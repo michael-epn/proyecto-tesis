@@ -41,7 +41,8 @@ jobs:
 
       - name: Build application
         run: npm run build
-        
+        env:
+          VITE_BACKEND_URL: ${{ vars.VITE_BACKEND_URL }}
       - name: Fix SPA Routing (Copy index to 404)
         run: cp ./dist/index.html ./dist/404.html
         
