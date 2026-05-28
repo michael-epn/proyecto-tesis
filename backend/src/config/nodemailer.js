@@ -15,11 +15,26 @@ const transporter = nodemailer.createTransport({
     },
 })
 
+transporter.verify((error, success) => {
+
+    if (error) {
+
+        console.log("ERROR SMTP:")
+        console.log(error)
+
+    } else {
+
+        console.log("SMTP listo")
+
+    }
+
+})
+
 
 const sendMail = async (to, subject, html) => {
     try {
         const info = await transporter.sendMail({
-            from: '"Sistema Tesis IA - ESFOT" <tu_correo@gmail.com>',
+            from: `"Sistema Tesis IA - ESFOT" <${process.env.GMAIL_USER}>`,
             to,
             subject,
             html,

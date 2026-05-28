@@ -8,17 +8,6 @@ import direccionRoutes from './routers/direccion_routes.js'
 const app = express()
 dotenv.config()
 
-transporter.verify((error, success) => {
-
-    if (error) {
-        console.log(error)
-    } else {
-        console.log("SMTP listo")
-    }
-
-})
-
-
 app.set('port', process.env.PORT || 3000)
 
 const corsOptions = {
