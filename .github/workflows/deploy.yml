@@ -33,6 +33,8 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          # Le indicamos a la caché exactamente dónde buscar el archivo lock
+          cache-dependency-path: './frontend/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
@@ -43,7 +45,9 @@ jobs:
       - name: Upload artifact to Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'  # ✅ CORREGIDO: sin el prefijo './frontend'
+          # Las acciones "uses" siempre se ejecutan desde la raíz. 
+          # Debemos especificar la ruta completa hacia tu build.
+          path: './frontend/dist' 
 
       - name: Deploy to GitHub Pages
         id: deployment
