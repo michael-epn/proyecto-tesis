@@ -16,7 +16,6 @@ apiInstance.setApiKey(
 
 const sendMail = async (to, subject, html) => {
     try {
-        // Instanciamos directamente la clase de correo
         const sendSmtpEmail = new SendSmtpEmail();
         
         sendSmtpEmail.subject = subject;
