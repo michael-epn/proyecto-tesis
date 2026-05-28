@@ -57,34 +57,28 @@ const perfil = (req, res) => {
 
 const actualizarPerfil = async (req, res) => {
     try {
-        const { id } = req.params
-        const { nombre, apellido, carrera, email, intereses, habilidades_tecnicas } = req.body
+        const { id } = req.params;
+        const { nombre, apellido, carrera, intereses, habilidades_tecnicas } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ msg: `ID invalido: ${id}` })
+            return res.status(400).json({ msg: `ID invalido: ${id}` });
         }
-        const estudianteBDD = await Estudiante.findById(id)
+        const estudianteBDD = await Estudiante.findById(id);
         if (!estudianteBDD) {
-            return res.status(404).json({ msg: "Estudiante no encontrado" })
+            return res.status(404).json({ msg: "Estudiante no encontrado" });
         }
         if (Object.values(req.body).includes("")) {
-            return res.status(400).json({ msg: "Debes llenar todos los campos" })
-        }
-        if (estudianteBDD.email !== email) {
-            const emailExistente = await Estudiante.findOne({ email })
-            if (emailExistente) {
-                return res.status(400).json({ msg: "El email ya esta registrado" })
-            }
-        }
-        estudianteBDD.nombre = nombre ?? estudianteBDD.nombre
-        estudianteBDD.apellido = apellido ?? estudianteBDD.apellido
-        estudianteBDD.carrera = carrera ?? estudianteBDD.carrera
-        estudianteBDD.intereses = intereses ?? estudianteBDD.intereses
-        estudianteBDD.habilidades_tecnicas = habilidades_tecnicas ?? estudianteBDD.habilidades_tecnicas
-        estudianteBDD.email = email ?? estudianteBDD.email
-        await estudianteBDD.save()
-        res.status(200).json(estudianteBDD)
+            return res.status(400).json({ msg: "Debes llenar todos los campos" });
+        }        
+        estudianteBDD.nombre = nombre ?? estudianteBDD.nombre;
+        estudianteBDD.apellido = apellido ?? estudianteBDD.apellido;
+        estudianteBDD.carrera = carrera ?? estudianteBDD.carrera;
+        estudianteBDD.intereses = intereses ?? estudianteBDD.intereses;
+        estudianteBDD.habilidades_tecnicas = habilidades_tecnicas ?? estudianteBDD.habilidades_tecnicas;
+        
+        await estudianteBDD.save();
+        res.status(200).json(estudianteBDD);
     } catch (error) {
-        res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
+        res.status(500).json({ msg: `Error en el servidor - ${error.message}` });
     }
 }
 

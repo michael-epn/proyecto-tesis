@@ -61,32 +61,25 @@ const perfil = (req, res) => {
 
 const actualizarPerfil = async (req, res) => {
     try {
-        const { id } = req.params
-        const { nombre, apellido, cargo, email } = req.body
+        const { id } = req.params;
+        const { nombre, apellido, cargo } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ msg: `ID invalido: ${id}` })
+            return res.status(400).json({ msg: `ID invalido: ${id}` });
         }
-        const direccionBDD = await Direccion.findById(id)
+        const direccionBDD = await Direccion.findById(id);
         if (!direccionBDD) {
-            return res.status(404).json({ msg: "Administrador no encontrado" })
+            return res.status(404).json({ msg: "Administrador no encontrado" });
         }
         if (Object.values(req.body).includes("")) {
-            return res.status(400).json({ msg: "Debes llenar todos los campos" })
+            return res.status(400).json({ msg: "Debes llenar todos los campos" });
         }
-        if (direccionBDD.email !== email) {
-            const emailExistente = await Direccion.findOne({ email })
-            if (emailExistente) {
-                return res.status(400).json({ msg: "El email ya esta registrado" })
-            }
-        }
-        direccionBDD.nombre = nombre ?? direccionBDD.nombre
-        direccionBDD.apellido = apellido ?? direccionBDD.apellido
-        direccionBDD.cargo = cargo ?? direccionBDD.cargo
-        direccionBDD.email = email ?? direccionBDD.email
-        await direccionBDD.save()
-        res.status(200).json(direccionBDD)
+        direccionBDD.nombre = nombre ?? direccionBDD.nombre;
+        direccionBDD.apellido = apellido ?? direccionBDD.apellido;
+        direccionBDD.cargo = cargo ?? direccionBDD.cargo;
+        await direccionBDD.save();
+        res.status(200).json(direccionBDD);
     } catch (error) {
-        res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
+        res.status(500).json({ msg: `Error en el servidor - ${error.message}` });
     }
 }
 

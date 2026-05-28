@@ -58,35 +58,28 @@ const perfil = (req, res) => {
 
 const actualizarPerfil = async (req, res) => {
     try {
-        const { id } = req.params
-        const { nombre, apellido, email, areas_investigacion, tecnologias_especialidad, cupos_maximos, disponibilidad } = req.body
+        const { id } = req.params;
+        const { nombre, apellido, areas_investigacion, tecnologias_especialidad, cupos_maximos, disponibilidad } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ msg: `ID invalido: ${id}` })
+            return res.status(400).json({ msg: `ID invalido: ${id}` });
         }
-        const docenteBDD = await Docente.findById(id)
+        const docenteBDD = await Docente.findById(id);
         if (!docenteBDD) {
-            return res.status(404).json({ msg: "Docente no encontrado" })
+            return res.status(404).json({ msg: "Docente no encontrado" });
         }
         if (Object.values(req.body).includes("")) {
-            return res.status(400).json({ msg: "Debes llenar todos los campos" })
+            return res.status(400).json({ msg: "Debes llenar todos los campos" });
         }
-        if (docenteBDD.email !== email) {
-            const emailExistente = await Docente.findOne({ email })
-            if (emailExistente) {
-                return res.status(400).json({ msg: "El email ya esta registrado" })
-            }
-        }
-        docenteBDD.nombre = nombre ?? docenteBDD.nombre
-        docenteBDD.apellido = apellido ?? docenteBDD.apellido
-        docenteBDD.areas_investigacion = areas_investigacion ?? docenteBDD.areas_investigacion
-        docenteBDD.tecnologias_especialidad = tecnologias_especialidad ?? docenteBDD.tecnologias_especialidad
-        docenteBDD.cupos_maximos = cupos_maximos ?? docenteBDD.cupos_maximos
-        docenteBDD.disponibilidad = disponibilidad ?? docenteBDD.disponibilidad
-        docenteBDD.email = email ?? docenteBDD.email
-        await docenteBDD.save()
-        res.status(200).json(docenteBDD)
+        docenteBDD.nombre = nombre ?? docenteBDD.nombre;
+        docenteBDD.apellido = apellido ?? docenteBDD.apellido;
+        docenteBDD.areas_investigacion = areas_investigacion ?? docenteBDD.areas_investigacion;
+        docenteBDD.tecnologias_especialidad = tecnologias_especialidad ?? docenteBDD.tecnologias_especialidad;
+        docenteBDD.cupos_maximos = cupos_maximos ?? docenteBDD.cupos_maximos;
+        docenteBDD.disponibilidad = disponibilidad ?? docenteBDD.disponibilidad;
+        await docenteBDD.save();
+        res.status(200).json(docenteBDD);
     } catch (error) {
-        res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
+        res.status(500).json({ msg: `Error en el servidor - ${error.message}` });
     }
 }
 

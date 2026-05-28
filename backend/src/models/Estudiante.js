@@ -2,7 +2,14 @@ import { Schema, model } from 'mongoose'
 import bcrypt from 'bcryptjs'
 
 const estudianteSchema = new Schema({
-    nombre: { type: String, required: true, trim: true },
+    nombre: { type: String, required: true, trim: true,
+        validate: {
+            validator: function(value) {
+                return /^[a-zA-Z\s]+$/.test(value);
+            },
+            message: 'El nombre no puede contener números'
+        }
+    },
     apellido: { type: String, required: true, trim: true },
     carrera: { type: String, required: true, trim: true },
     email: { 

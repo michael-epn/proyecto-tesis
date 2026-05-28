@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
 
-// Componente auxiliar
 const InputField = ({ label, register, name, type = "text", disabled = false }) => (
     <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
@@ -12,7 +11,7 @@ const InputField = ({ label, register, name, type = "text", disabled = false }) 
             type={type} 
             {...register(name)} 
             disabled={disabled}
-            className={`w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none ${disabled ? 'bg-slate-100 cursor-not-allowed' : ''}`} 
+            className={`w-full px-3 py-2 border border-slate-300 rounded-md outline-none focus:ring-2 focus:ring-blue-500 ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : ''}`} 
         />
     </div>
 );
@@ -27,7 +26,6 @@ const PerfilDireccion = () => {
     useEffect(() => {
         const cargarPerfil = async () => {
             try {
-                // Ajustado a la ruta de dirección
                 const { data } = await clienteAxios.get('/direccion/perfil');
                 reset(data);
             } catch (error) {
@@ -41,10 +39,10 @@ const PerfilDireccion = () => {
 
     const onSubmit = async (formData) => {
         try {
-            // No requerimos procesar arrays como en estudiante, enviamos el objeto directo
-            const { data } = await clienteAxios.put(`/direccion/perfil/${user?._id}`, formData);
+            const { email, ...payload } = formData;
             
-            // Actualizar el estado global con los nuevos datos
+            const { data } = await clienteAxios.put(`/direccion/perfil/${user?._id}`, payload);
+            
             setAuth(token, data, rol);
             toast.success("Perfil actualizado con éxito");
         } catch (error) {
@@ -68,13 +66,13 @@ const PerfilDireccion = () => {
         <div className="bg-white shadow-md rounded-sm border border-slate-200 p-6 max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-slate-800 mb-6 border-b pb-4">Mi Perfil - Dirección</h2>
 
-            {/* Formulario Perfil */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputField label="Nombre" register={register} name="nombre" />
                     <InputField label="Apellido" register={register} name="apellido" />
                     <InputField label="Cargo" register={register} name="cargo" />
-                    <InputField label="Email" register={register} name="email" type="email" />
+                    {/* Se bloquea la edición del correo */}
+                    <InputField label="Email" register={register} name="email" type="email" disabled={true} />
                 </div>
 
                 <button type="submit" className="bg-blue-600 text-white font-bold py-2 px-6 rounded hover:bg-blue-700 transition-colors">
@@ -82,7 +80,6 @@ const PerfilDireccion = () => {
                 </button>
             </form>
 
-            {/* Formulario Seguridad */}
             <form onSubmit={handleSubmitPassword(onSubmitPassword)} className="mt-10 pt-6 border-t space-y-6">
                 <h3 className="text-xl font-bold text-slate-800">Seguridad</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
