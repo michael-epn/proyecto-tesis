@@ -1,38 +1,45 @@
-import { createRequire } from 'module';
 import dotenv from 'dotenv';
-
-// IDEA CLAVE: "Engañamos" a Node.js creando un require compatible con ES6
-const require = createRequire(import.meta.url);
-const brevo = require('@getbrevo/brevo');
 
 dotenv.config();
 
-const apiInstance = new brevo.TransactionalEmailsApi();
-
-apiInstance.setApiKey(
-    brevo.TransactionalEmailsApiApiKeys.apiKey,
-    process.env.BREVO_API_KEY
-);
-
 const sendMail = async (to, subject, html) => {
     try {
-        const sendSmtpEmail = new brevo.SendSmtpEmail();
-        
-        sendSmtpEmail.subject = subject;
-        sendSmtpEmail.htmlContent = html;
-        sendSmtpEmail.sender = {
-            name: "Sistema Tesis IA - ESFOT",
-            email: process.env.BREVO_SENDER_EMAIL
-        };
-        sendSmtpEmail.to = [{ email: to }];
+        // IDEA CLAVE: Petición directa a la API REST de Brevo
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'api-key': process.env.BREVO_API_KEY
+            },
+            body: JSON.stringify({
+                sender: { 
+                    name: "Sistema Tesis IA - ESFOT", 
+                    email: process.env.BREVO_SENDER_EMAIL 
+                },
+                to: [
+                    { email: to }
+                ],
+                subject: subject,
+                htmlContent: html
+            })
+        });
 
-        const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
-        console.log("Correo enviado correctamente", response.messageId);
+        // Validamos si la respuesta HTTP es exitosa
+        if (!response.ok) {
+            const errorDetails = await response.json();
+            console.log("Detalles del rechazo de Brevo:", errorDetails);
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Correo enviado exitosamente vía API REST. ID:", data.messageId);
         
-        return response;
+        return data;
+
     } catch (error) {
-        console.log("ERROR BREVO", error);
-        throw new Error("No se pudo enviar el correo");
+        console.log("ERROR BREVO HTTP", error);
+        throw new Error("No se pudo enviar el correo de confirmación");
     }
 }
 
