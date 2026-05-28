@@ -1,4 +1,4 @@
-import sendMail from "../config/brevo"
+import sendMail from "../config/brevo.js"
 
 const sendMailToRegister = async (userMail, token, rol) => {
     return await sendMail(
