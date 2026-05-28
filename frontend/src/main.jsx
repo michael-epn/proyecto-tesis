@@ -9,11 +9,9 @@ import './css/style.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <HashRouter>
-      <ThemeProvider>
-        <App />
-        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-      </ThemeProvider>
-    </HashRouter>
+    <ThemeProvider>
+      <App />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+    </ThemeProvider>
   </React.StrictMode>
 )
