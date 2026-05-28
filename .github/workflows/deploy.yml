@@ -2,15 +2,13 @@ name: Deploy Frontend to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # Se ejecuta automáticamente al subir cambios a la rama main
+    branches: ["main"]
 
-# Permisos necesarios para interactuar con el motor de GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Evita que se acumulen ejecuciones colgadas si haces varios pushes seguidos
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -22,10 +20,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     
-    # 🎯 AQUÍ LE DECIMOS A GITHUB QUE EL ROOT ES LA CARPETA FRONTEND
     defaults:
       run:
-        working-directory: ./frontend # ⚠️ Si tu carpeta se llama diferente, cámbiala aquí. Si está en la raíz pura, borra estas 3 líneas de "defaults".
+        working-directory: ./frontend
 
     steps:
       - name: Checkout repository
@@ -35,10 +32,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm' # Optimiza el tiempo de instalación guardando la caché
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci # "npm ci" es más rápido y seguro para entornos de producción/servidores
+        run: npm ci
 
       - name: Build application
         run: npm run build
@@ -46,8 +43,7 @@ jobs:
       - name: Upload artifact to Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          # Le indicamos la ruta exacta del compilado final generado por Vite
-          path: './frontend/dist' # ⚠️ Si borraste el "defaults" arriba, aquí debes dejarlo solo como './dist'
+          path: './dist'  # ✅ CORREGIDO: sin el prefijo './frontend'
 
       - name: Deploy to GitHub Pages
         id: deployment
