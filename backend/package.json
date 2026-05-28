@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@getbrevo/brevo": "^5.0.4",
     "accepts": "^2.0.0",
     "base64id": "^2.0.0",
     "bcryptjs": "^3.0.3",
