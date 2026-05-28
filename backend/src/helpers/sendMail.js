@@ -1,4 +1,4 @@
-import sendMail from "../config/nodemailer"
+import sendMail from "../config/nodemailer.js"
 
 const sendMailToRegister = async (userMail, token, rol) => {
     return await sendMail(
