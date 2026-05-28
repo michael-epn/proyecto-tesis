@@ -1,4 +1,25 @@
-import sendMail from "../config/nodemailer.js"
+import { Resend } from 'resend';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const sendMail = async (to, subject, html) => {
+    try {
+        const data = await resend.emails.send({
+            from: 'Sistema Tesis IA <onboarding@resend.dev>', // Usamos el correo de prueba de Resend
+            to: [to],
+            subject: subject,
+            html: html
+        });
+        console.log("Email enviado exitosamente vía API: ", data.id);
+        return data;
+    } catch (error) {
+        console.error("Error enviando email vía Resend:", error);
+        throw new Error("No se pudo enviar el correo de confirmación");
+    }
+}
 
 const sendMailToRegister = async (userMail, token, rol) => {
     return await sendMail(

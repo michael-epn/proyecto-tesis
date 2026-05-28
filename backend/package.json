@@ -90,6 +90,7 @@
     "qs": "^6.15.1",
     "range-parser": "^1.2.1",
     "raw-body": "^3.0.2",
+    "resend": "^6.12.4",
     "router": "^2.2.0",
     "safe-buffer": "^5.2.1",
     "safer-buffer": "^2.1.2",
@@ -121,8 +122,8 @@
     "wrappy": "^1.0.2",
     "ws": "^8.18.3"
   },
-"scripts": {
-    "start":"node src/index.js"
+  "scripts": {
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
