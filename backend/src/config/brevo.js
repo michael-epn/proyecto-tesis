@@ -1,22 +1,22 @@
-import { 
-    TransactionalEmailsApi, 
-    TransactionalEmailsApiApiKeys, 
-    SendSmtpEmail 
-} from '@getbrevo/brevo';
+import { createRequire } from 'module';
 import dotenv from 'dotenv';
+
+// IDEA CLAVE: "Engañamos" a Node.js creando un require compatible con ES6
+const require = createRequire(import.meta.url);
+const brevo = require('@getbrevo/brevo');
 
 dotenv.config();
 
-const apiInstance = new TransactionalEmailsApi();
+const apiInstance = new brevo.TransactionalEmailsApi();
 
 apiInstance.setApiKey(
-    TransactionalEmailsApiApiKeys.apiKey,
+    brevo.TransactionalEmailsApiApiKeys.apiKey,
     process.env.BREVO_API_KEY
 );
 
 const sendMail = async (to, subject, html) => {
     try {
-        const sendSmtpEmail = new SendSmtpEmail();
+        const sendSmtpEmail = new brevo.SendSmtpEmail();
         
         sendSmtpEmail.subject = subject;
         sendSmtpEmail.htmlContent = html;
