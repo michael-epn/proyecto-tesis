@@ -11,7 +11,9 @@ dotenv.config()
 app.set('port', process.env.PORT || 3000)
 
 const corsOptions = {
-    origin: process.env.URL_FRONTEND, 
+origin: process.env.URL_FRONTEND,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
     optionsSuccessStatus: 200
 }
 
