@@ -1,4 +1,4 @@
-import sendMail from "../config/nodemailer.js"
+import sendMail from "../config/brevo"
 
 const sendMailToRegister = async (userMail, token, rol) => {
     return await sendMail(
