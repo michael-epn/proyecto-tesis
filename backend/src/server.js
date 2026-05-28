@@ -4,6 +4,7 @@ import cors from 'cors'
 import estudianteRoutes from './routers/estudiante_routes.js'
 import docenteRoutes from './routers/docente_routes.js'
 import direccionRoutes from './routers/direccion_routes.js'
+import cors from 'cors'
 
 const app = express()
 dotenv.config()
@@ -20,6 +21,13 @@ app.get('/', (req, res) => {
 app.use('/api/estudiante', estudianteRoutes)
 app.use('/api/docente', docenteRoutes)
 app.use('/api/direccion', direccionRoutes)
+
+const corsOptions = {
+    origin: process.env.URL_FRONTEND,
+    optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
 
 app.use((req, res) => res.status(404).send("Endpoint no encontrado - 404"))
 
