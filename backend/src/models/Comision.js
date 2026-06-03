@@ -41,4 +41,4 @@ comisionSchema.methods.createToken = function() {
     return tokenGenerado
 }
 
-export default model('Direccion', direccionSchema)
+export default model('Comision', comisionSchema)
