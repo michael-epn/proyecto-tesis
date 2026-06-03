@@ -47,17 +47,17 @@ const Login = () => {
                         >
                             <option value="estudiante">Estudiante</option>
                             <option value="docente">Docente</option>
-                            <option value="comision">Comisión Academica</option>
+                            <option value="comision">Comisión Académica</option>
                         </select>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-slate-600 mb-2">Correo Institucional</label>
+                        <label className="block text-sm font-semibold text-slate-600 mb-2">Correo Electrónico</label>
                         <input
                             type="email"
                             {...register("email", { required: true })}
                             className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400"
-                            placeholder="usuario@epn.edu.ec"
+                            placeholder="usuario@email.com"
                         />
                     </div>
 
@@ -80,13 +80,13 @@ const Login = () => {
                         type="submit"
                         className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-200"
                     >
-                        Iniciar Sesion
+                        Iniciar Sesión
                     </button>
                 </form>
 
                 <div className="mt-8 text-center border-t border-slate-200 pt-6">
                     <p className="text-sm text-slate-600">
-                        ¿No tienes una cuenta? <Link to="/auth/registro" className="text-blue-600 font-bold hover:underline">Registrate aqui</Link>
+                        ¿No tienes una cuenta? <Link to="/auth/registro" className="text-blue-600 font-bold hover:underline">Registrate aquí</Link>
                     </p>
                 </div>
             </div>

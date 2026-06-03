@@ -147,7 +147,7 @@ const Registro = () => {
 
                 <div className="mt-8 text-center border-t border-slate-200 pt-6">
                     <p className="text-sm text-slate-600">
-                        Ya tienes una cuenta? <Link to="/auth/login" className="text-blue-600 font-bold hover:underline">Inicia Sesion</Link>
+                        Ya tienes una cuenta? <Link to="/auth/login" className="text-blue-600 font-bold hover:underline">Inicia Sesión</Link>
                     </p>
                 </div>
             </div>

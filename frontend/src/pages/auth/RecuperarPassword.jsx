@@ -40,17 +40,17 @@ const RecuperarPassword = () => {
                         >
                             <option value="estudiante">Estudiante</option>
                             <option value="docente">Docente</option>
-                            <option value="direccion">Direccion Academica</option>
+                            <option value="comision">Comisión Académica</option>
                         </select>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-slate-600 mb-2">Correo Institucional</label>
+                        <label className="block text-sm font-semibold text-slate-600 mb-2">Correo Electrónico</label>
                         <input
                             type="email"
                             {...register("email", { required: true })}
                             className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400"
-                            placeholder="usuario@epn.edu.ec"
+                            placeholder="usuario@email.com"
                         />
                         {errors.email && <span className="text-xs text-red-500 mt-1 block">Campo requerido</span>}
                     </div>
@@ -65,7 +65,7 @@ const RecuperarPassword = () => {
 
                 <div className="mt-8 text-center border-t border-slate-200 pt-6">
                     <Link to="/auth/login" className="text-sm text-blue-600 font-bold hover:underline">
-                        Volver al Inicio de Sesion
+                        Volver al Inicio de Sesión
                     </Link>
                 </div>
             </div>

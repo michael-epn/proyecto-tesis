@@ -20,7 +20,7 @@ const NuevoPassword = () => {
 
         const comprobarToken = async () => {
             setCargando(true);
-            const roles = ['estudiante', 'docente', 'direccion'];
+            const roles = ['estudiante', 'docente', 'comision'];
             for (const rol of roles) {
                 try {
                     await clienteAxios.get(`/${rol}/recuperarpassword/${token}`);
