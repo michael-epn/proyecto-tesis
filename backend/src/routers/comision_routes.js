@@ -9,7 +9,7 @@ import {
     recuperarPassword,
     comprobarTokenPasword,
     crearNuevoPassword
-} from '../controllers/direccion_controller.js'
+} from '../controllers/comision_controller.js'
 import { verificarTokenJWT } from '../middlewares/JWT.js'
 
 const router = Router()

@@ -1,33 +1,35 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import cors from 'cors' // Solo una vez
+import cors from 'cors'
 import estudianteRoutes from './routers/estudiante_routes.js'
 import docenteRoutes from './routers/docente_routes.js'
-import direccionRoutes from './routers/direccion_routes.js'
+import comisionRoutes from './routers/comision_routes.js'
 
-const app = express()
 dotenv.config()
-
+const app = express()
 app.set('port', process.env.PORT || 3000)
 
-const corsOptions = {
-origin: process.env.URL_FRONTEND,
+app.use(cors({
+    origin: process.env.URL_FRONTEND,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-    optionsSuccessStatus: 200
-}
+    credentials: true
+}))
 
-app.use(cors(corsOptions)) // Se aplica una sola vez con las opciones correctas
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
-    res.send("Sistema Inteligente de Recomendacion de Tesis")
+    res.send('Sistema Inteligente de Recomendación de Tesis')
 })
 
 app.use('/api/estudiante', estudianteRoutes)
 app.use('/api/docente', docenteRoutes)
-app.use('/api/direccion', direccionRoutes)
+app.use('/api/comision', comisionRoutes)
 
-app.use((req, res) => res.status(404).send("Endpoint no encontrado - 404"))
+app.use((req, res) => {
+    res.status(404).json({
+        msg: 'Endpoint no encontrado'
+    })
+})
 
 export default app

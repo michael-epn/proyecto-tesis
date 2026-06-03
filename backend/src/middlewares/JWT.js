@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 import Estudiante from "../models/Estudiante.js"
 import Docente from "../models/Docente.js"
-import Direccion from "../models/Direccion.js"
+import Direccion from "../models/Comision.js"
 
 const crearTokenJWT = (id, rol) => {
     return jwt.sign(

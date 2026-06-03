@@ -4,7 +4,6 @@ dotenv.config();
 
 const sendMail = async (to, subject, html) => {
     try {
-        // IDEA CLAVE: Petición directa a la API REST de Brevo
         const response = await fetch('https://api.brevo.com/v3/smtp/email', {
             method: 'POST',
             headers: {
@@ -25,7 +24,6 @@ const sendMail = async (to, subject, html) => {
             })
         });
 
-        // Validamos si la respuesta HTTP es exitosa
         if (!response.ok) {
             const errorDetails = await response.json();
             console.log("Detalles del rechazo de Brevo:", errorDetails);
