@@ -15,9 +15,9 @@ import Recomendaciones from './pages/estudiante/Recomendaciones'
 import PerfilEstudiante from './pages/estudiante/PerfilEstudiante'
 import SolicitudesEntrantes from './pages/docente/SolicitudesEntrantes'
 import PerfilDocente from './pages/docente/PerfilDocente'
-import DashboardGeneral from './pages/direccion/DashboardGeneral'
-import AuditoriaTramites from './pages/direccion/AuditoriaTramites'
-import PerfilDireccion from './pages/direccion/PerfilDireccion'
+import DashboardGeneral from './pages/comision/DashboardGeneral'
+import AuditoriaTramites from './pages/comision/AuditoriaTramites'
+import PerfilComision from './pages/comision/PerfilComision'
 
 const App = () => {
     return (
@@ -45,10 +45,10 @@ const App = () => {
                 <Route path="perfil" element={<PerfilDocente />} />
             </Route>
 
-            <Route path="/direccion" element={<DashboardLayout rolesPermitidos={['direccion']} />}>
+            <Route path="/comision" element={<DashboardLayout rolesPermitidos={['comision']} />}>
                 <Route index element={<DashboardGeneral />} />
                 <Route path="auditoria" element={<AuditoriaTramites />} />
-                <Route path="perfil" element={<PerfilDireccion />} />
+                <Route path="perfil" element={<PerfilComision />} />
             </Route>
 
             {/* Ruta por defecto */}

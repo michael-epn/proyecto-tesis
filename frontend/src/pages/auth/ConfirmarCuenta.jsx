@@ -14,7 +14,7 @@ const ConfirmarCuenta = () => {
 
         const confirmarCuenta = async () => {
             let exito = false;
-            const roles = ['estudiante', 'docente', 'direccion'];
+            const roles = ['estudiante', 'docente', 'comision'];
 
             for (const rol of roles) {
                 try {

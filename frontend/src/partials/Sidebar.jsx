@@ -74,7 +74,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               <span className="hidden lg:block lg:sidebar-expanded:hidden text-center w-6" aria-hidden="true">
                 •••
               </span>
-              <span className="lg:hidden lg:sidebar-expanded:block">Navegacion</span>
+              <span className="lg:hidden lg:sidebar-expanded:block">Navegación</span>
             </h3>
             <ul className="mt-3">
               
@@ -90,7 +90,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/estudiante/perfil' && 'bg-slate-900'}`}>
                     <NavLink end to="/estudiante/perfil" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/estudiante/perfil' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
-                        <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Mi Perfil Tecnico</span>
+                        <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Mi Perfil Técnico</span>
                       </div>
                     </NavLink>
                   </li>
@@ -109,31 +109,31 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/docente/perfil' && 'bg-slate-900'}`}>
                     <NavLink end to="/docente/perfil" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/docente/perfil' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
-                        <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Gestion de Cupos</span>
+                        <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Gestión de Cupos</span>
                       </div>
                     </NavLink>
                   </li>
                 </>
               )}
 
-              {rol === 'direccion' && (
+              {rol === 'comision' && (
                 <>
-                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/direccion' && 'bg-slate-900'}`}>
-                    <NavLink end to="/direccion" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/direccion' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
+                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/comision' && 'bg-slate-900'}`}>
+                    <NavLink end to="/comision" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/comision' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
                         <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Dashboard General</span>
                       </div>
                     </NavLink>
                   </li>
-                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/direccion/auditoria' && 'bg-slate-900'}`}>
-                    <NavLink end to="/direccion/auditoria" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/direccion/auditoria' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
+                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/comision/auditoria' && 'bg-slate-900'}`}>
+                    <NavLink end to="/comision/auditoria" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/comision/auditoria' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
                         <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Auditoria de Tramites</span>
                       </div>
                     </NavLink>
                   </li>
-                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/direccion/perfil' && 'bg-slate-900'}`}>
-                    <NavLink end to="/direccion/perfil" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/direccion/perfil' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
+                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/comision/perfil' && 'bg-slate-900'}`}>
+                    <NavLink end to="/comision/perfil" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/comision/perfil' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
                         <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Mi Perfil</span>
                       </div>

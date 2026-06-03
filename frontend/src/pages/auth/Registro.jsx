@@ -52,7 +52,7 @@ const Registro = () => {
                         >
                             <option value="estudiante">Estudiante</option>
                             <option value="docente">Docente</option>
-                            <option value="direccion">Direccion Academica</option>
+                            <option value="comision">Comisión Académica</option>
                         </select>
                     </div>
 
@@ -114,7 +114,7 @@ const Registro = () => {
                         </div>
                     )}
 
-                    {rolSeleccionado === 'direccion' && (
+                    {rolSeleccionado === 'comision' && (
                         <div>
                             <label className="block text-sm font-semibold text-slate-600 mb-2">Cargo</label>
                             <input

@@ -47,7 +47,7 @@ const Login = () => {
                         >
                             <option value="estudiante">Estudiante</option>
                             <option value="docente">Docente</option>
-                            <option value="direccion">Direccion Academica</option>
+                            <option value="comision">Comisión Academica</option>
                         </select>
                     </div>
 

@@ -16,7 +16,7 @@ const InputField = ({ label, register, name, type = "text", disabled = false }) 
     </div>
 );
 
-const PerfilDireccion = () => {
+const PerfilComision = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const { register: registerPassword, handleSubmit: handleSubmitPassword, reset: resetPassword } = useForm();
     
@@ -26,7 +26,7 @@ const PerfilDireccion = () => {
     useEffect(() => {
         const cargarPerfil = async () => {
             try {
-                const { data } = await clienteAxios.get('/direccion/perfil');
+                const { data } = await clienteAxios.get('/comision/perfil');
                 reset(data);
             } catch (error) {
                 toast.error("Error al cargar la información del perfil");
@@ -41,7 +41,7 @@ const PerfilDireccion = () => {
         try {
             const { email, ...payload } = formData;
             
-            const { data } = await clienteAxios.put(`/direccion/perfil/${user?._id}`, payload);
+            const { data } = await clienteAxios.put(`/comision/perfil/${user?._id}`, payload);
             
             setAuth(token, data, rol);
             toast.success("Perfil actualizado con éxito");
@@ -52,7 +52,7 @@ const PerfilDireccion = () => {
 
     const onSubmitPassword = async (data) => {
         try {
-            await clienteAxios.put('/direccion/password', data);
+            await clienteAxios.put('/comision/password', data);
             toast.success("Contraseña actualizada correctamente");
             resetPassword();
         } catch (error) {
@@ -94,4 +94,4 @@ const PerfilDireccion = () => {
     );
 };
 
-export default PerfilDireccion;
+export default PerfilComision;
