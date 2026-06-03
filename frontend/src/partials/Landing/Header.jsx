@@ -9,7 +9,7 @@ function Header() {
           {/* Logo / Título */}
           <div className="shrink-0 mr-4">
             <Link to="/" className="block text-white font-bold text-xl tracking-wide">
-              ESFOT <span className="text-[#C8102E]">IA</span>
+              TESIS <span className="text-[#C8102E]">IA</span>
             </Link>
           </div>
 
@@ -17,12 +17,12 @@ function Header() {
           <nav className="flex grow justify-end">
             <ul className="flex grow justify-end flex-wrap items-center space-x-4">
               <li>
-                <Link to="/login" className="text-gray-200 hover:text-white transition duration-150 ease-in-out font-medium">
+                <Link to="/auth/login" className="text-gray-200 hover:text-white transition duration-150 ease-in-out font-medium">
                   Iniciar Sesión
                 </Link>
               </li>
               <li>
-                <Link to="/registro" className="btn-sm text-white bg-[#C8102E] hover:bg-red-800 px-4 py-2 rounded shadow transition duration-150 ease-in-out">
+                <Link to="/auth/registro" className="btn-sm text-white bg-[#C8102E] hover:bg-red-800 px-4 py-2 rounded shadow transition duration-150 ease-in-out">
                   Registrarse
                 </Link>
               </li>

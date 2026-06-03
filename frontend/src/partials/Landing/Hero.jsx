@@ -15,7 +15,7 @@ function Hero() {
             </p>
             <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
               <div>
-                <Link to="/registro" className="btn text-white bg-[#C8102E] hover:bg-red-800 w-full mb-4 sm:w-auto sm:mb-0 sm:mr-4 px-6 py-3 rounded-lg shadow-lg font-semibold transition-all">
+                <Link to="/auth/registro" className="btn text-white bg-[#C8102E] hover:bg-red-800 w-full mb-4 sm:w-auto sm:mb-0 sm:mr-4 px-6 py-3 rounded-lg shadow-lg font-semibold transition-all">
                   Comenzar mi proyecto
                 </Link>
               </div>
