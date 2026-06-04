@@ -33,8 +33,15 @@ const Registro = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-white dark:bg-gray-900">
-            {/* Lado Izquierdo: Formulario */}
+        <div className="fixed inset-0 z-50 flex min-h-screen bg-white dark:bg-gray-900 overflow-hidden">
+            <div className="hidden md:block md:w-1/2 relative bg-gray-900">
+                <img 
+                    src="https://images.unsplash.com/photo-1644325349124-d1756b79dd42?q=80&w=1475&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                    alt="Registro Background" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-90"
+                />
+                <div className="absolute inset-0 bg-violet-900/10 mix-blend-multiply"></div>
+            </div>
             <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8 md:p-12 lg:p-16 overflow-y-auto no-scrollbar">
                 <div className="w-full max-w-md">
                     <h1 className="h2 text-center text-gray-900 dark:text-white mb-8">Crear Cuenta</h1>
@@ -160,17 +167,6 @@ const Registro = () => {
                         </p>
                     </div>
                 </div>
-            </div>
-
-            {/* Lado Derecho: Imagen */}
-            <div className="hidden md:block md:w-1/2 relative bg-gray-900">
-                <img 
-                    src="https://images.unsplash.com/photo-1644325349124-d1756b79dd42?q=80&w=1475&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                    alt="Registro Background" 
-                    className="absolute inset-0 w-full h-full object-cover opacity-90"
-                />
-                {/* Overlay opcional para darle un tinte alineado a los colores violeta de tu theme */}
-                <div className="absolute inset-0 bg-violet-900/10 mix-blend-multiply"></div>
             </div>
         </div>
     );
