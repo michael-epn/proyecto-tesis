@@ -26,7 +26,7 @@ const App = () => {
             <Route path="/" element={<Landing />} />
 
             {/* 2. Rutas Publicas (Login, Registro, Correos) */}
-            <Route path="auth" element={<AuthLayout />}>
+            <Route path="/auth" element={<AuthLayout />}>
                 <Route path="login" element={<Login />} />
                 <Route path="registro" element={<Registro />} />
                 <Route path="confirmar/:token" element={<ConfirmarCuenta />} />
