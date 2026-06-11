@@ -51,7 +51,7 @@ const VerPerfilEstudiante = () => {
                     </div>
                     <div className="text-center">
                         <h3 className="font-bold text-lg text-slate-800">{perfil?.nombre} {perfil?.apellido}</h3>
-                        <p className="text-sm text-slate-500 capitalize">{perfil?.carrera || 'Estudiante'}</p>
+                        <p className="text-sm text-slate-500">{perfil?.carrera || 'Estudiante'}</p>
                     </div>
                 </div>
 

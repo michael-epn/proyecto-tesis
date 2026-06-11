@@ -3,6 +3,7 @@ import { sendMailToRegister } from "../helpers/sendMail.js"
 import { crearTokenJWT } from "../middlewares/JWT.js"
 import mongoose from "mongoose"
 import { sendMailToRecoveryPassword } from "../helpers/sendMail.js"
+import { subirImagenCloudinary } from "../helpers/uploadCloudinary.js"
 
 
 const registro = async (req, res) => {
