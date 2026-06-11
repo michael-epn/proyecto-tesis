@@ -78,10 +78,10 @@ function DropdownProfile({ align }) {
             <li>
               <Link
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                to={`/${rol}/perfil`}
+                to={`/${rol}/configuracion`}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                Configuracion
+                Configuración
               </Link>
             </li>
             <li>
@@ -89,7 +89,7 @@ function DropdownProfile({ align }) {
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3 w-full text-left"
                 onClick={handleLogout}
               >
-                Cerrar Sesion
+                Cerrar Sesión
               </button>
             </li>
           </ul>

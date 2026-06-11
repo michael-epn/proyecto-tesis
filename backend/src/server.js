@@ -4,15 +4,27 @@ import cors from 'cors'
 import estudianteRoutes from './routers/estudiante_routes.js'
 import docenteRoutes from './routers/docente_routes.js'
 import comisionRoutes from './routers/comision_routes.js'
+import cloudinary from 'cloudinary'
+import fileUpload from "express-fileupload"
 
 dotenv.config()
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
 const app = express()
 app.set('port', process.env.PORT || 3000)
-
 app.use(cors({
     origin: process.env.URL_FRONTEND,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
+}))
+
+app.use(fileUpload({
+    useTempFiles : true,
+    tempFileDir : './uploads'
 }))
 
 app.use(express.json())

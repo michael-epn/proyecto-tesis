@@ -11,13 +11,14 @@ import RecuperarPassword from './pages/auth/RecuperarPassword'
 import NuevoPassword from './pages/auth/NuevoPassword'
 
 // Paginas Privadas
-import Recomendaciones from './pages/estudiante/Recomendaciones'
-import PerfilEstudiante from './pages/estudiante/PerfilEstudiante'
 import SolicitudesEntrantes from './pages/docente/SolicitudesEntrantes'
 import PerfilDocente from './pages/docente/PerfilDocente'
 import DashboardGeneral from './pages/comision/DashboardGeneral'
 import AuditoriaTramites from './pages/comision/AuditoriaTramites'
 import PerfilComision from './pages/comision/PerfilComision'
+import Recomendaciones from './pages/estudiante/Recomendaciones'
+import VerPerfilEstudiante from './pages/estudiante/VerPerfilEstudiante'
+import EditarPerfilEstudiante from './pages/estudiante/EditarPerfilEstudiante'
 
 const App = () => {
     return (
@@ -37,7 +38,8 @@ const App = () => {
             {/* 3. Rutas Privadas por Rol */}
             <Route path="/estudiante" element={<DashboardLayout rolesPermitidos={['estudiante']} />}>
                 <Route index element={<Recomendaciones />} />
-                <Route path="perfil" element={<PerfilEstudiante />} />
+                <Route path="perfil" element={<VerPerfilEstudiante />} /> 
+                <Route path="configuracion" element={<EditarPerfilEstudiante />} /> 
             </Route>
 
             <Route path="/docente" element={<DashboardLayout rolesPermitidos={['docente']} />}>
