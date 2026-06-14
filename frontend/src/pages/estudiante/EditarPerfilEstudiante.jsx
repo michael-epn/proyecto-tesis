@@ -76,8 +76,14 @@ const EditarPerfilEstudiante = () => {
                 dataToSend.append('fotoPerfil', archivoFoto);
             }
 
-            const { data } = await clienteAxios.put(`/estudiante/perfil/${user?._id}`, dataToSend);
-            setAuth(token, data, rol);
+            const { data } = await clienteAxios.put(`/estudiante/perfil/${user?._id}`, dataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
+            setAuth(token, { ...user, ...data }, rol);
+            
             toast.success("Perfil técnico actualizado con éxito");
             navigate('/estudiante/perfil');
         } catch (error) {
