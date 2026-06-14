@@ -39,7 +39,7 @@ const VerPerfilEstudiante = () => {
                 </div>
 
                 <div className="px-6 md:px-12 pb-12">
-                    <div className="flex flex-col md:flex-row gap-6 items-start md:items-end -mt-16 md:-mt-20 mb-10">
+                    <div className="flex flex-col md:flex-row gap-6 items-start md:items-end -mt-16 md:-mt-20 mb-10 relative z-10">
                         <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white shadow-lg bg-slate-100 flex items-center justify-center shrink-0">
                             {perfil?.fotoPerfil ? (
                                 <img src={perfil.fotoPerfil} alt="Foto de perfil" className="w-full h-full object-cover" />

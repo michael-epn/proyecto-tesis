@@ -175,7 +175,7 @@ const EditarPerfilEstudiante = () => {
                     </div>
 
                     <div className="lg:col-span-1">
-                        <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden lg:sticky lg:top-8">
+                        <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
                             <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
