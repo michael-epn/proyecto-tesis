@@ -49,7 +49,7 @@ const VerPerfilEstudiante = () => {
                                 </span>
                             )}
                         </div>
-                        <div className="mt-2 md:mb-4 w-full">
+                        <div className="mt-2 w-full">
                             <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">{perfil?.nombre} {perfil?.apellido}</h2>
                             <p className="text-lg text-indigo-600 font-semibold mt-1">{perfil?.carrera || 'Estudiante Universitario'}</p>
                         </div>
