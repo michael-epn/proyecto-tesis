@@ -10,7 +10,14 @@ const estudianteSchema = new Schema({
             message: 'El nombre no puede contener números'
         }
     },
-    apellido: { type: String, required: true, trim: true },
+    apellido: { type: String, required: true, trim: true,
+        validate: {
+            validator: function(value) {
+                return /^[a-zA-Z\s]+$/.test(value);
+            },
+            message: 'El apellido no puede contener números'
+        }
+    },
     carrera: { type: String, required: true, trim: true },
     email: { 
         type: String, 
@@ -20,6 +27,7 @@ const estudianteSchema = new Schema({
         match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Formato de correo inválido']
     },
     password: { type: String, required: true },
+    fotoPerfil: { type: String, default: null },
     intereses: { type: [String], default: [] },
     habilidades_tecnicas: { type: [String], default: [] }, // Clave para el motor de recomendación IA
     status: { type: Boolean, default: true },

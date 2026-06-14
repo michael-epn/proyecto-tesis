@@ -10,13 +10,7 @@ const VerPerfilEstudiante = () => {
     useEffect(() => {
         const cargarPerfil = async () => {
             try {
-                const { data } = await clienteAxios.get(`/estudiante/perfil?t=${new Date().getTime()}`, {
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache',
-                        'Expires': '0'
-                    }
-                });
+                const { data } = await clienteAxios.get(`/estudiante/perfil?t=${new Date().getTime()}`);
                 setPerfil(data);
             } catch (error) {
                 toast.error("Error al cargar la información del perfil");

@@ -69,7 +69,7 @@ const actualizarPerfil = async (req, res) => {
         }
         if (req.files && req.files.fotoPerfil) {
             const archivoTemp = req.files.fotoPerfil.tempFilePath;
-            const { secure_url, public_id } = await subirImagenCloudinary(archivoTemp, "ESFOT");
+            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT");
             estudianteBDD.fotoPerfil = secure_url;
         }
         estudianteBDD.nombre = nombre ?? estudianteBDD.nombre;
@@ -82,8 +82,8 @@ const actualizarPerfil = async (req, res) => {
             estudianteBDD.habilidades_tecnicas = typeof habilidades_tecnicas === 'string' ? JSON.parse(habilidades_tecnicas) : habilidades_tecnicas;
         }
         await estudianteBDD.save();
-        const { password, token, confirmEmail, createdAt, updatedAt, __v, ...datosActualizados } = estudianteBDD._doc;
-        res.status(200).json(datosActualizados);
+        const estudianteActualizado = await Estudiante.findById(id).select("-password -token -confirmEmail -createdAt -updatedAt -__v");
+        res.status(200).json(estudianteActualizado);
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` });

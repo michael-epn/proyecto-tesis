@@ -31,13 +31,7 @@ const EditarPerfilEstudiante = () => {
     useEffect(() => {
         const cargarPerfil = async () => {
             try {
-                const { data } = await clienteAxios.get(`/estudiante/perfil?t=${new Date().getTime()}`, {
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache',
-                        'Expires': '0'
-                    }
-                });
+                const { data } = await clienteAxios.get(`/estudiante/perfil?t=${new Date().getTime()}`);
                 reset({
                     ...data,
                     intereses: data.intereses?.join(', ') || '',
@@ -81,11 +75,9 @@ const EditarPerfilEstudiante = () => {
             if (archivoFoto) {
                 dataToSend.append('fotoPerfil', archivoFoto);
             }
-
             const { data } = await clienteAxios.put(`/estudiante/perfil/${user?._id}`, dataToSend);
-            
             setAuth(token, data, rol);
-            toast.success("Perfil técnico actualizado con éxito");
+            toast.success("Perfil actualizado con éxito");
             navigate('/estudiante/perfil');
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al actualizar el perfil");
