@@ -185,6 +185,7 @@ const EditarPerfilDocente = () => {
                                     <InputField label="Nombre" register={register} name="nombre" />
                                     <InputField label="Apellido" register={register} name="apellido" />
                                     <InputField label="Correo Electrónico" register={register} name="email" type="email" disabled={true} />
+                                    <InputField label="Cupos Máximos de Tutoría" register={register} name="cupos_maximos" type="number" options={{ required: true }} />
                                     <div className="flex items-center justify-between p-4 border border-slate-200 rounded-xl bg-slate-50">
                                         <div>
                                             <label className="block text-sm font-bold text-slate-700">Disponibilidad de Tutoría</label>
@@ -199,7 +200,6 @@ const EditarPerfilDocente = () => {
                                             <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                         </label>
                                     </div>
-                                    <InputField label="Cupos Máximos de Tutoría" register={register} name="cupos_maximos" type="number" options={{ required: true }} />
                                 </div>
 
                                 <div className="space-y-6">
