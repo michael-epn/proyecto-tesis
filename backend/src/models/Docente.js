@@ -10,7 +10,14 @@ const docenteSchema = new Schema({
             message: 'El nombre no puede contener números'
         }
     },
-    apellido: { type: String, required: true, trim: true },
+    apellido: { type: String, required: true, trim: true 
+        , validate: {
+            validator: function(value) {
+                return /^[a-zA-Z\s]+$/.test(value);
+            },
+            message: 'El apellido no puede contener números'
+        }
+    },
     email: { 
         type: String, 
         required: true, 
@@ -18,6 +25,8 @@ const docenteSchema = new Schema({
         unique: true 
     },
     password: { type: String, required: true },
+    fotoPerfil: { type: String, default: null },
+    bannerPerfil: { type: String, default: null },
     areas_investigacion: { type: [String], default: [] },
     tecnologias_especialidad: { type: [String], default: [] },
     cupos_maximos: { type: Number, required: true, default: 5 },

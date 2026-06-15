@@ -12,13 +12,14 @@ import NuevoPassword from './pages/auth/NuevoPassword'
 
 // Paginas Privadas
 import SolicitudesEntrantes from './pages/docente/SolicitudesEntrantes'
-import PerfilDocente from './pages/docente/PerfilDocente'
 import DashboardGeneral from './pages/comision/DashboardGeneral'
 import AuditoriaTramites from './pages/comision/AuditoriaTramites'
 import PerfilComision from './pages/comision/PerfilComision'
 import Recomendaciones from './pages/estudiante/Recomendaciones'
 import VerPerfilEstudiante from './pages/estudiante/VerPerfilEstudiante'
 import EditarPerfilEstudiante from './pages/estudiante/EditarPerfilEstudiante'
+import EditarPerfilDocente from './pages/docente/EditarPerfilDocente'
+import VerPerfilDocente from './pages/docente/VerPerfilDocente'
 
 const App = () => {
     return (
@@ -44,7 +45,8 @@ const App = () => {
 
             <Route path="/docente" element={<DashboardLayout rolesPermitidos={['docente']} />}>
                 <Route index element={<SolicitudesEntrantes />} />
-                <Route path="perfil" element={<PerfilDocente />} />
+                <Route path="perfil" element={<VerPerfilDocente />} />
+                <Route path="configuracion" element={<EditarPerfilDocente />} />
             </Route>
 
             <Route path="/comision" element={<DashboardLayout rolesPermitidos={['comision']} />}>

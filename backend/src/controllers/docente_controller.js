@@ -2,6 +2,7 @@ import Docente from "../models/Docente.js"
 import { sendMailToRegister, sendMailToRecoveryPassword } from "../helpers/sendMail.js"
 import { crearTokenJWT } from "../middlewares/JWT.js"
 import mongoose from "mongoose"
+import { subirImagenCloudinary } from "../helpers/uploadCloudinary.js"
 
 const registro = async (req, res) => {
     try {
@@ -55,7 +56,6 @@ const perfil = (req, res) => {
     const { token, confirmEmail, createdAt, updatedAt, __v, password, ...datosPerfil } = req.docente._doc || req.docente
     res.status(200).json(datosPerfil)
 }
-
 const actualizarPerfil = async (req, res) => {
     try {
         const { id } = req.params;
@@ -67,18 +67,31 @@ const actualizarPerfil = async (req, res) => {
         if (!docenteBDD) {
             return res.status(404).json({ msg: "Docente no encontrado" });
         }
-        if (Object.values(req.body).includes("")) {
-            return res.status(400).json({ msg: "Debes llenar todos los campos" });
+        if (req.files && req.files.fotoPerfil) {
+            const archivoTemp = req.files.fotoPerfil.tempFilePath;
+            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT/Perfiles_Docentes");
+            docenteBDD.fotoPerfil = secure_url;
+        }
+        if (req.files && req.files.bannerPerfil) {
+            const archivoTemp = req.files.bannerPerfil.tempFilePath;
+            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT/Banners_Docentes");
+            docenteBDD.bannerPerfil = secure_url;
         }
         docenteBDD.nombre = nombre ?? docenteBDD.nombre;
         docenteBDD.apellido = apellido ?? docenteBDD.apellido;
-        docenteBDD.areas_investigacion = areas_investigacion ?? docenteBDD.areas_investigacion;
-        docenteBDD.tecnologias_especialidad = tecnologias_especialidad ?? docenteBDD.tecnologias_especialidad;
         docenteBDD.cupos_maximos = cupos_maximos ?? docenteBDD.cupos_maximos;
         docenteBDD.disponibilidad = disponibilidad ?? docenteBDD.disponibilidad;
+        if (areas_investigacion) {
+            docenteBDD.areas_investigacion = typeof areas_investigacion === 'string' ? JSON.parse(areas_investigacion) : areas_investigacion;
+        }
+        if (tecnologias_especialidad) {
+            docenteBDD.tecnologias_especialidad = typeof tecnologias_especialidad === 'string' ? JSON.parse(tecnologias_especialidad) : tecnologias_especialidad;
+        }
         await docenteBDD.save();
-        res.status(200).json(docenteBDD);
+        const docenteActualizado = await Docente.findById(id).select("-password -token -confirmEmail -createdAt -updatedAt -__v");
+        res.status(200).json(docenteActualizado);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` });
     }
 }
