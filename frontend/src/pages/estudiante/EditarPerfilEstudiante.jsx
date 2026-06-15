@@ -27,6 +27,9 @@ const EditarPerfilEstudiante = () => {
 
     const [fotoPreview, setFotoPreview] = useState(null);
     const [archivoFoto, setArchivoFoto] = useState(null);
+    
+    const [bannerPreview, setBannerPreview] = useState(null);
+    const [archivoBanner, setArchivoBanner] = useState(null);
 
     const [mostrarPasswordActual, setMostrarPasswordActual] = useState(false);
     const [mostrarPasswordNuevo, setMostrarPasswordNuevo] = useState(false);
@@ -42,6 +45,9 @@ const EditarPerfilEstudiante = () => {
                 if(data.fotoPerfil) {
                     setFotoPreview(data.fotoPerfil);
                 }
+                if(data.bannerPerfil) {
+                    setBannerPreview(data.bannerPerfil);
+                }
             } catch (error) {
                 toast.error("Error al cargar la información del perfil");
             } finally {
@@ -51,15 +57,13 @@ const EditarPerfilEstudiante = () => {
         cargarPerfil();
     }, [reset]);
 
-    const handleImageChange = (e) => {
+    const handleFileChange = (e, setFileState, setPreviewState) => {
         const file = e.target.files[0];
         if (file) {
-            setArchivoFoto(file);
-            const objectUrl = URL.createObjectURL(file);
-            setFotoPreview(objectUrl);
+            setFileState(file);
+            setPreviewState(URL.createObjectURL(file));
         }
     };
-
     const onSubmit = async (formData) => {
         try {
             const { email, ...dataRestante } = formData;
@@ -76,6 +80,9 @@ const EditarPerfilEstudiante = () => {
             
             if (archivoFoto) {
                 dataToSend.append('fotoPerfil', archivoFoto);
+            }
+            if (archivoBanner) {
+                dataToSend.append('bannerPerfil', archivoBanner);
             }
             const { data } = await clienteAxios.put(`/estudiante/perfil/${user?._id}`, dataToSend);
             setAuth(token, data, rol);
@@ -124,26 +131,50 @@ const EditarPerfilEstudiante = () => {
                                 </h3>
                             </div>
                             <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8 space-y-8">
-                                <div className="flex flex-col md:flex-row items-center gap-6 p-5 bg-slate-50 rounded-xl border border-slate-100">
-                                    <div className="w-28 h-28 shrink-0 rounded-full overflow-hidden border-4 border-white shadow-md bg-slate-200 flex items-center justify-center">
-                                        {fotoPreview ? (
-                                            <img src={fotoPreview} alt="Preview" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <span className="text-slate-400 text-sm font-semibold text-center px-2">Subir foto</span>
-                                        )}
+                                <div className="flex flex-col gap-8 p-6 bg-slate-50 rounded-xl border border-slate-100 mb-6">               
+                                    <div className="flex flex-col md:flex-row items-center gap-6">
+                                        <div className="w-full md:w-64 h-32 shrink-0 rounded-xl overflow-hidden border-4 border-white shadow-md bg-slate-200 relative flex items-center justify-center">
+                                            {bannerPreview ? (
+                                                <img src={bannerPreview} alt="Banner Preview" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full bg-gradient-to-r from-indigo-600 to-blue-500 flex items-center justify-center">
+                                                    <span className="text-white/90 text-sm font-semibold text-center px-2 drop-shadow-sm">Subir banner</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 w-full text-center md:text-left">
+                                            <label className="block text-sm font-bold text-slate-700 mb-2">Banner de Perfil</label>
+                                            <input 
+                                                type="file" 
+                                                accept="image/jpeg, image/png, image/webp" 
+                                                onChange={(e) => handleFileChange(e, setArchivoBanner, setBannerPreview)}
+                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" 
+                                            />
+                                            <p className="text-xs text-slate-400 mt-2 font-medium">Formato horizontal recomendado. Tamaño máximo 2MB.</p>
+                                        </div>
                                     </div>
-                                    <div className="flex-1 w-full text-center md:text-left">
-                                        <label className="block text-sm font-bold text-slate-700 mb-2">Fotografía de Perfil</label>
-                                        <input 
-                                            type="file" 
-                                            accept="image/jpeg, image/png, image/webp" 
-                                            onChange={handleImageChange}
-                                            className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" 
-                                        />
-                                        <p className="text-xs text-slate-400 mt-2 font-medium">Formatos recomendados: JPG, PNG. Tamaño máximo 2MB.</p>
+                                    <div className="w-full h-px bg-slate-200"></div>
+                                    <div className="flex flex-col md:flex-row items-center gap-6">
+                                        <div className="w-28 h-28 shrink-0 rounded-full overflow-hidden border-4 border-white shadow-md bg-slate-200 flex items-center justify-center">
+                                            {fotoPreview ? (
+                                                <img src={fotoPreview} alt="Preview" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <span className="text-slate-400 text-sm font-semibold text-center px-2">Subir foto</span>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 w-full text-center md:text-left">
+                                            <label className="block text-sm font-bold text-slate-700 mb-2">Fotografía de Perfil</label>
+                                            <input 
+                                                type="file" 
+                                                accept="image/jpeg, image/png, image/webp" 
+                                                onChange={(e) => handleFileChange(e, setArchivoFoto, setFotoPreview)}
+                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" 
+                                            />
+                                            <p className="text-xs text-slate-400 mt-2 font-medium">Formatos recomendados: JPG, PNG. Tamaño máximo 2MB.</p>
+                                        </div>
                                     </div>
                                 </div>
-
+                                
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label="Nombre" register={register} name="nombre" />
                                     <InputField label="Apellido" register={register} name="apellido" />

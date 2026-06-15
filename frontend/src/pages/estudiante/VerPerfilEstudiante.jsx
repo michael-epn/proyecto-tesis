@@ -26,17 +26,20 @@ const VerPerfilEstudiante = () => {
     return (
         <div className="w-full min-h-full bg-slate-50 p-4 md:p-8">
             <div className="w-full max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
-                <div className="h-32 md:h-48 bg-gradient-to-r from-indigo-600 to-blue-500 relative flex justify-end p-4 md:p-6">
-                    <Link 
-                        to="/estudiante/configuracion" 
-                        className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-sm font-bold py-2.5 px-5 rounded-lg transition-all flex items-center gap-2 border border-white/30 shadow-sm h-fit"
+                    <div 
+                        className="h-32 md:h-48 bg-gradient-to-r from-indigo-600 to-blue-500 relative flex justify-end p-4 md:p-6"
+                        style={perfil?.bannerPerfil ? { backgroundImage: `url(${perfil.bannerPerfil})` } : {}}
                     >
-                        <svg className="w-4 h-4 fill-current" viewBox="0 0 16 16">
-                            <path d="M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z" />
-                        </svg>
-                        Editar Perfil
-                    </Link>
-                </div>
+                        <Link 
+                            to="/estudiante/configuracion" 
+                            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-sm font-bold py-2.5 px-5 rounded-lg transition-all flex items-center gap-2 border border-white/30 shadow-sm h-fit"
+                        >
+                            <svg className="w-4 h-4 fill-current" viewBox="0 0 16 16">
+                                <path d="M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z" />
+                            </svg>
+                            Editar Perfil
+                        </Link>
+                    </div>
 
                 <div className="px-6 md:px-12 pb-12">
                     <div className="flex flex-col md:flex-row gap-6 items-start md:items-end -mt-16 md:-mt-20 mb-10 relative z-10">

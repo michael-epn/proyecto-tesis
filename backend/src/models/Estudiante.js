@@ -28,8 +28,9 @@ const estudianteSchema = new Schema({
     },
     password: { type: String, required: true },
     fotoPerfil: { type: String, default: null },
+    bannerPerfil: { type: String, default: null },
     intereses: { type: [String], default: [] },
-    habilidades_tecnicas: { type: [String], default: [] }, // Clave para el motor de recomendación IA
+    habilidades_tecnicas: { type: [String], default: [] },
     status: { type: Boolean, default: true },
     token: { type: String, default: null },
     confirmEmail: { type: Boolean, default: false },

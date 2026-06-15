@@ -69,8 +69,13 @@ const actualizarPerfil = async (req, res) => {
         }
         if (req.files && req.files.fotoPerfil) {
             const archivoTemp = req.files.fotoPerfil.tempFilePath;
-            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT");
+            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT/Perfiles_Estudiantes");
             estudianteBDD.fotoPerfil = secure_url;
+        }
+        if (req.files && req.files.bannerPerfil) {
+            const archivoTemp = req.files.bannerPerfil.tempFilePath;
+            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT/Banners_Estudiantes");
+            estudianteBDD.bannerPerfil = secure_url;
         }
         estudianteBDD.nombre = nombre ?? estudianteBDD.nombre;
         estudianteBDD.apellido = apellido ?? estudianteBDD.apellido;
