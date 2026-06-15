@@ -180,26 +180,21 @@ const EditarPerfilDocente = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 border-2 border-indigo-50 rounded-xl bg-white shadow-sm gap-4">
+                                    <div>
+                                        <label className="block text-base font-extrabold text-slate-800">Estado de Disponibilidad</label>
+                                        <p className="text-sm text-slate-500 mt-1">Habilita esta opción para aparecer en el sistema de asignación de tutores de la Comisión.</p>
+                                    </div>
+                                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                                        <input type="checkbox" {...register("disponibilidad")} className="sr-only peer" />
+                                        <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
+                                    </label>
+                                </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label="Nombre" register={register} name="nombre" />
                                     <InputField label="Apellido" register={register} name="apellido" />
                                     <InputField label="Correo Electrónico" register={register} name="email" type="email" disabled={true} />
                                     <InputField label="Cupos Máximos de Tutoría" register={register} name="cupos_maximos" type="number" options={{ required: true }} />
-                                    <div className="flex items-center justify-between p-4 border border-slate-200 rounded-xl bg-slate-50">
-                                        <div>
-                                            <label className="block text-sm font-bold text-slate-700">Disponibilidad de Tutoría</label>
-                                            <p className="text-xs text-slate-500 mt-1">Activa esta opción si aceptas nuevos estudiantes.</p>
-                                        </div>
-                                        <label className="relative inline-flex items-center cursor-pointer">
-                                            <input 
-                                                type="checkbox" 
-                                                {...register("disponibilidad")} 
-                                                className="sr-only peer" 
-                                            />
-                                            <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                                        </label>
-                                    </div>
                                 </div>
 
                                 <div className="space-y-6">

@@ -54,7 +54,13 @@ const VerPerfilEstudiante = () => {
                         </div>
                         <div className="mt-2 w-full">
                             <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">{perfil?.nombre} {perfil?.apellido}</h2>
-                            <p className="text-lg text-indigo-600 font-semibold mt-1">{perfil?.carrera || 'Estudiante Universitario'}</p>
+                            <p className="text-lg text-indigo-600 font-semibold mt-1 flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                                </svg>
+                                {perfil?.carrera}
+                            </p>
                         </div>
                     </div>
 
