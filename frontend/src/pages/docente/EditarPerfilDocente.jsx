@@ -183,7 +183,7 @@ const EditarPerfilDocente = () => {
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 border-2 border-indigo-50 rounded-xl bg-white shadow-sm gap-4">
                                     <div>
                                         <label className="block text-base font-extrabold text-slate-800">Estado de Disponibilidad</label>
-                                        <p className="text-sm text-slate-500 mt-1">Habilita esta opción para que los estudiamtes puedan saber tu disponibilidad.</p>
+                                        <p className="text-sm text-slate-500 mt-1">Habilita esta opción para que los estudiantes puedan saber tu disponibilidad.</p>
                                     </div>
                                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
                                         <input type="checkbox" {...register("disponibilidad")} className="sr-only peer" />
