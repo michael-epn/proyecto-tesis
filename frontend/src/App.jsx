@@ -20,6 +20,8 @@ import VerPerfilEstudiante from './pages/estudiante/VerPerfilEstudiante'
 import EditarPerfilEstudiante from './pages/estudiante/EditarPerfilEstudiante'
 import EditarPerfilDocente from './pages/docente/EditarPerfilDocente'
 import VerPerfilDocente from './pages/docente/VerPerfilDocente'
+import HistorialDocente from './pages/docente/HistorialDocente'
+import HistorialEstudiante from './pages/estudiante/HistorialEstudiante'
 
 const App = () => {
     return (
