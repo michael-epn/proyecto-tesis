@@ -56,4 +56,19 @@ const sendMailToRecoveryPassword = async (userMail, token, rol) => {
     )
 }
 
-export { sendMailToRegister, sendMailToRecoveryPassword }
+// Usar la misma estructura visual del archivo original
+const sendMailSolicitudActualizada = async (userMail, estado, feedback) => {
+    const mensajeExtra = estado === 'rechazada' ? `<p><strong>Feedback del docente:</strong> ${feedback}</p>` : '';
+    
+    return await sendMail(
+        userMail,
+        `Actualización de Solicitud de Tesis - ${estado.toUpperCase()}`,
+        `<div style="font-family: 'Inter', sans-serif; padding: 20px;">
+            <h2>Tu solicitud ha sido ${estado}</h2>
+            ${mensajeExtra}
+            <p>Revisa la plataforma para más detalles.</p>
+        </div>`
+    );
+};
+
+export { sendMailToRegister, sendMailToRecoveryPassword, sendMailSolicitudActualizada }
