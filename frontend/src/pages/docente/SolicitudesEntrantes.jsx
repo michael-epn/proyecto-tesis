@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import clienteAxios from '../config/axios';
+import clienteAxios from '../../config/axios';
+
 
 const SolicitudesEntrantes = () => {
     const [solicitudes, setSolicitudes] = useState([]);
@@ -9,7 +10,7 @@ const SolicitudesEntrantes = () => {
     useEffect(() => {
         const obtenerSolicitudes = async () => {
             try {
-                const { data } = await clienteAxios.get('/api/tesis/historial/recibidas');
+                const { data } = await clienteAxios.get('/tesis/historial/recibidas');
                 setSolicitudes(data.filter(sol => sol.estado === 'enviada'));
             } catch (error) {
                 toast.error("Error al cargar las solicitudes de tesis");
@@ -33,7 +34,7 @@ const SolicitudesEntrantes = () => {
         }
 
         try {
-            await clienteAxios.put(`/api/tesis/responder/${idSolicitud}`, {
+            await clienteAxios.put(`/tesis/responder/${idSolicitud}`, {
                 estado: estadoAccion,
                 feedback
             });

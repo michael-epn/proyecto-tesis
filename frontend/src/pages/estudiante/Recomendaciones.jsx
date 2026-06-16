@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import clienteAxios from '../config/axios';
+import clienteAxios from '../../config/axios';
+
 
 const Recomendaciones = () => {
     const { register, handleSubmit, reset } = useForm();
@@ -13,7 +14,7 @@ const Recomendaciones = () => {
     useEffect(() => {
         const obtenerDocentes = async () => {
             try {
-                const { data } = await clienteAxios.get('/api/docente');
+                const { data } = await clienteAxios.get('/docente');
                 setDocentes(data);
             } catch (error) {
                 console.error("Error al cargar docentes", error);
@@ -33,7 +34,7 @@ const Recomendaciones = () => {
                 ideas: formData.ideas
             };
 
-            const { data } = await clienteAxios.post('/api/tesis/generar', payload);
+            const { data } = await clienteAxios.post('/tesis/generar', payload);
             
             setRecomendaciones([data, ...recomendaciones]);
             toast.success("Tema generado con éxito");
@@ -51,7 +52,7 @@ const Recomendaciones = () => {
         }
 
         try {
-            await clienteAxios.post('/api/tesis/solicitar', {
+            await clienteAxios.post('/tesis/solicitar', {
                 temaId: idTema,
                 docenteId: docenteSeleccionado
             });
