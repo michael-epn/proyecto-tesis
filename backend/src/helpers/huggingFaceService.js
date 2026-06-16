@@ -5,36 +5,34 @@ const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 export const generarPropuestaTesis = async (promptData, historialTemas = []) => {
     const temasPrevios = historialTemas.map(t => `- ${t.titulo}`).join('\n');
     
-    const prompt = `
-    Eres un sistema experto en recomendar temas de tesis. Genera un título y una descripción corta para un proyecto de tesis.
+    const systemPrompt = `Eres un sistema experto en recomendar temas de tesis. 
+    REGLA ABSOLUTA: Devuelve ÚNICAMENTE un objeto JSON válido con esta estructura exacta:
+    {"titulo": "...", "descripcion": "...", "tecnologias": ["...", "..."]}
+    Cero texto adicional, cero saludos, cero formato markdown.`;
     
-    Habilidades del estudiante: ${promptData.habilidades.join(', ')}.
+    const userPrompt = `
+    Habilidades: ${promptData.habilidades.join(', ')}.
     Intereses: ${promptData.intereses.join(', ')}.
     Contexto: ${promptData.contexto}.
     Ideas base: ${promptData.ideas}.
     
-    REGLA 1: No repitas ni uses variaciones simples de estos temas anteriores:
+    Temas a evitar (ya generados):
     ${temasPrevios || 'Ninguno.'}
-    
-    REGLA 2: Devuelve ÚNICAMENTE un objeto JSON válido. No incluyas saludos, ni explicaciones, ni formato markdown.
-    El JSON debe tener exactamente esta estructura:
-    {"titulo": "...", "descripcion": "...", "tecnologias": ["...", "..."]}
     `;
 
     try {
-        const response = await hf.textGeneration({
+        const response = await hf.chatCompletion({
             model: 'Qwen/Qwen2.5-7B-Instruct',
-            inputs: prompt,
-            parameters: { 
-                max_new_tokens: 300, 
-                temperature: 0.6,
-                return_full_text: false
-            }
+            messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt }
+            ],
+            max_tokens: 300,
+            temperature: 0.6
         });
 
-        let textoGenerado = response.generated_text.trim();
+        let textoGenerado = response.choices[0].message.content.trim();
         
-        // TIP: Imprimir la respuesta exacta de la IA antes de intentar parsearla
         console.log("=== RESPUESTA CRUDA DE IA ===");
         console.log(textoGenerado);
 
@@ -52,10 +50,8 @@ export const generarPropuestaTesis = async (promptData, historialTemas = []) => 
         return JSON.parse(jsonMatch[0]);
 
     } catch (error) {
-        // Captura del error exacto de la librería o de red
         console.error("=== ERROR FATAL HUGGING FACE ===");
         console.error("Mensaje:", error.message);
-        console.error("Detalles:", error);
         return null;
     }
 };
