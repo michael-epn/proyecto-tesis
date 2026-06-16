@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@huggingface/inference": "^4.13.19",
     "accepts": "^2.0.0",
     "base64id": "^2.0.0",
     "bcryptjs": "^3.0.3",
