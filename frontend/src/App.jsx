@@ -40,13 +40,15 @@ const App = () => {
             <Route path="/estudiante" element={<DashboardLayout rolesPermitidos={['estudiante']} />}>
                 <Route index element={<Recomendaciones />} />
                 <Route path="perfil" element={<VerPerfilEstudiante />} /> 
-                <Route path="configuracion" element={<EditarPerfilEstudiante />} /> 
+                <Route path="configuracion" element={<EditarPerfilEstudiante />} />
+                <Route path="historial" element={<HistorialEstudiante />} /> 
             </Route>
 
             <Route path="/docente" element={<DashboardLayout rolesPermitidos={['docente']} />}>
                 <Route index element={<SolicitudesEntrantes />} />
                 <Route path="perfil" element={<VerPerfilDocente />} />
                 <Route path="configuracion" element={<EditarPerfilDocente />} />
+                <Route path="historial" element={<HistorialDocente />} />
             </Route>
 
             <Route path="/comision" element={<DashboardLayout rolesPermitidos={['comision']} />}>
