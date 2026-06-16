@@ -5,12 +5,13 @@ import clienteAxios from '../../config/axios';
 const HistorialDocente = () => {
     const [historial, setHistorial] = useState([]);
     const [cargando, setCargando] = useState(true);
+    // Nuevo estado para el filtro
+    const [orden, setOrden] = useState('reciente');
 
     useEffect(() => {
         const obtenerHistorial = async () => {
             try {
                 const { data } = await clienteAxios.get('/tesis/historial/recibidas');
-                // Filtramos para mostrar SOLO las ya gestionadas
                 const gestionadas = data.filter(sol => sol.estado === 'aceptada' || sol.estado === 'rechazada');
                 setHistorial(gestionadas);
             } catch (error) {
@@ -24,16 +25,35 @@ const HistorialDocente = () => {
 
     const cuposOcupados = historial.filter(sol => sol.estado === 'aceptada').length;
 
+    // Lógica de ordenamiento
+    const historialOrdenado = [...historial].sort((a, b) => {
+        const fechaA = new Date(a.createdAt || 0);
+        const fechaB = new Date(b.createdAt || 0);
+        return orden === 'reciente' ? fechaB - fechaA : fechaA - fechaB;
+    });
+
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
             <div className="max-w-7xl mx-auto">
                 <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
-                    <div>
-                        <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Historial de Tutorías</h2>
-                        <p className="text-slate-500 mt-2 font-medium">Registro de solicitudes de titulación aceptadas o rechazadas.</p>
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Historial de Tutorías</h2>
+                            <p className="text-slate-500 mt-2 font-medium">Registro de solicitudes de titulación aceptadas o rechazadas.</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Ordenar por:</label>
+                            <select 
+                                value={orden}
+                                onChange={(e) => setOrden(e.target.value)}
+                                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 outline-none shadow-sm cursor-pointer"
+                            >
+                                <option value="reciente">Más recientes primero</option>
+                                <option value="antiguo">Más antiguos primero</option>
+                            </select>
+                        </div>
                     </div>
                     
-                    {/* Tarjeta resumen de cupos */}
                     <div className="bg-white border border-slate-200 px-6 py-3 rounded-xl shadow-sm flex items-center gap-4">
                         <div className="bg-indigo-100 p-2 rounded-lg text-indigo-600">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,14 +93,14 @@ const HistorialDocente = () => {
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
                                         </td>
                                     </tr>
-                                ) : historial.length === 0 ? (
+                                ) : historialOrdenado.length === 0 ? (
                                     <tr>
                                         <td colSpan="3" className="px-6 py-12 text-center text-slate-500 font-medium">
                                             Aún no has gestionado ninguna solicitud.
                                         </td>
                                     </tr>
                                 ) : (
-                                    historial.map((sol) => (
+                                    historialOrdenado.map((sol) => (
                                         <tr key={sol._id} className="hover:bg-slate-50 transition-colors">
                                             <td className="px-6 py-4 align-top w-1/4">
                                                 <div className="font-bold text-slate-800">{sol.estudiante?.nombre} {sol.estudiante?.apellido}</div>
@@ -88,7 +108,6 @@ const HistorialDocente = () => {
                                             </td>
                                             <td className="px-6 py-4 align-top">
                                                 <div className="font-bold text-slate-800 mb-1">{sol.tema?.titulo}</div>
-                                                {/* Caja con el feedback enviado */}
                                                 <div className="mt-3 bg-slate-100 border border-slate-200 p-3 rounded-lg flex items-start gap-2">
                                                     <svg className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                                                     <div>

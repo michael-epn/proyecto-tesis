@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 
-
 const SolicitudesEntrantes = () => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [cargando, setCargando] = useState(true);
+
+    const [modalFeedback, setModalFeedback] = useState(false);
+    const [solicitudARechazar, setSolicitudARechazar] = useState(null);
+    const [textoFeedback, setTextoFeedback] = useState('');
 
     useEffect(() => {
         const obtenerSolicitudes = async () => {
@@ -21,33 +24,53 @@ const SolicitudesEntrantes = () => {
         obtenerSolicitudes();
     }, []);
 
-    const procesarSolicitud = async (idSolicitud, estadoAccion) => {
-        let feedback = "";
-
-        if (estadoAccion === 'rechazada') {
-            feedback = prompt("Por favor, ingresa el motivo del rechazo (Requerimiento de la Comisión):");
-            if (!feedback || feedback.trim() === "") {
-                return toast.warning("El feedback es obligatorio para rechazar la propuesta");
-            }
-        } else {
-            feedback = prompt("Comentario adicional de aceptación (Opcional):") || "Solicitud aprobada y lista para registro.";
-        }
+    const aceptarSolicitud = async (idSolicitud) => {
+        if (!window.confirm("¿Estás seguro de aceptar esta propuesta de tesis?")) return;
 
         try {
             await clienteAxios.put(`/tesis/responder/${idSolicitud}`, {
-                estado: estadoAccion,
-                feedback
+                estado: 'aceptada',
+                feedback: "Solicitud aprobada por el docente y lista para registro."
             });
             
             setSolicitudes(solicitudes.filter(s => s._id !== idSolicitud));
-            toast.success(`Trámite marcado como ${estadoAccion}`);
+            toast.success("Trámite aceptado exitosamente");
         } catch (error) {
-            toast.error(error.response?.data?.msg || "Error al procesar la solicitud");
+            toast.error(error.response?.data?.msg || "Error al aceptar la solicitud");
+        }
+    };
+
+    // Funciones para Rechazar (con modal)
+    const abrirModalRechazo = (idSolicitud) => {
+        setSolicitudARechazar(idSolicitud);
+        setTextoFeedback('');
+        setModalFeedback(true);
+    };
+
+    const confirmarRechazo = async () => {
+        if (!textoFeedback || textoFeedback.trim() === "") {
+            return toast.warning("El feedback es obligatorio para rechazar la propuesta");
+        }
+
+        try {
+            await clienteAxios.put(`/tesis/responder/${solicitudARechazar}`, {
+                estado: 'rechazada',
+                feedback: textoFeedback
+            });
+            
+            setSolicitudes(solicitudes.filter(s => s._id !== solicitudARechazar));
+            toast.success("Trámite rechazado. Se notificará al estudiante.");
+            
+            setModalFeedback(false);
+            setTextoFeedback('');
+            setSolicitudARechazar(null);
+        } catch (error) {
+            toast.error(error.response?.data?.msg || "Error al rechazar la solicitud");
         }
     };
 
     return (
-        <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
+        <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8 relative">
             <div className="max-w-7xl mx-auto">
                 <header className="mb-8">
                     <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Bandeja de Solicitudes</h2>
@@ -114,13 +137,13 @@ const SolicitudesEntrantes = () => {
                                             <td className="px-6 py-4 align-middle">
                                                 <div className="flex flex-col gap-2 justify-center">
                                                     <button 
-                                                        onClick={() => procesarSolicitud(sol._id, 'aceptada')} 
+                                                        onClick={() => aceptarSolicitud(sol._id)} 
                                                         className="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm text-sm"
                                                     >
                                                         Aceptar
                                                     </button>
                                                     <button 
-                                                        onClick={() => procesarSolicitud(sol._id, 'rechazada')} 
+                                                        onClick={() => abrirModalRechazo(sol._id)} 
                                                         className="w-full bg-white border border-slate-300 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-50 transition-colors shadow-sm text-sm"
                                                     >
                                                         Rechazar
@@ -135,6 +158,43 @@ const SolicitudesEntrantes = () => {
                     </div>
                 </div>
             </div>
+
+            {modalFeedback && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+                        <div className="bg-rose-50 px-6 py-4 border-b border-rose-100 flex items-center gap-2">
+                            <svg className="w-6 h-6 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <h3 className="text-lg font-bold text-rose-800">Motivo de Rechazo</h3>
+                        </div>
+                        <div className="p-6">
+                            <p className="text-sm text-slate-600 mb-4 font-medium">Por favor, escribe el feedback o motivo por el cual no puedes aceptar esta tutoría (Requerimiento de la Comisión).</p>
+                            <textarea 
+                                value={textoFeedback}
+                                onChange={(e) => setTextoFeedback(e.target.value)}
+                                className="w-full h-32 px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-rose-500 resize-none"
+                                placeholder="Ej: Actualmente me encuentro enfocado en otras áreas de investigación..."
+                            ></textarea>
+                            <div className="mt-6 flex gap-3">
+                                <button 
+                                    onClick={confirmarRechazo}
+                                    disabled={textoFeedback.trim().length === 0}
+                                    className="flex-1 bg-rose-600 text-white font-bold py-3 rounded-xl hover:bg-rose-700 transition-colors disabled:bg-rose-300"
+                                >
+                                    Confirmar Rechazo
+                                </button>
+                                <button 
+                                    onClick={() => setModalFeedback(false)}
+                                    className="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

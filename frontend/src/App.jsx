@@ -22,6 +22,7 @@ import EditarPerfilDocente from './pages/docente/EditarPerfilDocente'
 import VerPerfilDocente from './pages/docente/VerPerfilDocente'
 import HistorialDocente from './pages/docente/HistorialDocente'
 import HistorialEstudiante from './pages/estudiante/HistorialEstudiante'
+import EstudiantesAceptados from './pages/docente/EstudiantesAceptados'
 
 const App = () => {
     return (
@@ -51,6 +52,7 @@ const App = () => {
                 <Route path="perfil" element={<VerPerfilDocente />} />
                 <Route path="configuracion" element={<EditarPerfilDocente />} />
                 <Route path="historial" element={<HistorialDocente />} />
+                <Route path="listado" element={<EstudiantesAceptados />} />
             </Route>
 
             <Route path="/comision" element={<DashboardLayout rolesPermitidos={['comision']} />}>

@@ -25,5 +25,7 @@ router.get('/historial/recibidas', verificarTokenJWT, async (req, res) => {
     const solicitudes = await SolicitudTesis.find({ docente: req.docente._id }).populate('tema estudiante');
     res.json(solicitudes);
 });
-
+router.post('/docente/reiniciar-cupos', verificarTokenJWT, reiniciarCuposDocente);
+router.delete('/docente/eliminar-aceptado/:idSolicitud', verificarTokenJWT, eliminarEstudianteAceptado);
+router.post('/docente/enviar-comision', verificarTokenJWT, enviarListaComision);
 export default router;

@@ -80,7 +80,6 @@ const actualizarPerfil = async (req, res) => {
         docenteBDD.nombre = nombre ?? docenteBDD.nombre;
         docenteBDD.apellido = apellido ?? docenteBDD.apellido;
         docenteBDD.cupos_maximos = cupos_maximos ?? docenteBDD.cupos_maximos;
-        docenteBDD.disponibilidad = disponibilidad ?? docenteBDD.disponibilidad;
         if (areas_investigacion) {
             docenteBDD.areas_investigacion = typeof areas_investigacion === 'string' ? JSON.parse(areas_investigacion) : areas_investigacion;
         }

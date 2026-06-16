@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 
-
 const HistorialEstudiante = () => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [feedbackModal, setFeedbackModal] = useState({ abierto: false, texto: '' });
+    // Nuevo estado para el filtro
+    const [orden, setOrden] = useState('reciente');
 
     useEffect(() => {
         const obtenerHistorial = async () => {
@@ -31,12 +32,33 @@ const HistorialEstudiante = () => {
         }
     };
 
+    const solicitudesOrdenadas = [...solicitudes].sort((a, b) => {
+        const fechaA = new Date(a.createdAt || 0);
+        const fechaB = new Date(b.createdAt || 0);
+        return orden === 'reciente' ? fechaB - fechaA : fechaA - fechaB;
+    });
+
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8 relative">
             <div className="max-w-7xl mx-auto">
-                <header className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Mis Solicitudes de Tesis</h2>
-                    <p className="text-slate-500 mt-2 font-medium">Consulta el estado de tus propuestas enviadas a los docentes de la ESFOT.</p>
+                <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Mis Solicitudes de Tesis</h2>
+                            <p className="text-slate-500 mt-2 font-medium">Consulta el estado de tus propuestas enviadas a los docentes de la ESFOT.</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Ordenar por:</label>
+                            <select 
+                                value={orden}
+                                onChange={(e) => setOrden(e.target.value)}
+                                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 outline-none shadow-sm cursor-pointer"
+                            >
+                                <option value="reciente">Más recientes primero</option>
+                                <option value="antiguo">Más antiguos primero</option>
+                            </select>
+                        </div>
+                    </div>
                 </header>
 
                 <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
@@ -66,14 +88,14 @@ const HistorialEstudiante = () => {
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
                                         </td>
                                     </tr>
-                                ) : solicitudes.length === 0 ? (
+                                ) : solicitudesOrdenadas.length === 0 ? (
                                     <tr>
                                         <td colSpan="4" className="px-6 py-12 text-center text-slate-500 font-medium">
                                             Aún no has enviado ninguna solicitud de tesis.
                                         </td>
                                     </tr>
                                 ) : (
-                                    solicitudes.map((sol) => (
+                                    solicitudesOrdenadas.map((sol) => (
                                         <tr key={sol._id} className="hover:bg-slate-50 transition-colors">
                                             <td className="px-6 py-4 align-top max-w-md">
                                                 <div className="font-bold text-slate-800">{sol.tema?.titulo}</div>
@@ -108,7 +130,6 @@ const HistorialEstudiante = () => {
                 </div>
             </div>
 
-            {/* Modal Simple de Feedback */}
             {feedbackModal.abierto && (
                 <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">

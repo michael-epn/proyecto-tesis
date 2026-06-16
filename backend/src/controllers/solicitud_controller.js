@@ -8,8 +8,21 @@ export const generarTema = async (req, res) => {
     const { habilidades, intereses, contexto, ideas } = req.body;
     const estudianteId = req.estudiante._id;
 
-    const historial = await TemaGenerado.find({ estudiante: estudianteId }).limit(5);
+    const solicitudAceptada = await SolicitudTesis.findOne({ 
+        estudiante: estudianteId, 
+        estado: { $in: ['aceptada', 'en_comision'] } 
+    });
     
+    if (solicitudAceptada) {
+        return res.status(403).json({ msg: "Ya tienes una tutoría aceptada. No puedes generar más temas." });
+    }
+
+    const conteoTemas = await TemaGenerado.countDocuments({ estudiante: estudianteId });
+    if (conteoTemas >= 2) {
+        return res.status(403).json({ msg: "Has alcanzado el límite máximo de 2 temas generados permitidos por la ESFOT." });
+    }
+
+    const historial = await TemaGenerado.find({ estudiante: estudianteId }).limit(5);
     const IA_Response = await generarPropuestaTesis(req.body, historial);
 
     if (!IA_Response) return res.status(500).json({ msg: "Error al generar tema con IA" });
@@ -71,4 +84,53 @@ export const responderSolicitud = async (req, res) => {
     await sendMailSolicitudActualizada(solicitud.estudiante.email, estado, feedback);
 
     res.status(200).json({ msg: `Solicitud ${estado}`, solicitud });
+};
+
+export const reiniciarCuposDocente = async (req, res) => {
+    try {
+        const docenteActualizado = await Docente.findByIdAndUpdate(
+            req.docente._id, 
+            { cupos_ocupados: 0 }, 
+            { new: true }
+        ).select("-password -token -confirmEmail");
+        res.status(200).json({ msg: "Contador de cupos reiniciado exitosamente", docente: docenteActualizado });
+    } catch (error) {
+        res.status(500).json({ msg: "Error al reiniciar cupos" });
+    }
+};
+
+export const eliminarEstudianteAceptado = async (req, res) => {
+    try {
+        const { idSolicitud } = req.params;
+        
+        const solicitud = await SolicitudTesis.findById(idSolicitud);
+        if (!solicitud) return res.status(404).json({ msg: "Solicitud no encontrada" });
+
+        solicitud.estado = 'rechazada';
+        solicitud.feedback = "Tutoría cancelada por el docente posterior a la aceptación.";
+        await solicitud.save();
+
+        await Docente.findByIdAndUpdate(req.docente._id, { $inc: { cupos_ocupados: -1 } });
+
+        res.status(200).json({ msg: "Estudiante removido exitosamente" });
+    } catch (error) {
+        res.status(500).json({ msg: "Error al remover estudiante" });
+    }
+};
+
+export const enviarListaComision = async (req, res) => {
+    try {
+        const resultado = await SolicitudTesis.updateMany(
+            { docente: req.docente._id, estado: 'aceptada' },
+            { estado: 'en_comision' }
+        );
+
+        if (resultado.modifiedCount === 0) {
+            return res.status(400).json({ msg: "No hay estudiantes aceptados para enviar." });
+        }
+
+        res.status(200).json({ msg: `Se han enviado ${resultado.modifiedCount} solicitudes a la Comisión exitosamente.` });
+    } catch (error) {
+        res.status(500).json({ msg: "Error al enviar a la comisión" });
+    }
 };

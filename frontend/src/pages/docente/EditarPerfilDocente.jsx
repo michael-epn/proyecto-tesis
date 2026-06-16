@@ -18,23 +18,18 @@ const InputField = ({ label, register, name, type = "text", disabled = false, op
 );
 
 const EditarPerfilDocente = () => {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
-    const { register: registerPassword, handleSubmit: handleSubmitPassword, reset: resetPassword } = useForm();
-    
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+    const { register: registerPassword, handleSubmit: handleSubmitPassword, reset: resetPassword } = useForm();   
     const { user, token, rol, setAuth } = useAuthStore();
     const [cargando, setCargando] = useState(true);
     const navigate = useNavigate();
-
-    // Estados para imágenes
     const [fotoPreview, setFotoPreview] = useState(null);
     const [archivoFoto, setArchivoFoto] = useState(null);
-    
     const [bannerPreview, setBannerPreview] = useState(null);
     const [archivoBanner, setArchivoBanner] = useState(null);
-
-    // Estados para mostrar/ocultar contraseñas
     const [mostrarPasswordActual, setMostrarPasswordActual] = useState(false);
     const [mostrarPasswordNuevo, setMostrarPasswordNuevo] = useState(false);
+    const [cuposOcupados, setCuposOcupados] = useState(0);
 
     useEffect(() => {
         const cargarPerfil = async () => {
@@ -45,12 +40,9 @@ const EditarPerfilDocente = () => {
                     areas_investigacion: data.areas_investigacion?.join(', ') || '',
                     tecnologias_especialidad: data.tecnologias_especialidad?.join(', ') || ''
                 });
-                if(data.fotoPerfil) {
-                    setFotoPreview(data.fotoPerfil);
-                }
-                if(data.bannerPerfil) {
-                    setBannerPreview(data.bannerPerfil);
-                }
+                setCuposOcupados(data.cupos_ocupados || 0);
+                if(data.fotoPerfil) {setFotoPreview(data.fotoPerfil);}
+                if(data.bannerPerfil) {setBannerPreview(data.bannerPerfil);}
             } catch (error) {
                 toast.error("Error al cargar la información del perfil");
             } finally {
@@ -60,6 +52,17 @@ const EditarPerfilDocente = () => {
         cargarPerfil();
     }, [reset]);
 
+    const handleReiniciarCupos = async () => {
+        if(!window.confirm("¿Estás seguro de reiniciar a 0 tu contador de estudiantes? Esto habilitará tu disponibilidad nuevamente.")) return;
+        try {
+            const { data } = await clienteAxios.post('/tesis/docente/reiniciar-cupos');
+            setCuposOcupados(0); // Actualizamos la UI inmediatamente
+            toast.success(data.msg);
+        } catch (error) {
+            toast.error("Error al reiniciar cupos");
+        }
+    };
+
     const handleFileChange = (e, setFileState, setPreviewState) => {
         const file = e.target.files[0];
         if (file) {
@@ -67,6 +70,8 @@ const EditarPerfilDocente = () => {
             setPreviewState(URL.createObjectURL(file));
         }
     };
+
+    const cuposMaximosActuales = Number(watch("cupos_maximos")) || 0;
 
     const onSubmit = async (formData) => {
         try {
@@ -182,13 +187,33 @@ const EditarPerfilDocente = () => {
                                 </div>
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 border-2 border-indigo-50 rounded-xl bg-white shadow-sm gap-4">
                                     <div>
-                                        <label className="block text-base font-extrabold text-slate-800">Estado de Disponibilidad</label>
-                                        <p className="text-sm text-slate-500 mt-1">Habilita esta opción para que los estudiantes puedan saber tu disponibilidad.</p>
+                                        <label className="block text-base font-extrabold text-slate-800">Estado de Disponibilidad (Automático)</label>
+                                        <p className="text-sm text-slate-500 mt-1">
+                                            Tu disponibilidad se calcula automáticamente. Tienes <strong>{cuposOcupados}</strong> de <strong>{cuposMaximosActuales}</strong> estudiantes permitidos.
+                                        </p>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                                        <input type="checkbox" {...register("disponibilidad")} className="sr-only peer" />
-                                        <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
-                                    </label>
+                                    <div className="flex flex-col items-end gap-3 w-full sm:w-auto">
+                                        {cuposOcupados < cuposMaximosActuales ? (
+                                            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-sm font-bold px-4 py-2 rounded-full border border-emerald-200">
+                                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                Disponible para Tutorías
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1.5 bg-rose-100 text-rose-800 text-sm font-bold px-4 py-2 rounded-full border border-rose-200 shadow-sm">
+                                                <span className="w-2 h-2 rounded-full bg-rose-600"></span>
+                                                Límite Alcanzado
+                                            </span>
+                                        )}
+                                        {cuposOcupados > 0 && (
+                                            <button 
+                                                type="button"
+                                                onClick={handleReiniciarCupos}
+                                                className="text-xs font-bold text-slate-500 hover:text-indigo-600 underline underline-offset-2 transition-colors bg-transparent border-none cursor-pointer"
+                                            >
+                                                ¿Deseas reiniciar los estudiantes a 0 para habilitar disponibilidad?
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label="Nombre" register={register} name="nombre" />
@@ -196,7 +221,6 @@ const EditarPerfilDocente = () => {
                                     <InputField label="Correo Electrónico" register={register} name="email" type="email" disabled={true} />
                                     <InputField label="Cupos Máximos de Tutoría" register={register} name="cupos_maximos" type="number" options={{ required: true }} />
                                 </div>
-
                                 <div className="space-y-6">
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-2">Áreas de Investigación (separadas por coma)</label>
