@@ -8,7 +8,8 @@ import {
     confirmarMail,
     recuperarPassword,
     comprobarTokenPasword,
-    crearNuevoPassword
+    crearNuevoPassword,
+    obtenerDocentes
 } from '../controllers/docente_controller.js'
 import { verificarTokenJWT } from '../middlewares/JWT.js'
 
@@ -21,6 +22,7 @@ router.post('/recuperarpassword', recuperarPassword)
 router.get('/recuperarpassword/:token', comprobarTokenPasword)
 router.post('/nuevopassword/:token', crearNuevoPassword)
 
+router.get('/', verificarTokenJWT, obtenerDocentes)
 router.get('/perfil', verificarTokenJWT, perfil)
 router.put('/perfil/:id', verificarTokenJWT, actualizarPerfil)
 router.put('/password', verificarTokenJWT, actualizarPassword)

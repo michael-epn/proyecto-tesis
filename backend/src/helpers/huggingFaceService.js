@@ -30,10 +30,7 @@ export const generarPropuestaTesis = async (promptData, historialTemas = []) => 
             max_tokens: 300,
             temperature: 0.6
         });
-
         let textoGenerado = response.choices[0].message.content.trim();
-        console.log(textoGenerado);
-
         if (textoGenerado.startsWith('```json')) {
             textoGenerado = textoGenerado.replace(/```json/g, '').replace(/```/g, '').trim();
         }

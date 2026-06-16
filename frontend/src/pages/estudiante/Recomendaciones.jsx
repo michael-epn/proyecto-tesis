@@ -8,15 +8,12 @@ const Recomendaciones = () => {
     const [cargandoIA, setCargandoIA] = useState(false);
     const [recomendaciones, setRecomendaciones] = useState([]);
     const [docentes, setDocentes] = useState([]);
-    
-    // MEJORA: Manejo de estado independiente por ID de tema para evitar colisiones
     const [docentesSeleccionados, setDocentesSeleccionados] = useState({});
 
     useEffect(() => {
         const obtenerDocentes = async () => {
             try {
                 const { data } = await clienteAxios.get('/docente');
-
                 const listaDocentes = Array.isArray(data) ? data : data.docentes || data.data || [];
                 setDocentes(listaDocentes);
             } catch (error) {
@@ -88,9 +85,11 @@ const Recomendaciones = () => {
                     <p className="text-slate-500 mt-2 font-medium">Ingresa tu contexto académico para generar propuestas usando Inteligencia Artificial.</p>
                 </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* CORRECCIÓN: grid-cols-2 divide la pantalla exactamente a la mitad */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                     
-                    <div className="lg:col-span-4 lg:sticky lg:top-8 bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
+                    {/* LADO IZQUIERDO: Formulario al 50% de ancho */}
+                    <div className="lg:sticky lg:top-8 bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden w-full">
                         <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
                             <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +124,7 @@ const Recomendaciones = () => {
                                     type="text" 
                                     {...register("contexto", { required: true })}
                                     className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow" 
-                                    placeholder="Ej: Optimización de recursos" 
+                                    placeholder="Ej: Optimización de procesos administrativos" 
                                 />
                             </div>
                             <div>
@@ -156,19 +155,20 @@ const Recomendaciones = () => {
                         </form>
                     </div>
 
-                    <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* LADO DERECHO: Grid de Resultados al 50% de ancho */}
+                    <div className="grid grid-cols-1 gap-6 w-full">
                         {recomendaciones.length === 0 && !cargandoIA && (
-                            <div className="md:col-span-2 flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400">
+                            <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400 h-full min-h-[400px]">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                 </svg>
-                                <p className="font-medium text-lg">Aún no hay propuestas generadas.</p>
-                                <p className="text-sm">Llena el formulario para comenzar.</p>
+                                <p className="font-medium text-lg text-center">Aún no hay propuestas generadas.</p>
+                                <p className="text-sm text-center mt-2">Llena el formulario de la izquierda para comenzar.</p>
                             </div>
                         )}
 
                         {recomendaciones.map((rec) => (
-                            <div key={rec._id} className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden flex flex-col h-full hover:shadow-2xl transition-shadow duration-300">
+                            <div key={rec._id} className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300 w-full">
                                 <div className="p-6 flex-grow">
                                     <h2 className="text-xl font-extrabold text-slate-800 mb-3 leading-tight">{rec.titulo}</h2>
                                     <p className="text-slate-600 text-sm font-medium mb-6 line-clamp-4">{rec.descripcion}</p>
