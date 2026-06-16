@@ -18,7 +18,7 @@ const ConfirmarCuenta = () => {
 
             for (const rol of roles) {
                 try {
-                    await clienteAxios.get(`/api/${rol}/confirmar/${token}`);
+                    await clienteAxios.get(`/${rol}/confirmar/${token}`);
                     setCuentaConfirmada(true);
                     break;
                 } catch (error) {
