@@ -185,33 +185,37 @@ const EditarPerfilDocente = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 border-2 border-indigo-50 rounded-xl bg-white shadow-sm gap-4">
-                                    <div>
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-sm gap-6 mb-2">
+                                    <div className="flex-1">
                                         <label className="block text-base font-extrabold text-slate-800">Estado de Disponibilidad (Automático)</label>
-                                        <p className="text-sm text-slate-500 mt-1">
+                                        <p className="text-sm text-slate-600 mt-1 mb-3">
                                             Tienes <strong>{cuposOcupados}</strong> de <strong>{cuposMaximosActuales}</strong> estudiantes permitidos.
                                         </p>
-                                    </div>
-                                    <div className="flex flex-col items-end gap-3 w-full sm:w-auto">
-                                        {cuposOcupados < cuposMaximosActuales ? (
-                                            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-sm font-bold px-4 py-2 rounded-full border border-emerald-200">
-                                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                Disponible para Tutorías
-                                            </span>
-                                        ) : (
-                                            <span className="inline-flex items-center gap-1.5 bg-rose-100 text-rose-800 text-sm font-bold px-4 py-2 rounded-full border border-rose-200 shadow-sm">
-                                                <span className="w-2 h-2 rounded-full bg-rose-600"></span>
-                                                Límite Alcanzado
-                                            </span>
-                                        )}
                                         {cuposOcupados > 0 && (
                                             <button 
                                                 type="button"
                                                 onClick={handleReiniciarCupos}
-                                                className="text-xs font-bold text-slate-500 hover:text-indigo-600 underline underline-offset-2 transition-colors bg-transparent border-none cursor-pointer"
+                                                className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-100/50 hover:bg-indigo-100 px-3 py-2 rounded-lg border border-indigo-200 cursor-pointer"
                                             >
-                                                ¿Deseas reiniciar los estudiantes a 0 para habilitar disponibilidad?
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                                Reiniciar contador a 0
                                             </button>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="shrink-0 w-full sm:w-auto flex justify-start sm:justify-end">
+                                        {cuposOcupados < cuposMaximosActuales ? (
+                                            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-sm font-bold px-4 py-2.5 rounded-full border border-emerald-200 shadow-sm">
+                                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                Disponible para Tutorías
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1.5 bg-rose-100 text-rose-800 text-sm font-bold px-4 py-2.5 rounded-full border border-rose-200 shadow-sm">
+                                                <span className="w-2 h-2 rounded-full bg-rose-600"></span>
+                                                Límite Alcanzado
+                                            </span>
                                         )}
                                     </div>
                                 </div>
