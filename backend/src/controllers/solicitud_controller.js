@@ -88,14 +88,24 @@ export const responderSolicitud = async (req, res) => {
 
 export const reiniciarCuposDocente = async (req, res) => {
     try {
+        const resultado = await SolicitudTesis.updateMany(
+            { docente: req.docente._id, estado: 'aceptada' },
+            { 
+                estado: 'rechazada', 
+                feedback: 'El docente ha reiniciado su disponibilidad de cupos y cancelado los trámites previos no confirmados.' 
+            }
+        );
         const docenteActualizado = await Docente.findByIdAndUpdate(
             req.docente._id, 
             { cupos_ocupados: 0 }, 
             { new: true }
         ).select("-password -token -confirmEmail");
-        res.status(200).json({ msg: "Contador de cupos reiniciado exitosamente", docente: docenteActualizado });
+        res.status(200).json({ 
+            msg: `Contador reiniciado exitosamente. Se despejaron ${resultado.modifiedCount} estudiantes de la lista.`, 
+            docente: docenteActualizado 
+        });
     } catch (error) {
-        res.status(500).json({ msg: "Error al reiniciar cupos" });
+        res.status(500).json({ msg: "Error al reiniciar cupos y limpiar la lista" });
     }
 };
 

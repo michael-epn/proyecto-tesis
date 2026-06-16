@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
 import clienteAxios from '../../config/axios';
 import { toast } from 'react-toastify';
+import { useAuthStore } from '../../store/authStore';
 
 const EstudiantesAceptados = () => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [cargando, setCargando] = useState(true);
+    const { user } = useAuthStore();
+
+    const cuposMaximos = user?.cupos_maximos || 5; 
+    const faltanCupos = cuposMaximos - solicitudes.length;
+    const puedeEnviar = solicitudes.length === cuposMaximos;
 
     useEffect(() => {
         cargarAceptados();
@@ -33,13 +39,16 @@ const EstudiantesAceptados = () => {
     };
 
     const handleEnviarComision = async () => {
-        if(solicitudes.length === 0) return toast.warning("No tienes estudiantes aceptados para enviar.");
+        if (!puedeEnviar) {
+            return toast.warning(`Aún te faltan ${faltanCupos} estudiantes para completar tu cupo de ${cuposMaximos}.`);
+        }
+        
         if(!window.confirm("¿Enviar esta lista final a la Comisión? Ya no podrás editarlos.")) return;
         
         try {
             const { data } = await clienteAxios.post('/tesis/docente/enviar-comision');
             toast.success(data.msg);
-            setSolicitudes([]);
+            setSolicitudes([]); 
         } catch (error) {
             toast.error("Error al enviar a la comisión");
         }
@@ -83,11 +92,27 @@ const EstudiantesAceptados = () => {
                         </div>
                     )}
 
-                    <div className="border-t border-slate-200 pt-6">
+                    <div className="border-t border-slate-200 pt-6 mt-4">
+                        
+                        {!puedeEnviar && solicitudes.length > 0 && (
+                            <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3 text-amber-800 shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <div>
+                                    <p className="text-sm font-bold">Requisito de la Comisión</p>
+                                    <p className="text-sm font-medium mt-1">
+                                        Debes completar tu límite exacto de <strong>{cuposMaximos} estudiantes</strong> para poder enviar el reporte. 
+                                        Actualmente tienes {solicitudes.length}, te {faltanCupos === 1 ? 'falta' : 'faltan'} <strong>{faltanCupos}</strong>.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
                         <button 
                             onClick={handleEnviarComision}
-                            disabled={solicitudes.length === 0}
-                            className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-lg disabled:bg-slate-300 disabled:shadow-none flex justify-center items-center gap-2"
+                            disabled={!puedeEnviar}
+                            className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-lg disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none flex justify-center items-center gap-2"
                         >
                             Confirmar Tutorías y Enviar a Comisión
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

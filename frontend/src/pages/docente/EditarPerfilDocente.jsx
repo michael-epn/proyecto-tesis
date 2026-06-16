@@ -189,7 +189,7 @@ const EditarPerfilDocente = () => {
                                     <div>
                                         <label className="block text-base font-extrabold text-slate-800">Estado de Disponibilidad (Automático)</label>
                                         <p className="text-sm text-slate-500 mt-1">
-                                            Tu disponibilidad se calcula automáticamente. Tienes <strong>{cuposOcupados}</strong> de <strong>{cuposMaximosActuales}</strong> estudiantes permitidos.
+                                            Tienes <strong>{cuposOcupados}</strong> de <strong>{cuposMaximosActuales}</strong> estudiantes permitidos.
                                         </p>
                                     </div>
                                     <div className="flex flex-col items-end gap-3 w-full sm:w-auto">

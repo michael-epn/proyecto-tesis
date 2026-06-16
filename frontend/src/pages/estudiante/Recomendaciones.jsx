@@ -101,7 +101,7 @@ const Recomendaciones = () => {
                         
                         <form onSubmit={handleSubmit(ejecutarMotorIA)} className="p-6 space-y-5">
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Habilidades Técnicas</label>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Habilidades Técnicas (separados por coma)</label>
                                 <input 
                                     type="text" 
                                     {...register("habilidades", { required: true })}
@@ -110,7 +110,7 @@ const Recomendaciones = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Áreas de Interés</label>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Áreas de Interés (separadas por coma)</label>
                                 <input 
                                     type="text" 
                                     {...register("intereses", { required: true })}

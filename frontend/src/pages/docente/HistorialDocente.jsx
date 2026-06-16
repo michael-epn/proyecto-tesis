@@ -5,7 +5,6 @@ import clienteAxios from '../../config/axios';
 const HistorialDocente = () => {
     const [historial, setHistorial] = useState([]);
     const [cargando, setCargando] = useState(true);
-    // Nuevo estado para el filtro
     const [orden, setOrden] = useState('reciente');
 
     useEffect(() => {
@@ -25,7 +24,6 @@ const HistorialDocente = () => {
 
     const cuposOcupados = historial.filter(sol => sol.estado === 'aceptada').length;
 
-    // Lógica de ordenamiento
     const historialOrdenado = [...historial].sort((a, b) => {
         const fechaA = new Date(a.createdAt || 0);
         const fechaB = new Date(b.createdAt || 0);
@@ -48,8 +46,8 @@ const HistorialDocente = () => {
                                 onChange={(e) => setOrden(e.target.value)}
                                 className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 outline-none shadow-sm cursor-pointer"
                             >
-                                <option value="reciente">Más recientes primero</option>
-                                <option value="antiguo">Más antiguos primero</option>
+                                <option value="reciente">Más recientes</option>
+                                <option value="antiguo">Más antiguos</option>
                             </select>
                         </div>
                     </div>
