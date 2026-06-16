@@ -4,6 +4,7 @@ import cors from 'cors'
 import estudianteRoutes from './routers/estudiante_routes.js'
 import docenteRoutes from './routers/docente_routes.js'
 import comisionRoutes from './routers/comision_routes.js'
+import tesisRoutes from './routers/tesis_routes.js'
 import cloudinary from 'cloudinary'
 import fileUpload from "express-fileupload"
 
@@ -37,6 +38,7 @@ app.get('/', (req, res) => {
 app.use('/api/estudiante', estudianteRoutes)
 app.use('/api/docente', docenteRoutes)
 app.use('/api/comision', comisionRoutes)
+app.use('/api/tesis', tesisRoutes)
 
 app.use((req, res) => {
     res.status(404).json({
