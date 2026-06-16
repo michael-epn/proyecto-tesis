@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import clienteAxios from '../config/axios';
+import clienteAxios from '../../config/axios';
 
 const HistorialDocente = () => {
     const [historial, setHistorial] = useState([]);
