@@ -33,15 +33,29 @@ export const generarPropuestaTesis = async (promptData, historialTemas = []) => 
         });
 
         let textoGenerado = response.generated_text.trim();
+        
+        // TIP: Imprimir la respuesta exacta de la IA antes de intentar parsearla
+        console.log("=== RESPUESTA CRUDA DE IA ===");
+        console.log(textoGenerado);
+
         if (textoGenerado.startsWith('```json')) {
             textoGenerado = textoGenerado.replace(/```json/g, '').replace(/```/g, '').trim();
         }
 
         const jsonMatch = textoGenerado.match(/\{[\s\S]*\}/);
-        return jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+        
+        if (!jsonMatch) {
+            console.error("Error: La IA no devolvió un JSON válido.");
+            return null;
+        }
+
+        return JSON.parse(jsonMatch[0]);
 
     } catch (error) {
-        console.error("Error en la API de IA:", error.message);
+        // Captura del error exacto de la librería o de red
+        console.error("=== ERROR FATAL HUGGING FACE ===");
+        console.error("Mensaje:", error.message);
+        console.error("Detalles:", error);
         return null;
     }
 };
