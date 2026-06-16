@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { generarTema, enviarSolicitud, responderSolicitud } from '../controllers/solicitud_controller.js';
+import { generarTema, enviarSolicitud, responderSolicitud, reiniciarCuposDocente, eliminarEstudianteAceptado, enviarListaComision } from '../controllers/solicitud_controller.js';
 import { verificarTokenJWT } from '../middlewares/JWT.js';
 import SolicitudTesis from '../models/SolicitudTesis.js';
 
@@ -11,8 +11,8 @@ router.post('/solicitar', verificarTokenJWT, enviarSolicitud);
 router.get('/mis-solicitudes', verificarTokenJWT, async (req, res) => {
     try {
         const solicitudes = await SolicitudTesis.find({ estudiante: req.estudiante._id })
-            .populate('docente', 'nombre apellido email') // Trae los datos del docente asignado
-            .populate('tema', 'titulo descripcion tecnologias') // Trae los datos del tema
+            .populate('docente', 'nombre apellido email')
+            .populate('tema', 'titulo descripcion tecnologias')
             .sort({ createdAt: -1 });
         res.json(solicitudes);
     } catch (error) {
