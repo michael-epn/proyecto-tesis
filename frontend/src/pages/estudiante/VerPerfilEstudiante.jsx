@@ -86,18 +86,18 @@ const VerPerfilEstudiante = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                     </svg>
-                                    Áreas de Interés
+                                    Materias Aprobadas
                                 </h4>
                                 <div className="flex flex-wrap gap-2.5">
-                                    {perfil?.intereses?.length > 0 ? (
-                                        perfil.intereses.map((interes, index) => (
+                                    {perfil?.materias_aprobadas?.length > 0 ? (
+                                        perfil.materias_aprobadas.map((materia, index) => (
                                             <span key={index} className="bg-indigo-50 text-indigo-700 border border-indigo-100 text-sm px-4 py-1.5 rounded-full font-semibold">
-                                                {interes}
+                                                {materia}
                                             </span>
                                         ))
                                     ) : (
                                         <p className="text-sm text-slate-500 italic w-full p-4 bg-slate-50 rounded-lg text-center border border-dashed border-slate-300">
-                                            Aún no has registrado tus intereses.
+                                            Aún no has registrado tus materias aprobadas.
                                         </p>
                                     )}
                                 </div>
@@ -108,18 +108,18 @@ const VerPerfilEstudiante = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                                     </svg>
-                                    Habilidades Técnicas
+                                    Cursos Adicionales
                                 </h4>
                                 <div className="flex flex-wrap gap-2.5">
-                                    {perfil?.habilidades_tecnicas?.length > 0 ? (
-                                        perfil.habilidades_tecnicas.map((hab, index) => (
+                                    {perfil?.cursos_adicionales?.length > 0 ? (
+                                        perfil.cursos_adicionales.map((curso, index) => (
                                             <span key={index} className="bg-emerald-50 text-emerald-700 border border-emerald-100 text-sm px-4 py-1.5 rounded-full font-semibold">
-                                                {hab}
+                                                {curso}
                                             </span>
                                         ))
                                     ) : (
                                         <p className="text-sm text-slate-500 italic w-full p-4 bg-slate-50 rounded-lg text-center border border-dashed border-slate-300">
-                                            Aún no has registrado tus habilidades técnicas.
+                                            Aún no has registrado tus cursos adicionales.
                                         </p>
                                     )}
                                 </div>

@@ -44,8 +44,8 @@ const login = async (req, res) => {
             return res.status(401).json({ msg: "Password incorrecto" })
         }
         const token = crearTokenJWT(estudianteBDD._id, estudianteBDD.rol)
-        const { nombre, apellido, carrera, intereses, habilidades_tecnicas, fotoPerfil, _id, rol } = estudianteBDD
-        res.status(200).json({ token, rol, nombre, apellido, carrera, intereses, habilidades_tecnicas, fotoPerfil, _id, email: estudianteBDD.email })
+        const { nombre, apellido, carrera, materias_aprobadas, cursos_adicionales, fotoPerfil, _id, rol } = estudianteBDD
+        res.status(200).json({ token, rol, nombre, apellido, carrera, materias_aprobadas, cursos_adicionales, fotoPerfil, _id, email: estudianteBDD.email })
     } catch (error) {
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
     }
@@ -59,7 +59,7 @@ const perfil = (req, res) => {
 const actualizarPerfil = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, apellido, carrera, intereses, habilidades_tecnicas } = req.body;
+        const { nombre, apellido, carrera, materias_aprobadas, cursos_adicionales } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ msg: `ID invalido: ${id}` });
         }
@@ -80,11 +80,11 @@ const actualizarPerfil = async (req, res) => {
         estudianteBDD.nombre = nombre ?? estudianteBDD.nombre;
         estudianteBDD.apellido = apellido ?? estudianteBDD.apellido;
         estudianteBDD.carrera = carrera ?? estudianteBDD.carrera;
-        if (intereses) {
-            estudianteBDD.intereses = typeof intereses === 'string' ? JSON.parse(intereses) : intereses;
+        if (materias_aprobadas) {
+            estudianteBDD.materias_aprobadas = typeof materias_aprobadas === 'string' ? JSON.parse(materias_aprobadas) : materias_aprobadas;
         }
-        if (habilidades_tecnicas) {
-            estudianteBDD.habilidades_tecnicas = typeof habilidades_tecnicas === 'string' ? JSON.parse(habilidades_tecnicas) : habilidades_tecnicas;
+        if (cursos_adicionales) {
+            estudianteBDD.cursos_adicionales = typeof cursos_adicionales === 'string' ? JSON.parse(cursos_adicionales) : cursos_adicionales;
         }
         await estudianteBDD.save();
         const estudianteActualizado = await Estudiante.findById(id).select("-password -token -confirmEmail -createdAt -updatedAt -__v");
