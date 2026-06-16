@@ -66,7 +66,7 @@ const Recomendaciones = () => {
             });
             
             setRecomendaciones(recomendaciones.filter(rec => rec._id !== idTema));
-            toast.success("Solicitud enviada exitosamente para revisión de la Comisión y el Docente");
+            toast.success("Solicitud enviada exitosamente para revisión del Docente");
             
             const nuevosSeleccionados = { ...docentesSeleccionados };
             delete nuevosSeleccionados[idTema];
@@ -203,7 +203,7 @@ const Recomendaciones = () => {
                                         onClick={() => enviarSolicitud(rec._id)}
                                         className="w-full bg-slate-800 text-white text-sm font-bold py-3 px-4 rounded-lg hover:bg-slate-900 transition-colors shadow-md flex justify-center items-center gap-2"
                                     >
-                                        Enviar a la Comisión
+                                        Enviar al Docente
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                         </svg>
