@@ -37,13 +37,13 @@ const EditarPerfilEstudiante = () => {
     const mallaCurricular = {
         "Primer período": ["Comunicación Oral y Escrita", "Introducción a las TICs", "Cálculo Diferencial e Integral", "Estadística y Probabilidad Básica", "Administración Financiera", "Física"],
         "Segundo período": ["Programación", "Sistemas Operativos", "Algoritmos y Estructuras de Datos", "Arquitectura de Computadores", "Redes de Computadores", "Ecología y Ambiente"],
-        "Tercer período": ["Diseño de Interfaces", "Gestión de Proyectos de Software", "Programación Orientada A Objetos", "Bases de Datos", "Análisis de Datos"],
-        "Cuarto período": ["Desarrollo de Aplicaciones Web", "Prácticas de Servicio Comunitario", "DESARROLLO DE loT", "Fundamentos de Inteligencia Artificial", "Prácticas Laborales", "Metodología de la Investigación"],
+        "Tercer período": ["Diseño de Interfaces", "Gestión de Proyectos de Software", "Programación Orientada a Objetos", "Bases de Datos", "Análisis de Datos"],
+        "Cuarto período": ["Desarrollo de Aplicaciones Web", "Prácticas de Servicio Comunitario", "Desarrollo de loT", "Fundamentos de Inteligencia Artificial", "Prácticas Laborales", "Metodología de la Investigación"],
         "Quinto período": ["Desarrollo de Aplicaciones Móviles", "Trabajo de Integración Curricular", "Aplicaciones Distribuidas", "Tecnologías de Seguridad"],
-        "Requisitos": ["Nivel A2 de inglés", "Deportes", "Clubes", "Ética Profesional y Social", "Emprendimiento"]
+        "Requisitos": ["Nivel A2 de Inglés", "Deportes", "Clubes", "Ética Profesional y Social", "Emprendimiento"]
     };
 
-    const materiasString = watch("materias_aprobadas") || "";
+    const materiasString = watch("materias_favoritas") || "";
     const materiasSeleccionadas = materiasString 
         ? materiasString.split(", ").filter(Boolean) 
         : [];
@@ -51,13 +51,13 @@ const EditarPerfilEstudiante = () => {
     const agregarMateria = (materia) => {
         if (materia && !materiasSeleccionadas.includes(materia)) {
             const nuevoString = materiasString ? `${materiasString}, ${materia}` : materia;
-            setValue("materias_aprobadas", nuevoString);
+            setValue("materias_favoritas", nuevoString);
         }
     };
 
     const removerMateria = (materiaAQuitar) => {
         const nuevoArray = materiasSeleccionadas.filter(m => m !== materiaAQuitar);
-        setValue("materias_aprobadas", nuevoArray.join(", "));
+        setValue("materias_favoritas", nuevoArray.join(", "));
     };
     
     useEffect(() => {
@@ -66,7 +66,7 @@ const EditarPerfilEstudiante = () => {
                 const { data } = await clienteAxios.get(`/estudiante/perfil?t=${new Date().getTime()}`);
                 reset({
                     ...data,
-                    materias_aprobadas: data.materias_aprobadas?.join(', ') || '',
+                    materias_favoritas: data.materias_favoritas?.join(', ') || '',
                     cursos_adicionales: data.cursos_adicionales?.join(', ') || ''
                 });
                 if(data.fotoPerfil) {
@@ -96,14 +96,14 @@ const EditarPerfilEstudiante = () => {
         try {
             const { email, ...dataRestante } = formData;
 
-            const materiasArray = typeof dataRestante.materias_aprobadas === 'string' ? dataRestante.materias_aprobadas.split(',').map(i => i.trim()).filter(Boolean) : [];
+            const materiasArray = typeof dataRestante.materias_favoritas === 'string' ? dataRestante.materias_favoritas.split(',').map(i => i.trim()).filter(Boolean) : [];
             const cursosArray = typeof dataRestante.cursos_adicionales === 'string' ? dataRestante.cursos_adicionales.split(',').map(i => i.trim()).filter(Boolean) : [];
 
             const dataToSend = new FormData();
             dataToSend.append('nombre', dataRestante.nombre);
             dataToSend.append('apellido', dataRestante.apellido);
             dataToSend.append('carrera', dataRestante.carrera);
-            dataToSend.append('materias_aprobadas', JSON.stringify(materiasArray));
+            dataToSend.append('materias_favoritas', JSON.stringify(materiasArray));
             dataToSend.append('cursos_adicionales', JSON.stringify(cursosArray));
             
             if (archivoFoto) {
@@ -212,7 +212,7 @@ const EditarPerfilEstudiante = () => {
 
                                 <div className="space-y-6">
                                     <div>
-                                        <label className="block text-sm font-bold text-slate-700 mb-2">Materias Aprobadas</label>
+                                        <label className="block text-sm font-bold text-slate-700 mb-2">Materias Favoritas</label>
                                         
                                         <div className="flex flex-wrap gap-2 mb-3 p-3 min-h-[60px] border border-slate-300 rounded-xl bg-slate-50 transition-shadow focus-within:ring-2 focus-within:ring-indigo-500">
                                             {materiasSeleccionadas.length === 0 && (
@@ -251,11 +251,9 @@ const EditarPerfilEstudiante = () => {
                                             ))}
                                         </datalist>
                                         
-                                        {/* Input oculto para que React Hook Form capture el valor */}
-                                        <input type="hidden" {...register("materias_aprobadas")} />
+                                        <input type="hidden" {...register("materias_favoritas")} />
                                     </div>
 
-                                    {/* Cursos Adicionales */}
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-2">Cursos Adicionales (separados por coma)</label>
                                         <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none" placeholder="Ej: Python, React, MongoDB, Java..."></textarea>

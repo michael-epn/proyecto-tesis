@@ -29,7 +29,7 @@ const estudianteSchema = new Schema({
     password: { type: String, required: true },
     fotoPerfil: { type: String, default: null },
     bannerPerfil: { type: String, default: null },
-    materias_aprobadas: { type: [String], default: [] },
+    materias_favoritas: { type: [String], default: [] },
     cursos_adicionales: { type: [String], default: [] },
     status: { type: Boolean, default: true },
     token: { type: String, default: null },
