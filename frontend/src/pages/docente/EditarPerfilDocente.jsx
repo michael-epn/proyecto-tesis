@@ -53,10 +53,10 @@ const EditarPerfilDocente = () => {
     }, [reset]);
 
     const handleReiniciarCupos = async () => {
-        if(!window.confirm("¿Estás seguro de reiniciar a 0 tu contador de estudiantes? Esto habilitará tu disponibilidad nuevamente.")) return;
+        if(!window.confirm("¿Estás seguro de reiniciar a 0 tu contador de estudiantes?")) return;
         try {
             const { data } = await clienteAxios.post('/tesis/docente/reiniciar-cupos');
-            setCuposOcupados(0); // Actualizamos la UI inmediatamente
+            setCuposOcupados(0);
             toast.success(data.msg);
         } catch (error) {
             toast.error("Error al reiniciar cupos");
