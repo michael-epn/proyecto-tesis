@@ -32,8 +32,6 @@ export const generarPropuestaTesis = async (promptData, historialTemas = []) => 
         });
 
         let textoGenerado = response.choices[0].message.content.trim();
-        
-        console.log("=== RESPUESTA CRUDA DE IA ===");
         console.log(textoGenerado);
 
         if (textoGenerado.startsWith('```json')) {
@@ -50,7 +48,6 @@ export const generarPropuestaTesis = async (promptData, historialTemas = []) => 
         return JSON.parse(jsonMatch[0]);
 
     } catch (error) {
-        console.error("=== ERROR FATAL HUGGING FACE ===");
         console.error("Mensaje:", error.message);
         return null;
     }
