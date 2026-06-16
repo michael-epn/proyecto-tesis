@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { generarTema, enviarSolicitud, responderSolicitud } from '../controllers/solicitud_controller.js';
 import { verificarTokenJWT } from '../middlewares/JWT.js';
+import SolicitudTesis from '../models/SolicitudTesis.js';
 
 
 const router = Router();
