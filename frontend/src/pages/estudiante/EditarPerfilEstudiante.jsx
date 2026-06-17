@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
 import { Controller } from 'react-hook-form';
-import { opcionesAgrupadas } from '../../data/mallaCurricular';
+import { opcionesAgrupadas } from '../../data/mallaCurricular.js';
+
 
 const InputField = ({ label, register, name, type = "text", disabled = false }) => (
     <div>

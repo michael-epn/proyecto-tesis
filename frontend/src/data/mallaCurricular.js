@@ -1,5 +1,3 @@
-// 1. DATA CRUDA (Raw Data)
-// Exportamos el objeto base por si lo necesitas en el futuro para otra lógica
 export const mallaCurricular = {
     "Primer período": [
         "Comunicación Oral y Escrita", 
