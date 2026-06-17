@@ -233,7 +233,7 @@ const EditarPerfilEstudiante = () => {
                                         </div>
 
                                         <input 
-                                            type="text" 
+                                            type="text"
                                             list="lista-materias" 
                                             placeholder="Escribe una materia y presiona Enter..."
                                             className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
@@ -256,7 +256,7 @@ const EditarPerfilEstudiante = () => {
 
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-2">Cursos Adicionales (separados por coma)</label>
-                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none" placeholder="Ej: Python, React, MongoDB, Java..."></textarea>
+                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none"></textarea>
                                     </div>
                                 </div>
 
