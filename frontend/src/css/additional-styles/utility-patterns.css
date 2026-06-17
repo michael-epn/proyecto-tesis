@@ -140,7 +140,3 @@ input[type="search"]::-webkit-search-results-decoration {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
-
-input::-webkit-calendar-picker-indicator {
-  display: none !important;
-}
