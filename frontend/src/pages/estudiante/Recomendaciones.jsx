@@ -105,7 +105,8 @@ const Recomendaciones = () => {
                                 <input 
                                     type="text" 
                                     {...register("habilidades", { required: true })}
-                                    className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"  
+                                    className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
+                                     placeholder="Ejm: habilidad 1, habilidad 2..."  
                                 />
                             </div>
                             <div>
@@ -113,7 +114,8 @@ const Recomendaciones = () => {
                                 <input 
                                     type="text" 
                                     {...register("intereses", { required: true })}
-                                    className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow" 
+                                    className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
+                                    placeholder="Ejm: interes 1, interes 2..." 
                                 />
                             </div>
                             <div>
@@ -122,7 +124,7 @@ const Recomendaciones = () => {
                                     type="text" 
                                     {...register("contexto", { required: true })}
                                     className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow" 
-                                    placeholder="Describe el problema a resolver..." 
+                                    placeholder="Detalla el problema a resolver..." 
                                 />
                             </div>
                             <div>

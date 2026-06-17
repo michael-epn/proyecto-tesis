@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
+import { Controller } from 'react-hook-form';
+import { opcionesAgrupadas } from '../../data/mallaCurricular';
 
 const InputField = ({ label, register, name, type = "text", disabled = false }) => (
     <div>
@@ -18,7 +20,7 @@ const InputField = ({ label, register, name, type = "text", disabled = false }) 
 );
 
 const EditarPerfilEstudiante = () => {
-    const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, watch, setValue, control, formState: { errors } } = useForm();
     const { register: registerPassword, handleSubmit: handleSubmitPassword, reset: resetPassword } = useForm();
     
     const { user, token, rol, setAuth } = useAuthStore();
@@ -33,32 +35,6 @@ const EditarPerfilEstudiante = () => {
 
     const [mostrarPasswordActual, setMostrarPasswordActual] = useState(false);
     const [mostrarPasswordNuevo, setMostrarPasswordNuevo] = useState(false);
-
-    const mallaCurricular = {
-        "Primer período": ["Comunicación Oral y Escrita", "Introducción a las TICs", "Cálculo Diferencial e Integral", "Estadística y Probabilidad Básica", "Administración Financiera", "Física"],
-        "Segundo período": ["Programación", "Sistemas Operativos", "Algoritmos y Estructuras de Datos", "Arquitectura de Computadores", "Redes de Computadores", "Ecología y Ambiente"],
-        "Tercer período": ["Diseño de Interfaces", "Gestión de Proyectos de Software", "Programación Orientada a Objetos", "Bases de Datos", "Análisis de Datos"],
-        "Cuarto período": ["Desarrollo de Aplicaciones Web", "Prácticas de Servicio Comunitario", "Desarrollo de loT", "Fundamentos de Inteligencia Artificial", "Prácticas Laborales", "Metodología de la Investigación"],
-        "Quinto período": ["Desarrollo de Aplicaciones Móviles", "Trabajo de Integración Curricular", "Aplicaciones Distribuidas", "Tecnologías de Seguridad"],
-        "Requisitos": ["Nivel A2 de Inglés", "Deportes", "Clubes", "Ética Profesional y Social", "Emprendimiento"]
-    };
-
-    const materiasString = watch("materias_favoritas") || "";
-    const materiasSeleccionadas = materiasString 
-        ? materiasString.split(", ").filter(Boolean) 
-        : [];
-
-    const agregarMateria = (materia) => {
-        if (materia && !materiasSeleccionadas.includes(materia)) {
-            const nuevoString = materiasString ? `${materiasString}, ${materia}` : materia;
-            setValue("materias_favoritas", nuevoString);
-        }
-    };
-
-    const removerMateria = (materiaAQuitar) => {
-        const nuevoArray = materiasSeleccionadas.filter(m => m !== materiaAQuitar);
-        setValue("materias_favoritas", nuevoArray.join(", "));
-    };
     
     useEffect(() => {
         const cargarPerfil = async () => {
@@ -66,7 +42,7 @@ const EditarPerfilEstudiante = () => {
                 const { data } = await clienteAxios.get(`/estudiante/perfil?t=${new Date().getTime()}`);
                 reset({
                     ...data,
-                    materias_favoritas: data.materias_favoritas?.join(', ') || '',
+                    materias_favoritas: data.materias_favoritas?.map(m => ({ value: m, label: m })) || [],
                     cursos_adicionales: data.cursos_adicionales?.join(', ') || ''
                 });
                 if(data.fotoPerfil) {
@@ -96,7 +72,9 @@ const EditarPerfilEstudiante = () => {
         try {
             const { email, ...dataRestante } = formData;
 
-            const materiasArray = typeof dataRestante.materias_favoritas === 'string' ? dataRestante.materias_favoritas.split(',').map(i => i.trim()).filter(Boolean) : [];
+            const materiasArray = dataRestante.materias_favoritas 
+                ? dataRestante.materias_favoritas.map(item => item.value) 
+                : [];
             const cursosArray = typeof dataRestante.cursos_adicionales === 'string' ? dataRestante.cursos_adicionales.split(',').map(i => i.trim()).filter(Boolean) : [];
 
             const dataToSend = new FormData();
@@ -213,50 +191,33 @@ const EditarPerfilEstudiante = () => {
                                 <div className="space-y-6">
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-2">Materias Favoritas</label>
-                                        
-                                        <div className="flex flex-wrap gap-2 mb-3 p-3 min-h-[60px] border border-slate-300 rounded-xl bg-slate-50 transition-shadow focus-within:ring-2 focus-within:ring-indigo-500">
-                                            {materiasSeleccionadas.length === 0 && (
-                                                <span className="text-slate-400 text-sm italic">Ninguna materia seleccionada...</span>
+                                        <Controller
+                                            name="materias_favoritas"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Select
+                                                    {...field}
+                                                    isMulti
+                                                    options={opcionesAgrupadas}
+                                                    placeholder="Selecciona o escribe tus materias..."
+                                                    noOptionsMessage={() => "No se encontraron materias"}
+                                                    classNames={{
+                                                        control: (state) => 
+                                                            `!min-h-[50px] !rounded-xl !border-slate-300 hover:!border-indigo-500 !shadow-none ${state.isFocused ? '!ring-2 !ring-indigo-500 !border-indigo-500' : ''}`,
+                                                        multiValue: () => "!bg-indigo-100 !rounded-full !px-1 !py-0.5 !m-1",
+                                                        multiValueLabel: () => "!text-indigo-700 !font-medium !text-sm",
+                                                        multiValueRemove: () => "hover:!bg-indigo-200 hover:!text-indigo-900 !rounded-full !transition-colors",
+                                                        menu: () => "!rounded-xl !border-slate-200 !shadow-lg !overflow-hidden",
+                                                        option: (state) => `!text-sm !cursor-pointer ${state.isFocused ? '!bg-indigo-50 !text-indigo-700' : '!text-slate-600'}`
+                                                    }}
+                                                />
                                             )}
-                                            {materiasSeleccionadas.map((materia, index) => (
-                                                <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium shadow-sm">
-                                                    {materia}
-                                                    <button 
-                                                        type="button" 
-                                                        onClick={() => removerMateria(materia)} 
-                                                        className="hover:text-indigo-900 hover:bg-indigo-200 rounded-full w-4 h-4 flex items-center justify-center font-bold focus:outline-none transition-colors"
-                                                    >
-                                                        &times;
-                                                    </button>
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        <input 
-                                            type="text"
-                                            list="lista-materias" 
-                                            placeholder="Escribe una materia y presiona Enter..."
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    e.preventDefault();
-                                                    agregarMateria(e.target.value);
-                                                    e.target.value = "";
-                                                }
-                                            }}
                                         />
-                                        <datalist id="lista-materias">
-                                            {Object.values(mallaCurricular).flat().map(materia => (
-                                                <option key={materia} value={materia} />
-                                            ))}
-                                        </datalist>
-                                        
-                                        <input type="hidden" {...register("materias_favoritas")} />
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-2">Cursos Adicionales (separados por coma)</label>
-                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none"></textarea>
+                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none"  placeholder="Ejm: curso 1, curso 2..."></textarea>
                                     </div>
                                 </div>
 
