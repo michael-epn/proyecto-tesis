@@ -15,7 +15,11 @@ const Recomendaciones = () => {
             try {
                 const { data } = await clienteAxios.get('/docente');
                 const listaDocentes = Array.isArray(data) ? data : data.docentes || data.data || [];
-                setDocentes(listaDocentes);
+                const docentesDisponibles = listaDocentes.filter(doc => 
+                    doc.disponibilidad === true && 
+                    doc.cupos_ocupados < doc.cupos_maximos
+                );
+                setDocentes(docentesDisponibles);
             } catch (error) {
                 console.error("Error al cargar docentes", error);
                 toast.error("No se pudo cargar la lista de docentes.");

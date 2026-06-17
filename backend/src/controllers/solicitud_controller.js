@@ -40,7 +40,16 @@ export const generarTema = async (req, res) => {
 
 export const enviarSolicitud = async (req, res) => {
     const { temaId, docenteId } = req.body;
+    const docente = await Docente.findById(docenteId);
+    if (!docente) {
+        return res.status(404).json({ msg: "El docente no existe en los registros." });
+    }
     
+    if (!docente.disponibilidad || docente.cupos_ocupados >= docente.cupos_maximos) {
+        return res.status(403).json({ 
+            msg: "Operación denegada: El tutor seleccionado ha alcanzado su límite de cupos o no está disponible para la Comisión." 
+        });
+    }
     const solicitud = await SolicitudTesis.create({
         estudiante: req.estudiante._id,
         docente: docenteId,

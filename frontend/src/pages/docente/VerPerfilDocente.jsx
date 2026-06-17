@@ -70,7 +70,7 @@ const VerPerfilDocente = () => {
                             </div>
                             
                             <div className="mt-4 md:mt-0">
-                                {perfil?.disponibilidad ? (
+                                {perfil?.disponibilidad && (perfil?.cupos_ocupados < perfil?.cupos_maximos) ? (
                                     <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-sm font-bold px-4 py-2 rounded-full border border-emerald-200">
                                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                         Disponible para tutorías
@@ -78,7 +78,9 @@ const VerPerfilDocente = () => {
                                 ) : (
                                     <span className="inline-flex items-center gap-1.5 bg-rose-100 text-rose-800 text-sm font-bold px-4 py-2 rounded-full border border-rose-200">
                                         <span className="w-2 h-2 rounded-full bg-rose-500"></span>
-                                        No disponible temporalmente
+                                        {perfil?.cupos_ocupados >= perfil?.cupos_maximos 
+                                            ? "Límite de cupos alcanzado" 
+                                            : "No disponible temporalmente"}
                                     </span>
                                 )}
                             </div>
@@ -108,12 +110,14 @@ const VerPerfilDocente = () => {
                                     Capacidad de Tutoría
                                 </h4>
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-indigo-100 text-indigo-700 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">
-                                        {perfil?.cupos_maximos || 0}
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl ${perfil?.cupos_ocupados >= perfil?.cupos_maximos ? 'bg-rose-100 text-rose-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                                        {perfil?.cupos_ocupados || 0}/{perfil?.cupos_maximos || 0}
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-slate-800">Cupos Máximos</p>
-                                        <p className="text-xs text-slate-500">estudiantes permitidos</p>
+                                        <p className="text-sm font-semibold text-slate-800">Estado de Cupos</p>
+                                        <p className="text-xs text-slate-500">
+                                            {perfil?.cupos_maximos - (perfil?.cupos_ocupados || 0)} disponibles
+                                        </p>
                                     </div>
                                 </div>
                             </div>

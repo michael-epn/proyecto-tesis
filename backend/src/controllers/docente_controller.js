@@ -191,8 +191,10 @@ const obtenerDocentes = async (req, res) => {
         const docentes = await Docente.find({ 
             confirmEmail: true, 
             status: true,
-            disponibilidad: true
+            disponibilidad: true,
+            $expr: { $lt: ["$cupos_ocupados", "$cupos_maximos"] } 
         }).select('_id nombre apellido email cupos_maximos cupos_ocupados'); 
+        
         res.status(200).json(docentes);
     } catch (error) {
         res.status(500).json({ msg: `Error al obtener docentes - ${error.message}` });
