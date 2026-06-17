@@ -1,5 +1,5 @@
 export const mallaCurricular = {
-    "Materias (escoja según su carrera)": [
+    "Materias (tener en cuenta su carrera)": [
         "Comunicación Oral y Escrita", 
         "Introducción a las TICs", 
         "Cálculo Diferencial e Integral", 
