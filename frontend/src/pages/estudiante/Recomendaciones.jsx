@@ -14,12 +14,7 @@ const Recomendaciones = () => {
         const obtenerDocentes = async () => {
             try {
                 const { data } = await clienteAxios.get('/docente');
-                const listaDocentes = Array.isArray(data) ? data : data.docentes || data.data || [];
-                const docentesDisponibles = listaDocentes.filter(doc => 
-                    doc.disponibilidad === true && 
-                    doc.cupos_ocupados < doc.cupos_maximos
-                );
-                setDocentes(docentesDisponibles);
+                setDocentes(Array.isArray(data) ? data : data.docentes || data.data || []);
             } catch (error) {
                 console.error("Error al cargar docentes", error);
                 toast.error("No se pudo cargar la lista de docentes.");
@@ -40,7 +35,7 @@ const Recomendaciones = () => {
 
             const { data } = await clienteAxios.post('/tesis/generar', payload);
             setRecomendaciones([data, ...recomendaciones]);
-            toast.success("Tema generado con éxito");
+            toast.success("Borrador generado.");
             reset();
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al conectar con la IA");
@@ -50,31 +45,32 @@ const Recomendaciones = () => {
     };
 
     const handleSelectChange = (temaId, docenteId) => {
-        setDocentesSeleccionados(prev => ({
-            ...prev,
-            [temaId]: docenteId
-        }));
+        setDocentesSeleccionados(prev => ({...prev, [temaId]: docenteId}));
     };
 
-    const enviarSolicitud = async (idTema) => {
-        const docenteAsignado = docentesSeleccionados[idTema];
+    const cancelarBorrador = (idTemporal) => {
+        setRecomendaciones(recomendaciones.filter(rec => rec.id_temporal !== idTemporal));
         
-        if (!docenteAsignado) {
-            return toast.warning("Debes seleccionar un tutor para proceder");
-        }
+        const nuevosSeleccionados = { ...docentesSeleccionados };
+        delete nuevosSeleccionados[idTemporal];
+        setDocentesSeleccionados(nuevosSeleccionados);
+    };
 
+    const enviarSolicitud = async (borrador) => {
+        const docenteAsignado = docentesSeleccionados[borrador.id_temporal];
+        if (!docenteAsignado) return toast.warning("Debes seleccionar un tutor para proceder");
         try {
             await clienteAxios.post('/tesis/solicitar', {
-                temaId: idTema,
+                temaData: {
+                    titulo: borrador.titulo,
+                    descripcion: borrador.descripcion,
+                    tecnologias: borrador.tecnologias,
+                    promptData: borrador.promptData
+                },
                 docenteId: docenteAsignado
             });
-            
-            setRecomendaciones(recomendaciones.filter(rec => rec._id !== idTema));
-            toast.success("Solicitud enviada exitosamente para revisión del Docente");
-            
-            const nuevosSeleccionados = { ...docentesSeleccionados };
-            delete nuevosSeleccionados[idTema];
-            setDocentesSeleccionados(nuevosSeleccionados);
+            cancelarBorrador(borrador.id_temporal);
+            toast.success("Tema guardado y solicitud enviada al docente.");
 
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al enviar solicitud");
@@ -89,10 +85,8 @@ const Recomendaciones = () => {
                     <p className="text-slate-500 mt-2 font-medium">Ingresa tu contexto académico para generar propuestas usando Inteligencia Artificial.</p>
                 </header>
 
-                {/* CORRECCIÓN: grid-cols-2 divide la pantalla exactamente a la mitad */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                     
-                    {/* LADO IZQUIERDO: Formulario al 50% de ancho */}
                     <div className="lg:sticky lg:top-8 bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden w-full">
                         <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
                             <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -159,56 +153,66 @@ const Recomendaciones = () => {
                         </form>
                     </div>
 
-                    {/* LADO DERECHO: Grid de Resultados al 50% de ancho */}
                     <div className="grid grid-cols-1 gap-6 w-full">
-                        {recomendaciones.length === 0 && !cargandoIA && (
-                            <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400 h-full min-h-[400px]">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                </svg>
-                                <p className="font-medium text-lg text-center">Aún no hay propuestas generadas.</p>
-                                <p className="text-sm text-center mt-2">Llena el formulario de la izquierda para comenzar.</p>
-                            </div>
-                        )}
-
                         {recomendaciones.map((rec) => (
-                            <div key={rec._id} className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300 w-full">
+                            <div key={rec.id_temporal} className="bg-white shadow-xl rounded-2xl border border-indigo-200 overflow-hidden flex flex-col hover:shadow-2xl transition-shadow w-full ring-2 ring-indigo-50">
                                 <div className="p-6 flex-grow">
-                                    <h2 className="text-xl font-extrabold text-slate-800 mb-3 leading-tight">{rec.titulo}</h2>
+                                    <div className="flex justify-between items-start mb-3">
+                                        <h2 className="text-xl font-extrabold text-slate-800 leading-tight">{rec.titulo}</h2>
+                                        <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded border border-amber-200">Borrador</span>
+                                    </div>
                                     <p className="text-slate-600 text-sm font-medium mb-6 line-clamp-4">{rec.descripcion}</p>
                                     
                                     <div className="flex flex-wrap gap-2">
                                         {rec.tecnologias?.map((tech, i) => (
-                                            <span key={i} className="inline-flex items-center px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold border border-indigo-100">
-                                                {tech}
-                                            </span>
+                                            <span key={i} className="inline-flex items-center px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold border border-indigo-100">{tech}</span>
                                         ))}
                                     </div>
                                 </div>
                                 
                                 <div className="bg-slate-50 p-5 border-t border-slate-200 space-y-4">
                                     <div>
-                                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Docente Tutor</label>
+                                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Estado de Docentes</label>
                                         <select 
-                                            className="w-full px-3 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow bg-white text-sm text-slate-700"
-                                            value={docentesSeleccionados[rec._id] || ""}
-                                            onChange={(e) => handleSelectChange(rec._id, e.target.value)}
+                                            className="w-full px-3 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow bg-white text-sm"
+                                            value={docentesSeleccionados[rec.id_temporal] || ""}
+                                            onChange={(e) => handleSelectChange(rec.id_temporal, e.target.value)}
                                         >
-                                            <option value="" disabled>-- Elige un docente --</option>
-                                            {docentes.map(doc => (
-                                                <option key={doc._id} value={doc._id}>
-                                                    {doc.nombre} {doc.apellido}
-                                                </option>
-                                            ))}
+                                            <option value="" disabled>-- Elige un docente para continuar --</option>
+                                            {docentes.map(doc => {
+                                                const noDisponible = !doc.disponibilidad;
+                                                const lleno = doc.cupos_ocupados >= doc.cupos_maximos;
+                                                const deshabilitado = noDisponible || lleno;
+                                                
+                                                let etiqueta = "";
+                                                if (noDisponible) etiqueta = "(Fuera de servicio)";
+                                                else if (lleno) etiqueta = "(Sin cupos)";
+                                                else etiqueta = `(${doc.cupos_maximos - doc.cupos_ocupados} cupos disp.)`;
+
+                                                return (
+                                                    <option key={doc._id} value={doc._id} disabled={deshabilitado}>
+                                                        {doc.nombre} {doc.apellido} {etiqueta}
+                                                    </option>
+                                                )
+                                            })}
                                         </select>
                                     </div>
 
-                                    <button 
-                                        onClick={() => enviarSolicitud(rec._id)}
-                                        className="w-full bg-slate-800 text-white text-sm font-bold py-3 px-4 rounded-lg hover:bg-slate-900 transition-colors shadow-md flex justify-center items-center gap-2"
-                                    >
-                                        Enviar al Docente
-                                    </button>
+                                    {/* Botones de acción */}
+                                    <div className="flex gap-3">
+                                        <button 
+                                            onClick={() => cancelarBorrador(rec.id_temporal)}
+                                            className="w-1/3 bg-white border border-slate-300 text-slate-700 text-sm font-bold py-3 px-4 rounded-lg hover:bg-slate-100 transition-colors shadow-sm"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button 
+                                            onClick={() => enviarSolicitud(rec)}
+                                            className="w-2/3 bg-indigo-600 text-white text-sm font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors shadow-md flex justify-center items-center"
+                                        >
+                                            Guardar y Enviar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

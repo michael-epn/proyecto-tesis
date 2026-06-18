@@ -22,8 +22,15 @@ router.get('/mis-solicitudes', verificarTokenJWT, async (req, res) => {
 
 router.put('/responder/:idSolicitud', verificarTokenJWT, responderSolicitud);
 router.get('/historial/recibidas', verificarTokenJWT, async (req, res) => {
-    const solicitudes = await SolicitudTesis.find({ docente: req.docente._id }).populate('tema estudiante');
-    res.json(solicitudes);
+    try {
+        const solicitudes = await SolicitudTesis.find({ docente: req.docente._id })
+            .populate('estudiante', 'nombre apellido email') 
+            .populate('tema', 'titulo descripcion tecnologias');
+        
+        res.json(solicitudes);
+    } catch (error) {
+        res.status(500).json({ msg: "Error al obtener historial del docente" });
+    }
 });
 router.post('/docente/reiniciar-cupos', verificarTokenJWT, reiniciarCuposDocente);
 router.delete('/docente/eliminar-aceptado/:idSolicitud', verificarTokenJWT, eliminarEstudianteAceptado);

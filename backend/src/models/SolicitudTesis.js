@@ -6,8 +6,8 @@ const solicitudSchema = new Schema({
     tema: { type: Schema.Types.ObjectId, ref: 'TemaGenerado', required: true },
     estado: { 
         type: String, 
-        enum: ['borrador', 'enviada', 'aceptada', 'rechazada'], 
-        default: 'borrador' 
+        enum: ['enviada', 'aceptada', 'rechazada', 'en_comision'], 
+        default: 'enviada'
     },
     feedback: { type: String, default: null },
     fechaEnvio: { type: Date },

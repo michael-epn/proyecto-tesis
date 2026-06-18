@@ -13,8 +13,8 @@ const temaGeneradoSchema = new Schema({
     },
     estado: { 
         type: String, 
-        enum: ['disponible', 'en_solicitud', 'descartado'], 
-        default: 'disponible' 
+        enum: ['en_solicitud', 'aprobado_final'], 
+        default: 'en_solicitud' 
     }
 }, { timestamps: true });
 

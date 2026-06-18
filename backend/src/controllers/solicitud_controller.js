@@ -7,60 +7,52 @@ import { sendMailSolicitudActualizada } from '../helpers/sendMail.js';
 export const generarTema = async (req, res) => {
     const { habilidades, intereses, contexto, ideas } = req.body;
     const estudianteId = req.estudiante._id;
-
     const solicitudAceptada = await SolicitudTesis.findOne({ 
         estudiante: estudianteId, 
         estado: { $in: ['aceptada', 'en_comision'] } 
     });
-    
-    if (solicitudAceptada) {
-        return res.status(403).json({ msg: "Ya tienes una tutoría aceptada. No puedes generar más temas." });
-    }
-
+    if (solicitudAceptada) return res.status(403).json({ msg: "Ya tienes una tutoría aceptada." });
     const conteoTemas = await TemaGenerado.countDocuments({ estudiante: estudianteId });
-    if (conteoTemas >= 2) {
-        return res.status(403).json({ msg: "Has alcanzado el límite máximo de 2 temas generados permitidos por la ESFOT." });
-    }
-
+    if (conteoTemas >= 2) return res.status(403).json({ msg: "Límite de 2 temas alcanzado." });
     const historial = await TemaGenerado.find({ estudiante: estudianteId }).limit(5);
     const IA_Response = await generarPropuestaTesis(req.body, historial);
 
     if (!IA_Response) return res.status(500).json({ msg: "Error al generar tema con IA" });
-
-    const nuevoTema = await TemaGenerado.create({
-        estudiante: estudianteId,
-        titulo: IA_Response.titulo,
-        descripcion: IA_Response.descripcion,
-        tecnologias: IA_Response.tecnologias,
-        promptData: req.body
+    res.status(200).json({
+        id_temporal: Date.now().toString(),
+        borrador: true,
+        ...IA_Response,
+        promptData: req.body 
     });
-
-    res.status(201).json(nuevoTema);
 };
 
 export const enviarSolicitud = async (req, res) => {
-    const { temaId, docenteId } = req.body;
+    const { temaData, docenteId } = req.body;
+    const estudianteId = req.estudiante._id;
     const docente = await Docente.findById(docenteId);
-    if (!docente) {
-        return res.status(404).json({ msg: "El docente no existe en los registros." });
-    }
-    
+    if (!docente) return res.status(404).json({ msg: "El docente no existe." });
     if (!docente.disponibilidad || docente.cupos_ocupados >= docente.cupos_maximos) {
-        return res.status(403).json({ 
-            msg: "Operación denegada: El tutor seleccionado ha alcanzado su límite de cupos o no está disponible para la Comisión." 
-        });
+        return res.status(403).json({ msg: "El docente ya no tiene cupos disponibles o no está disponible." });
     }
+    const conteoTemas = await TemaGenerado.countDocuments({ estudiante: estudianteId });
+    if (conteoTemas >= 2) return res.status(403).json({ msg: "Límite de 2 temas guardados alcanzado." });
+    const nuevoTema = await TemaGenerado.create({
+        estudiante: estudianteId,
+        titulo: temaData.titulo,
+        descripcion: temaData.descripcion,
+        tecnologias: temaData.tecnologias,
+        promptData: temaData.promptData,
+        estado: 'en_solicitud'
+    });
     const solicitud = await SolicitudTesis.create({
-        estudiante: req.estudiante._id,
+        estudiante: estudianteId,
         docente: docenteId,
-        tema: temaId,
+        tema: nuevoTema._id,
         estado: 'enviada',
         fechaEnvio: new Date()
     });
 
-    await TemaGenerado.findByIdAndUpdate(temaId, { estado: 'en_solicitud' });
-    
-    res.status(200).json({ msg: "Solicitud enviada exitosamente", solicitud });
+    res.status(201).json({ msg: "Solicitud enviada exitosamente", solicitud });
 };
 
 export const responderSolicitud = async (req, res) => {
