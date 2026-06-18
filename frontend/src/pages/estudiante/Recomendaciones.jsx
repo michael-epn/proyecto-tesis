@@ -81,7 +81,7 @@ const Recomendaciones = () => {
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
             <div className="max-w-[1600px] mx-auto">
                 <header className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Motor Generador de Tesis</h2>
+                    <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Motor Generador de Temas</h2>
                     <p className="text-slate-500 mt-2 font-medium">Ingresa tu contexto académico para generar propuestas usando Inteligencia Artificial.</p>
                 </header>
 
