@@ -219,7 +219,7 @@ const EditarPerfilEstudiante = () => {
 
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-2">Cursos Adicionales (separados por coma)</label>
-                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none"  placeholder="Ejm: curso 1, curso 2..."></textarea>
+                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none"  placeholder="Ej: curso 1, curso 2..."></textarea>
                                     </div>
                                 </div>
 
