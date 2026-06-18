@@ -6,10 +6,20 @@ import clienteAxios from '../../config/axios';
 const Recomendaciones = () => {
     const { register, handleSubmit, reset } = useForm();
     const [cargandoIA, setCargandoIA] = useState(false);
-    const [recomendaciones, setRecomendaciones] = useState([]);
+    
+    const [recomendaciones, setRecomendaciones] = useState(() => {
+        const borradoresGuardados = localStorage.getItem('borradores_tesis');
+        return borradoresGuardados ? JSON.parse(borradoresGuardados) : [];
+    });
+
     const [docentes, setDocentes] = useState([]);
     const [docentesSeleccionados, setDocentesSeleccionados] = useState({});
     const [dropdownAbierto, setDropdownAbierto] = useState(null);
+
+    useEffect(() => {
+        localStorage.setItem('borradores_tesis', JSON.stringify(recomendaciones));
+    }, [recomendaciones]);
+
     useEffect(() => {
         const obtenerDocentes = async () => {
             try {
@@ -35,7 +45,7 @@ const Recomendaciones = () => {
 
             const { data } = await clienteAxios.post('/tesis/generar', payload);
             setRecomendaciones([data, ...recomendaciones]);
-            toast.success("Borrador generado.");
+            toast.success("Borrador generado. No olvides enviarlo.");
             reset();
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al conectar con la IA");
@@ -70,7 +80,7 @@ const Recomendaciones = () => {
                 docenteId: docenteAsignado
             });
             cancelarBorrador(borrador.id_temporal);
-            toast.success("Tema guardado y solicitud enviada al docente.");
+            toast.success("Tema guardado y solicitud enviada a la Comisión.");
 
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al enviar solicitud");
@@ -104,7 +114,7 @@ const Recomendaciones = () => {
                                     type="text" 
                                     {...register("habilidades", { required: true })}
                                     className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
-                                     placeholder="Ej: habilidad 1, habilidad 2..."  
+                                    placeholder="Ej: Python, React, Node.js"  
                                 />
                             </div>
                             <div>
@@ -113,7 +123,7 @@ const Recomendaciones = () => {
                                     type="text" 
                                     {...register("intereses", { required: true })}
                                     className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
-                                    placeholder="Ej: interes 1, interes 2..." 
+                                    placeholder="Ej: Inteligencia Artificial, Redes" 
                                 />
                             </div>
                             <div>
@@ -165,7 +175,7 @@ const Recomendaciones = () => {
                         )}
 
                         {recomendaciones.map((rec) => (
-                            <div key={rec.id_temporal} className="bg-white shadow-xl rounded-2xl border border-indigo-200 overflow-hidden flex flex-col hover:shadow-2xl transition-shadow w-full ring-2 ring-indigo-50">
+                            <div key={rec.id_temporal} className="bg-white shadow-xl rounded-2xl border border-indigo-200 flex flex-col hover:shadow-2xl transition-shadow w-full ring-2 ring-indigo-50">
                                 <div className="p-6 flex-grow">
                                     <div className="flex justify-between items-start mb-3">
                                         <h2 className="text-xl font-extrabold text-slate-800 leading-tight">{rec.titulo}</h2>
@@ -200,26 +210,24 @@ const Recomendaciones = () => {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                             </svg>
                                         </button>
-                                        
+
                                         {dropdownAbierto === rec.id_temporal && (
                                             <>
                                                 <ul className="absolute bottom-full mb-1 z-50 w-full bg-white border border-slate-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
                                                     {docentes.map(doc => {
-                                                        const noDisponible = !doc.disponibilidad;
-                                                        const lleno = doc.cupos_ocupados >= doc.cupos_maximos;
-                                                        const deshabilitado = noDisponible || lleno;
+                                                        const estaDisponible = doc.disponibilidad !== false; 
+                                                        const maxCupos = doc.cupos_maximos || 0;
+                                                        const cuposOcupados = doc.cupos_ocupados || 0;
+                                                        const deshabilitado = !estaDisponible || (cuposOcupados >= maxCupos);
                                                         
                                                         let textoEstado = "";
                                                         let colorEstado = "";
 
-                                                        if (noDisponible) {
-                                                            textoEstado = "- No disponible";
-                                                            colorEstado = "text-red-500 font-semibold";
-                                                        } else if (lleno) {
-                                                            textoEstado = "- Sin cupos";
+                                                        if (deshabilitado) {
+                                                            textoEstado = "No disponible";
                                                             colorEstado = "text-red-500 font-semibold";
                                                         } else {
-                                                            textoEstado = `- ${doc.cupos_maximos - doc.cupos_ocupados} cupos disp.`;
+                                                            textoEstado = `- ${maxCupos - cuposOcupados} cupos disp.`;
                                                             colorEstado = "text-emerald-500 font-medium";
                                                         }
 
