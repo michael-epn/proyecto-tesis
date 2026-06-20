@@ -227,7 +227,7 @@ const Recomendaciones = () => {
                                                             textoEstado = "• No disponible";
                                                             colorEstado = "text-red-500 font-semibold";
                                                         } else {
-                                                            textoEstado = `•  ${maxCupos - cuposOcupados} cupos disp.`;
+                                                            textoEstado = `• ${maxCupos - cuposOcupados} cupos disp.`;
                                                             colorEstado = "text-emerald-500 font-medium";
                                                         }
 
