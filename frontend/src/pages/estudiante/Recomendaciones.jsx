@@ -213,7 +213,7 @@ const Recomendaciones = () => {
 
                                         {dropdownAbierto === rec.id_temporal && (
                                             <>
-                                                <ul className="absolute top-full z-50 w-full bg-white border border-slate-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                                                <ul className="absolute top-full mt-2 z-50 w-full bg-white border border-slate-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
                                                     {docentes.map(doc => {
                                                         const estaDisponible = doc.disponibilidad !== false; 
                                                         const maxCupos = doc.cupos_maximos || 0;
