@@ -115,9 +115,6 @@ const EstudiantesAceptados = () => {
                             className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-lg disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none flex justify-center items-center gap-2"
                         >
                             Confirmar Tutorías y Enviar a Comisión
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
                         </button>
                         <p className="text-xs text-center text-slate-500 mt-3 font-medium">
                             Al enviar, los estudiantes pasarán a revisión administrativa y no podrás eliminarlos de esta lista.
