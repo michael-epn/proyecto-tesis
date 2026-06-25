@@ -70,19 +70,35 @@ const VerPerfilDocente = () => {
                             </div>
                             
                             <div className="mt-4 md:mt-0">
-                                {perfil?.disponibilidad && (perfil?.cupos_ocupados < perfil?.cupos_maximos) ? (
-                                    <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-sm font-bold px-4 py-2 rounded-full border border-emerald-200">
-                                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        Disponible para tutorías
-                                    </span>
-                                ) : (
-                                    <span className="inline-flex items-center gap-1.5 bg-rose-100 text-rose-800 text-sm font-bold px-4 py-2 rounded-full border border-rose-200">
-                                        <span className="w-2 h-2 rounded-full bg-rose-500"></span>
-                                        {perfil?.cupos_ocupados >= perfil?.cupos_maximos 
-                                            ? "Límite de cupos alcanzado" 
-                                            : "No disponible temporalmente"}
-                                    </span>
-                                )}
+                                {(() => {
+                                    const disponibilidadManual = perfil?.disponibilidad !== false;
+                                    const maxCupos = perfil?.cupos_maximos || 0;
+                                    const cuposOcupados = perfil?.cupos_ocupados || 0;
+                                    const estaLleno = cuposOcupados >= maxCupos;
+
+                                    if (!disponibilidadManual) {
+                                        return (
+                                            <span className="inline-flex items-center gap-1.5 bg-rose-100 text-rose-800 text-sm font-bold px-4 py-2 rounded-full border border-rose-200">
+                                                <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                                                Tutorías Desactivadas (Manual)
+                                            </span>
+                                        );
+                                    }
+                                    if (estaLleno) {
+                                        return (
+                                            <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-sm font-bold px-4 py-2 rounded-full border border-amber-200">
+                                                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                                                Límite de Cupos Alcanzado
+                                            </span>
+                                        );
+                                    }
+                                    return (
+                                        <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-sm font-bold px-4 py-2 rounded-full border border-emerald-200">
+                                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            Disponible para tutorías
+                                        </span>
+                                    );
+                                })()}
                             </div>
                         </div>
                     </div>

@@ -192,63 +192,77 @@ const Recomendaciones = () => {
                                 
                                 <div className="bg-slate-50 p-5 border-t border-slate-200 space-y-4">
                                     <div className="relative">
-                                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Estado de Docentes</label>
+                                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                                            Estado de Docentes
+                                        </label>
+
                                         <button 
                                             type="button"
                                             onClick={() => setDropdownAbierto(dropdownAbierto === rec.id_temporal ? null : rec.id_temporal)}
-                                            className="w-full px-3 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow bg-white text-sm flex justify-between items-center text-left"
+                                            className={`w-full px-3 py-2.5 border transition-shadow bg-white text-sm flex justify-between items-center text-left outline-none focus:ring-2 focus:ring-indigo-500
+                                                ${dropdownAbierto === rec.id_temporal 
+                                                    ? 'border-slate-300 rounded-t-lg border-b-slate-100' 
+                                                    : 'border-slate-300 rounded-lg'
+                                                }`}
                                         >
-                                            {docentesSeleccionados[rec.id_temporal] ? (
-                                                <span className="text-slate-700 font-medium truncate pr-2">
-                                                    {docentes.find(d => d._id === docentesSeleccionados[rec.id_temporal])?.nombre} {docentes.find(d => d._id === docentesSeleccionados[rec.id_temporal])?.apellido}
-                                                </span>
-                                            ) : (
-                                                <span className="text-slate-400 truncate pr-2">-- Elige un docente para continuar --</span>
-                                            )}
+                                            {(() => {
+                                                const idSeleccionado = docentesSeleccionados[rec.id_temporal];
+                                                if (!idSeleccionado) {
+                                                    return <span className="text-slate-400 truncate pr-2">-- Elige un docente para continuar --</span>;
+                                                }
+                                                
+                                                const docente = docentes.find(d => d._id === idSeleccionado);
+                                                return (
+                                                    <span className="text-slate-700 font-medium truncate pr-2">
+                                                        {docente ? `${docente.nombre} ${docente.apellido}` : 'Docente no encontrado'}
+                                                    </span>
+                                                );
+                                            })()}
                                             
-                                            <svg className={`w-4 h-4 text-slate-400 flex-shrink-0 transition-transform ${dropdownAbierto === rec.id_temporal ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg 
+                                                className={`w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-200 ${dropdownAbierto === rec.id_temporal ? 'rotate-180' : ''}`} 
+                                                fill="none" 
+                                                stroke="currentColor" 
+                                                viewBox="0 0 24 24"
+                                            >
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                             </svg>
                                         </button>
 
                                         {dropdownAbierto === rec.id_temporal && (
                                             <>
-                                                <ul className="absolute top-full mt-2 z-50 w-full bg-white border border-slate-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                                                <ul className="absolute top-full left-0 z-50 w-full bg-white border border-t-0 border-slate-300 rounded-b-lg shadow-xl max-h-60 overflow-y-auto">
                                                     {docentes.map(doc => {
-                                                        const estaDisponible = doc.disponibilidad !== false; 
+                                                        const disponibilidadManual = doc.disponibilidad !== false; 
                                                         const maxCupos = doc.cupos_maximos || 0;
                                                         const cuposOcupados = doc.cupos_ocupados || 0;
-                                                        const deshabilitado = !estaDisponible || (cuposOcupados >= maxCupos);
                                                         
-                                                        let textoEstado = "";
-                                                        let colorEstado = "";
-
-                                                        if (deshabilitado) {
-                                                            textoEstado = "• No disponible";
-                                                            colorEstado = "text-red-500 font-semibold";
-                                                        } else {
-                                                            textoEstado = `• ${maxCupos - cuposOcupados} cupos disp.`;
-                                                            colorEstado = "text-emerald-500 font-medium";
-                                                        }
+                                                        const estaLleno = cuposOcupados >= maxCupos;
+                                                        
+                                                        const estado = !disponibilidadManual 
+                                                            ? { texto: "No disponible", color: "text-rose-500 font-bold", deshabilitado: true }
+                                                            : estaLleno
+                                                                ? { texto: "Sin cupos", color: "text-amber-500 font-bold", deshabilitado: true }
+                                                                : { texto: `${maxCupos - cuposOcupados} cupos disp.`, color: "text-emerald-600 font-medium", deshabilitado: false };
 
                                                         return (
                                                             <li 
                                                                 key={doc._id} 
                                                                 onClick={() => {
-                                                                    if (!deshabilitado) {
+                                                                    if (!estado.deshabilitado) {
                                                                         handleSelectChange(rec.id_temporal, doc._id);
                                                                         setDropdownAbierto(null);
                                                                     }
                                                                 }}
-                                                                className={`px-3 py-2.5 text-sm flex items-center justify-between gap-1 transition-colors border-b border-slate-100 last:border-0
-                                                                    ${deshabilitado 
-                                                                        ? 'bg-slate-50 cursor-not-allowed opacity-70' 
+                                                                className={`px-3 py-2.5 text-sm flex items-center justify-between gap-2 transition-colors border-b border-slate-100 last:border-0
+                                                                    ${estado.deshabilitado 
+                                                                        ? 'bg-slate-50 cursor-not-allowed opacity-75' 
                                                                         : 'hover:bg-indigo-50 cursor-pointer text-slate-700'
                                                                     }
                                                                 `}
                                                             >
                                                                 <span className="truncate">{doc.nombre} {doc.apellido}</span>
-                                                                <span className={`flex-shrink-0 text-xs ${colorEstado}`}>{textoEstado}</span>
+                                                                <span className={`flex-shrink-0 text-xs ${estado.color}`}>• {estado.texto}</span>
                                                             </li>
                                                         );
                                                     })}
