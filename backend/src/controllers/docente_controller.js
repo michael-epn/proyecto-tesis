@@ -86,6 +86,9 @@ const actualizarPerfil = async (req, res) => {
         if (tecnologias_especialidad) {
             docenteBDD.tecnologias_especialidad = typeof tecnologias_especialidad === 'string' ? JSON.parse(tecnologias_especialidad) : tecnologias_especialidad;
         }
+        if (req.body.disponibilidad !== undefined) {
+            docenteBDD.disponibilidad = req.body.disponibilidad === 'true' || req.body.disponibilidad === true;
+        }
         await docenteBDD.save();
         const docenteActualizado = await Docente.findById(id).select("-password -token -confirmEmail -createdAt -updatedAt -__v");
         res.status(200).json(docenteActualizado);
