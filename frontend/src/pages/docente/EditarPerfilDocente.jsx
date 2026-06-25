@@ -185,67 +185,55 @@ const EditarPerfilDocente = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-sm gap-6 mb-6">
-                                    {(() => {
-                                        // Variables en tiempo real
-                                        const disponibilidadActiva = watch("disponibilidad") !== false;
-                                        const cuposMaximosForm = watch("cupos_maximos") || user?.cupos_maximos || 0;
-                                        const cuposOcupadosReal = user?.cupos_ocupados || 0;
-                                        const estaLleno = cuposOcupadosReal >= cuposMaximosForm;
+                                <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-sm gap-6 mb-6">
+                                    <div className="flex-1">
+                                        <label className="block text-base font-extrabold text-slate-800">Estado Público y Capacidad</label>
+                                        <p className="text-sm text-slate-600 mt-1 mb-3">
+                                            Tienes <strong>{cuposOcupados}</strong> de <strong>{watch("cupos_maximos") || cuposMaximosActuales || 0}</strong> estudiantes permitidos actualmente.
+                                        </p>
+                                        {cuposOcupados > 0 && (
+                                            <button 
+                                                type="button"
+                                                onClick={handleReiniciarCupos}
+                                                className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-100/50 hover:bg-indigo-100 px-3 py-2 rounded-lg border border-indigo-200 cursor-pointer"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                                Reiniciar contador a 0
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="shrink-0 w-full md:w-auto flex justify-start md:justify-end">
+                                        {(() => {
+                                            const disponibilidadActiva = watch("disponibilidad") !== false;
+                                            const cuposMaximosForm = watch("cupos_maximos") || cuposMaximosActuales || 0;
+                                            const estaLleno = cuposOcupados >= cuposMaximosForm;
 
-                                        return (
-                                            <>
-                                                {/* Lado Izquierdo: Información de Cupos y Botón Reiniciar */}
-                                                <div className="flex-1">
-                                                    <label className="block text-base font-extrabold text-slate-800">Capacidad y Estado</label>
-                                                    <p className="text-sm text-slate-600 mt-1 mb-3">
-                                                        Tienes <strong>{cuposOcupadosReal}</strong> estudiantes de <strong>{cuposMaximosForm}</strong> permitidos.
-                                                    </p>
-                                                    {cuposOcupadosReal > 0 && (
-                                                        <button 
-                                                            type="button"
-                                                            onClick={handleReiniciarCupos}
-                                                            className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-100/50 hover:bg-indigo-100 px-3 py-2 rounded-lg border border-indigo-200 cursor-pointer"
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                            </svg>
-                                                            Reiniciar contador a 0
-                                                        </button>
-                                                    )}
+                                            if (!disponibilidadActiva) {
+                                                return (
+                                                    <div className="flex items-center gap-2 text-rose-700 bg-rose-50 px-4 py-3 rounded-xl border border-rose-200 shadow-sm w-full md:w-auto">
+                                                        <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                        <span className="text-sm font-bold">Oculto (Manual)</span>
+                                                    </div>
+                                                );
+                                            }
+                                            if (estaLleno) {
+                                                return (
+                                                    <div className="flex items-center gap-2 text-amber-700 bg-amber-50 px-4 py-3 rounded-xl border border-amber-200 shadow-sm w-full md:w-auto">
+                                                        <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                                        <span className="text-sm font-bold">Límite alcanzado</span>
+                                                    </div>
+                                                );
+                                            }
+                                            return (
+                                                <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 px-4 py-3 rounded-xl border border-emerald-200 shadow-sm w-full md:w-auto">
+                                                    <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                    <span className="text-sm font-bold">Disponible ({cuposMaximosForm - cuposOcupados} libres)</span>
                                                 </div>
-                                                
-                                                {/* Lado Derecho: Indicador Dinámico de 3 Estados */}
-                                                <div className="shrink-0 w-full lg:w-auto flex justify-start lg:justify-end">
-                                                    {!disponibilidadActiva ? (
-                                                        <div className="flex items-center gap-3 text-rose-800 bg-rose-100 px-4 py-3 rounded-xl border border-rose-200 shadow-sm w-full sm:w-auto">
-                                                            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0"></span>
-                                                            <div>
-                                                                <span className="block text-sm font-extrabold">Oculto (Manual)</span>
-                                                                <span className="block text-xs font-medium opacity-80">Nadie puede enviarte solicitudes.</span>
-                                                            </div>
-                                                        </div>
-                                                    ) : estaLleno ? (
-                                                        <div className="flex items-center gap-3 text-amber-800 bg-amber-100 px-4 py-3 rounded-xl border border-amber-200 shadow-sm w-full sm:w-auto">
-                                                            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
-                                                            <div>
-                                                                <span className="block text-sm font-extrabold">Límite Alcanzado</span>
-                                                                <span className="block text-xs font-medium opacity-80">Apareces como "Sin cupos".</span>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="flex items-center gap-3 text-emerald-800 bg-emerald-100 px-4 py-3 rounded-xl border border-emerald-200 shadow-sm w-full sm:w-auto">
-                                                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-                                                            <div>
-                                                                <span className="block text-sm font-extrabold">Visible y Disponible</span>
-                                                                <span className="block text-xs font-medium opacity-80">Te quedan {cuposMaximosForm - cuposOcupadosReal} cupos libres.</span>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </>
-                                        );
-                                    })()}
+                                            );
+                                        })()}
+                                    </div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label="Nombre" register={register} name="nombre" />
