@@ -186,11 +186,25 @@ const EditarPerfilDocente = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-sm gap-6 mb-6">
-                                    <div className="flex-1">
-                                        <label className="block text-base font-extrabold text-slate-800">Estado Público y Capacidad</label>
-                                        <p className="text-sm text-slate-600 mt-1 mb-3">
-                                            Tienes <strong>{cuposOcupados}</strong> de <strong>{watch("cupos_maximos") || cuposMaximosActuales || 0}</strong> estudiantes permitidos actualmente.
-                                        </p>
+                                    <div className="flex-1 space-y-5">
+                                        <div>
+                                            <label className="block text-base font-extrabold text-slate-800">Control de Disponibilidad</label>
+                                            <p className="text-sm text-slate-600 mt-1 mb-3">
+                                                Puedes pausar la recepción de solicitudes en cualquier momento, incluso si tienes cupos.
+                                            </p>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input 
+                                                    type="checkbox" 
+                                                    {...register("disponibilidad")} 
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                                <span className="ml-3 text-sm font-bold text-slate-700">
+                                                    {watch("disponibilidad") !== false ? "Activo (Recibiendo)" : "Pausado (Oculto)"}
+                                                </span>
+                                            </label>
+                                        </div>
+
                                         {cuposOcupados > 0 && (
                                             <button 
                                                 type="button"
@@ -204,7 +218,11 @@ const EditarPerfilDocente = () => {
                                             </button>
                                         )}
                                     </div>
-                                    <div className="shrink-0 w-full md:w-auto flex justify-start md:justify-end">
+                                    <div className="shrink-0 w-full md:w-auto flex flex-col items-start md:items-end gap-3 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6">
+                                        <p className="text-sm text-slate-600 font-medium">
+                                            Tienes <strong>{cuposOcupados}</strong> de <strong>{watch("cupos_maximos") || cuposMaximosActuales || 0}</strong> cupos ocupados.
+                                        </p>
+
                                         {(() => {
                                             const disponibilidadActiva = watch("disponibilidad") !== false;
                                             const cuposMaximosForm = watch("cupos_maximos") || cuposMaximosActuales || 0;
@@ -214,7 +232,7 @@ const EditarPerfilDocente = () => {
                                                 return (
                                                     <div className="flex items-center gap-2 text-rose-700 bg-rose-50 px-4 py-3 rounded-xl border border-rose-200 shadow-sm w-full md:w-auto">
                                                         <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                                        <span className="text-sm font-bold">Oculto (Manual)</span>
+                                                        <span className="text-sm font-bold">Oculto (Pausa manual)</span>
                                                     </div>
                                                 );
                                             }
@@ -229,7 +247,7 @@ const EditarPerfilDocente = () => {
                                             return (
                                                 <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 px-4 py-3 rounded-xl border border-emerald-200 shadow-sm w-full md:w-auto">
                                                     <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                                    <span className="text-sm font-bold">Disponible ({cuposMaximosForm - cuposOcupados} libres)</span>
+                                                    <span className="text-sm font-bold">Disponible</span>
                                                 </div>
                                             );
                                         })()}
