@@ -12,7 +12,7 @@ const InputField = ({ label, register, name, type = "text", disabled = false, op
             type={type} 
             {...register(name, options)} 
             disabled={disabled}
-            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
+            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
         />
     </div>
 );
@@ -275,7 +275,7 @@ const EditarPerfilDocente = () => {
                                         <textarea 
                                             {...register("areas_investigacion", { required: true })} 
                                             rows="3" 
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none" 
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow resize-none" 
                                             placeholder="Ej: Inteligencia Artificial, Redes y Telecomunicaciones..."
                                         ></textarea>
                                         {errors.areas_investigacion && <span className="text-xs text-red-500 mt-1 block">Este campo es requerido</span>}
@@ -285,7 +285,7 @@ const EditarPerfilDocente = () => {
                                         <textarea 
                                             {...register("tecnologias_especialidad")} 
                                             rows="3" 
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none" 
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow resize-none" 
                                             placeholder="Ej: Python, React, Node.js..."
                                         ></textarea>
                                     </div>
@@ -321,7 +321,7 @@ const EditarPerfilDocente = () => {
                                         <input
                                             type={mostrarPasswordActual ? "text" : "password"}
                                             {...registerPassword("passwordactual", { required: true })}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all pr-12"
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
                                         />
                                         <button
                                             type="button"
@@ -348,7 +348,7 @@ const EditarPerfilDocente = () => {
                                         <input
                                             type={mostrarPasswordNuevo ? "text" : "password"}
                                             {...registerPassword("passwordnuevo", { required: true })}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all pr-12"
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
                                         />
                                         <button
                                             type="button"
@@ -370,9 +370,6 @@ const EditarPerfilDocente = () => {
                                 </div>
 
                                 <button type="submit" className="w-full bg-slate-800 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-900 transition-colors shadow-md flex justify-center items-center gap-2 mt-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                    </svg>
                                     Actualizar Password
                                 </button>
                             </form>

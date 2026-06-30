@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Children, cloneElement, useRef  } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -6,8 +6,8 @@ import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
 import { Controller } from 'react-hook-form';
 import { opcionesAgrupadas } from '../../data/mallaCurricular.js';
-import Select from 'react-select';
-
+import Select, { components } from 'react-select';
+import MultiSelectMaterias from '../../components/MultiSelectMaterias.jsx';
 
 const InputField = ({ label, register, name, type = "text", disabled = false }) => (
     <div>
@@ -16,7 +16,7 @@ const InputField = ({ label, register, name, type = "text", disabled = false }) 
             type={type} 
             {...register(name)} 
             disabled={disabled}
-            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
+            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
         />
     </div>
 );
@@ -37,7 +37,7 @@ const EditarPerfilEstudiante = () => {
 
     const [mostrarPasswordActual, setMostrarPasswordActual] = useState(false);
     const [mostrarPasswordNuevo, setMostrarPasswordNuevo] = useState(false);
-    
+
     useEffect(() => {
         const cargarPerfil = async () => {
             try {
@@ -129,8 +129,8 @@ const EditarPerfilEstudiante = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-8">
-                        <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
-                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
+                        <div className="bg-white shadow-xl rounded-2xl border border-slate-200">
+                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 rounded-t-xl">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -197,29 +197,22 @@ const EditarPerfilEstudiante = () => {
                                             name="materias_favoritas"
                                             control={control}
                                             render={({ field }) => (
-                                                <Select
-                                                    {...field}
-                                                    isMulti
+                                                <MultiSelectMaterias
+                                                    value={field.value || []}
+                                                    onChange={field.onChange}
                                                     options={opcionesAgrupadas}
-                                                    placeholder="Selecciona o escribe tus materias..."
-                                                    noOptionsMessage={() => "No se encontraron materias"}
-                                                    classNames={{
-                                                        control: (state) => 
-                                                            `!min-h-[50px] !rounded-xl !border-slate-300 hover:!border-indigo-500 !shadow-none ${state.isFocused ? '!ring-2 !ring-indigo-500 !border-indigo-500' : ''}`,
-                                                        multiValue: () => "!bg-indigo-100 !rounded-full !px-1 !py-0.5 !m-1",
-                                                        multiValueLabel: () => "!text-indigo-700 !font-medium !text-sm",
-                                                        multiValueRemove: () => "hover:!bg-indigo-200 hover:!text-indigo-900 !rounded-full !transition-colors",
-                                                        menu: () => "!rounded-xl !border-slate-200 !shadow-lg !overflow-hidden",
-                                                        option: (state) => `!text-sm !cursor-pointer ${state.isFocused ? '!bg-indigo-50 !text-indigo-700' : '!text-slate-600'}`
-                                                    }}
+                                                    placeholder={
+                                                        field.value?.length > 0 
+                                                            ? `${field.value.length} seleccionada${field.value.length > 1 ? 's' : ''}` 
+                                                            : "Selecciona tus materias..."
+                                                    }
                                                 />
                                             )}
                                         />
                                     </div>
-
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-2">Cursos Adicionales (separados por coma)</label>
-                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none"  placeholder="Ej: curso 1, curso 2..."></textarea>
+                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow resize-none"  placeholder="Ej: curso 1, curso 2..."></textarea>
                                     </div>
                                 </div>
 
@@ -253,7 +246,7 @@ const EditarPerfilEstudiante = () => {
                                         <input
                                             type={mostrarPasswordActual ? "text" : "password"}
                                             {...registerPassword("passwordactual")}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all pr-12"
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
                                         />
                                         <button
                                             type="button"
@@ -280,7 +273,7 @@ const EditarPerfilEstudiante = () => {
                                         <input
                                             type={mostrarPasswordNuevo ? "text" : "password"}
                                             {...registerPassword("passwordnuevo")}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all pr-12"
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
                                         />
                                         <button
                                             type="button"
@@ -302,9 +295,6 @@ const EditarPerfilEstudiante = () => {
                                 </div>
 
                                 <button type="submit" className="w-full bg-slate-800 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-900 transition-colors shadow-md flex justify-center items-center gap-2 mt-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                    </svg>
                                     Actualizar Password
                                 </button>
                             </form>

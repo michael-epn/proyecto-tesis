@@ -169,7 +169,7 @@ const SolicitudesEntrantes = () => {
                             <h3 className="text-lg font-bold text-rose-800">Motivo de Rechazo</h3>
                         </div>
                         <div className="p-6">
-                            <p className="text-sm text-slate-600 mb-4 font-medium">Por favor, escribe el feedback o motivo por el cual no puedes aceptar esta tutoría (Requerimiento de la Comisión).</p>
+                            <p className="text-sm text-slate-600 mb-4 font-medium">Por favor, escribe el feedback o motivo por el cual no puedes aceptar esta tutoría.</p>
                             <textarea 
                                 value={textoFeedback}
                                 onChange={(e) => setTextoFeedback(e.target.value)}
