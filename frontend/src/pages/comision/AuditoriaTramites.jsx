@@ -27,17 +27,19 @@ function AuditoriaTramites() {
         const guardado = localStorage.getItem('tramiteActivo_comision');
         return guardado ? JSON.parse(guardado) : null;
     });
+
     const tomarTramite = async (tramite) => {
         try {
             const { data } = await clienteAxios.put(`/comision/tramites/tomar/${tramite._id}`);
             toast.info("Has bloqueado este trámite para tu revisión.");
             setTramiteActivo(data.tramite);
-            localStorage.setItem('tramiteActivo_comision', JSON.stringify(data.tramite)); // <- Guardar
+            localStorage.setItem('tramiteActivo_comision', JSON.stringify(data.tramite));
             cargarTramites(); 
         } catch (error) {
             toast.error(error.response?.data?.msg || "No se pudo tomar el trámite.");
         }
     };
+
     const limpiarTramiteActivo = () => {
         setTramiteActivo(null);
         localStorage.removeItem('tramiteActivo_comision');
@@ -108,9 +110,11 @@ function AuditoriaTramites() {
                     <p className="text-slate-500 mt-2 font-medium">Revisa y oficializa las duplas de estudiante/tutor aceptadas en la ESFOT.</p>
                 </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Cambio principal: lg:grid-cols-2 asegura 50% / 50% */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                     
-                    <div className={`${tramiteActivo ? 'lg:col-span-5' : 'lg:col-span-12'} transition-all duration-300`}>
+                    {/* Caja 1: Bandeja - Ocupa 2 columnas si no hay trámite, o 1 si lo hay */}
+                    <div className={`${tramiteActivo ? 'lg:col-span-1' : 'lg:col-span-2'} transition-all duration-300 w-full`}>
                         <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
                             <div className="bg-slate-800 px-6 py-5 border-b border-slate-200 flex justify-between items-center">
                                 <h3 className="text-lg font-bold text-white">Bandeja de Entrada</h3>
@@ -161,8 +165,9 @@ function AuditoriaTramites() {
                         </div>
                     </div>
 
+                    {/* Caja 2: Resolución - Ocupa 1 columna */}
                     {tramiteActivo && (
-                        <div className="lg:col-span-7 lg:sticky lg:top-8 bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden w-full">
+                        <div className="lg:col-span-1 lg:sticky lg:top-8 bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden w-full">
                             <div className="bg-slate-800 px-6 py-4 border-b border-slate-700 flex justify-between items-center">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
