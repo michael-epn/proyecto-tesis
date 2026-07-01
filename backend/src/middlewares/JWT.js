@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 import Estudiante from "../models/Estudiante.js"
 import Docente from "../models/Docente.js"
-import Direccion from "../models/Comision.js"
+import Comision from "../models/Comision.js"
 
 const crearTokenJWT = (id, rol) => {
     return jwt.sign(
@@ -34,10 +34,10 @@ const verificarTokenJWT = async (req, res, next) => {
             if (!usuarioBDD) return res.status(401).json({ msg: "Usuario no encontrado" })
             req.docente = usuarioBDD
             
-        } else if (rol === "direccion") {
-            usuarioBDD = await Direccion.findById(id).lean().select("-password")
+        } else if (rol === "comision") {
+            usuarioBDD = await Comision.findById(id).lean().select("-password")
             if (!usuarioBDD) return res.status(401).json({ msg: "Usuario no encontrado" })
-            req.direccion = usuarioBDD
+            req.comision = usuarioBDD
             
         } else {
             return res.status(403).json({ msg: "Rol de usuario no valido" })

@@ -34,13 +34,12 @@ const SolicitudesEntrantes = () => {
             });
             
             setSolicitudes(solicitudes.filter(s => s._id !== idSolicitud));
-            toast.success("Trámite aceptado exitosamente");
+            toast.success("Tema de tesis aceptado exitosamente");
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al aceptar la solicitud");
         }
     };
 
-    // Funciones para Rechazar (con modal)
     const abrirModalRechazo = (idSolicitud) => {
         setSolicitudARechazar(idSolicitud);
         setTextoFeedback('');
@@ -59,7 +58,7 @@ const SolicitudesEntrantes = () => {
             });
             
             setSolicitudes(solicitudes.filter(s => s._id !== solicitudARechazar));
-            toast.success("Trámite rechazado. Se notificará al estudiante.");
+            toast.success("Tema de tesis rechazado. Se notificará al estudiante.");
             
             setModalFeedback(false);
             setTextoFeedback('');

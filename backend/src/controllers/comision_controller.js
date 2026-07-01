@@ -1,7 +1,9 @@
 import Comision from "../models/Comision.js"
-import { sendMailToRegister, sendMailToRecoveryPassword } from "../helpers/sendMail.js"
+import { sendMailToRegister, sendMailToRecoveryPassword, sendMailResolucionComision, sendMailResolucionComisionDocente } from "../helpers/sendMail.js"
 import { crearTokenJWT } from "../middlewares/JWT.js"
 import mongoose from "mongoose"
+import Docente from "../models/Docente.js"
+import SolicitudTesis from "../models/SolicitudTesis.js"
 
 const registro = async (req, res) => {
     const { nombre, apellido, cargo, email, password } = req.body;
@@ -16,7 +18,7 @@ const registro = async (req, res) => {
         const nuevaComision = new Comision(req.body);
         const token = nuevaComision.createToken();
         try {
-            await sendMailToRegister(email, token, "Comision");
+            await sendMailToRegister(email, token, "comision");
         } catch (mailError) {
             console.error("Error enviando correo:", mailError);
             return res.status(500).json({ msg: "Error al enviar el correo de confirmación" });
@@ -24,7 +26,7 @@ const registro = async (req, res) => {
         await nuevaComision.save();
         res.status(200).json({ msg: "Revisa tu correo para confirmar tu cuenta" });
     } catch (error) {
-        console.error("Error detallado:", error); // Vital para debuggear
+        console.error("Error detallado:", error);
         res.status(500).json({ msg: `Error en el servidor: ${error.message}` });
     }
 }
@@ -35,49 +37,62 @@ const login = async (req, res) => {
         if (Object.values(req.body).includes("")) {
             return res.status(400).json({ msg: "Debes llenar todos los campos" })
         }
-        const ComisionBDD = await Comision.findOne({ email })
-        if (!ComisionBDD) {
-            return res.status(404).json({ msg: "El administrador no esta registrado" })
+        const comisionBDD = await Comision.findOne({ email })
+        if (!comisionBDD) {
+            return res.status(404).json({ msg: "La comision no esta registrada" })
         }
-        if (!ComisionBDD.confirmEmail) {
+        if (!comisionBDD.confirmEmail) {
             return res.status(403).json({ msg: "Debes confirmar tu cuenta" })
         }
-        const verificarPassword = await ComisionBDD.matchPassword(password)
+        const verificarPassword = await comisionBDD.matchPassword(password)
         if (!verificarPassword) {
             return res.status(401).json({ msg: "Password incorrecto" })
         }
-        const token = crearTokenJWT(ComisionBDD._id, ComisionBDD.rol)
-        const { nombre, apellido, cargo, _id, rol } = ComisionBDD
-        res.status(200).json({ token, rol, nombre, apellido, cargo, _id, email: ComisionBDD.email })
+        const token = crearTokenJWT(comisionBDD._id, comisionBDD.rol)
+        const { nombre, apellido, cargo, _id, rol, cedula, celular } = comisionBDD
+        res.status(200).json({ token, rol, nombre, apellido, cargo, _id, email: comisionBDD.email, cedula, celular })
     } catch (error) {
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
     }
 }
 
 const perfil = (req, res) => {
-    const { token, confirmEmail, createdAt, updatedAt, __v, password, ...datosPerfil } = req.Comision._doc || req.Comision
+    const { token, confirmEmail, createdAt, updatedAt, __v, password, ...datosPerfil } = req.comision._doc || req.comision
     res.status(200).json(datosPerfil)
 }
 
 const actualizarPerfil = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, apellido, cargo } = req.body;
+        const { nombre, apellido, cargo, celular, cedula } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ msg: `ID invalido: ${id}` });
         }
-        const ComisionBDD = await Comision.findById(id);
-        if (!ComisionBDD) {
-            return res.status(404).json({ msg: "Administrador no encontrado" });
+        const comisionBDD = await Comision.findById(id);
+        if (!comisionBDD) {
+            return res.status(404).json({ msg: "Comisionado no encontrado" });
         }
         if (Object.values(req.body).includes("")) {
             return res.status(400).json({ msg: "Debes llenar todos los campos" });
         }
-        ComisionBDD.nombre = nombre ?? ComisionBDD.nombre;
-        ComisionBDD.apellido = apellido ?? ComisionBDD.apellido;
-        ComisionBDD.cargo = cargo ?? ComisionBDD.cargo;
-        await ComisionBDD.save();
-        res.status(200).json(ComisionBDD);
+        if (req.files && req.files.fotoPerfil) {
+            const archivoTemp = req.files.fotoPerfil.tempFilePath;
+            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT/Perfiles_Comisiones");
+            comisionBDD.fotoPerfil = secure_url;
+        }
+        if (req.files && req.files.bannerPerfil) {
+            const archivoTemp = req.files.bannerPerfil.tempFilePath;
+            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT/Banners_Comisiones");
+            comisionBDD.bannerPerfil = secure_url;
+        }
+        comisionBDD.nombre = nombre ?? comisionBDD.nombre;
+        comisionBDD.apellido = apellido ?? comisionBDD.apellido;
+        comisionBDD.cargo = cargo ?? comisionBDD.cargo;
+        comisionBDD.celular = celular ?? comisionBDD.celular;
+        comisionBDD.cedula = cedula ?? comisionBDD.cedula;
+        await comisionBDD.save();
+        const comisionActualizado = await Comision.findById(id).select("-password -token -confirmEmail -createdAt -updatedAt -__v");
+        res.status(200).json(comisionActualizado);
     } catch (error) {
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` });
     }
@@ -85,16 +100,16 @@ const actualizarPerfil = async (req, res) => {
 
 const actualizarPassword = async (req, res) => {
     try {
-        const ComisionBDD = await Comision.findById(req.Comision._id)
-        if (!ComisionBDD) {
+        const comisionBDD = await Comision.findById(req.comision._id)
+        if (!comisionBDD) {
             return res.status(404).json({ msg: "Usuario no encontrado" })
         }
-        const verificarPassword = await ComisionBDD.matchPassword(req.body.passwordactual)
+        const verificarPassword = await comisionBDD.matchPassword(req.body.passwordactual)
         if (!verificarPassword) {
             return res.status(400).json({ msg: "El password actual no es correcto" })
         }
-        ComisionBDD.password = req.body.passwordnuevo
-        await ComisionBDD.save()
+        comisionBDD.password = req.body.passwordnuevo
+        await comisionBDD.save()
         res.status(200).json({ msg: "Password actualizado correctamente" })
     } catch (error) {
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
@@ -124,13 +139,13 @@ const recuperarPassword = async (req, res) => {
         if (!email) {
             return res.status(400).json({ msg: "Debes ingresar un correo electronico" })
         }
-        const ComisionBDD = await Comision.findOne({ email })
-        if (!ComisionBDD) {
+        const comisionBDD = await Comision.findOne({ email })
+        if (!comisionBDD) {
             return res.status(404).json({ msg: "El usuario no se encuentra registrado" })
         }
-        const token = ComisionBDD.createToken()
-        await sendMailToRecoveryPassword(email, token, "Comision")
-        await ComisionBDD.save()
+        const token = comisionBDD.createToken()
+        await sendMailToRecoveryPassword(email, token, "comision")
+        await comisionBDD.save()
         res.status(200).json({ msg: "Revisa tu correo electronico para restablecer tu cuenta" })
     } catch (error) {
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
@@ -140,8 +155,8 @@ const recuperarPassword = async (req, res) => {
 const comprobarTokenPasword = async (req, res) => {
     try {
         const { token } = req.params
-        const ComisionBDD = await Comision.findOne({ token })
-        if (!ComisionBDD || ComisionBDD.token !== token) {
+        const comisionBDD = await Comision.findOne({ token })
+        if (!comisionBDD || comisionBDD.token !== token) {
             return res.status(404).json({ msg: "Lo sentimos, no se puede validar la cuenta" })
         }
         res.status(200).json({ msg: "Token confirmado, ya puedes crear tu nuevo password" })
@@ -160,18 +175,159 @@ const crearNuevoPassword = async (req, res) => {
         if (password !== confirmpassword) {
             return res.status(400).json({ msg: "Los passwords no coinciden" })
         }
-        const ComisionBDD = await Comision.findOne({ token })
-        if (!ComisionBDD) {
+        const comisionBDD = await Comision.findOne({ token })
+        if (!comisionBDD) {
             return res.status(404).json({ msg: "No se puede validar la cuenta" })
         }
-        ComisionBDD.token = null
-        ComisionBDD.password = password 
-        await ComisionBDD.save()
+        comisionBDD.token = null
+        comisionBDD.password = password 
+        await comisionBDD.save()
         res.status(200).json({ msg: "Felicitaciones, ya puedes iniciar sesion con tu nuevo password" })
     } catch (error) {
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
     }
 }
+
+const obtenerMetricas = async (req, res) => {
+    try {
+        const estados = await SolicitudTesis.aggregate([
+            { $group: { _id: "$estado", total: { $sum: 1 } } }
+        ]);
+
+        const cargaDocente = await Docente.find()
+            .sort({ cupos_ocupados: -1 })
+            .limit(5)
+            .select('nombre apellido cupos_ocupados cupos_maximos');
+
+        const tecnologias = await SolicitudTesis.aggregate([
+            { $match: { estado: { $in: ['aprobado_final', 'en_comision', 'en_revision'] } } },
+            { $lookup: { from: 'temagenerados', localField: 'tema', foreignField: '_id', as: 'temaInfo' } },
+            { $unwind: "$temaInfo" },
+            { $unwind: "$temaInfo.tecnologias" },
+            { $group: { _id: "$temaInfo.tecnologias", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 10 }
+        ]);
+
+        res.status(200).json({ estados, cargaDocente, tecnologias });
+    } catch (error) {
+        res.status(500).json({ msg: `Error obteniendo métricas: ${error.message}` });
+    }
+};
+
+const obtenerTramitesPendientes = async (req, res) => {
+    try {
+        const tramites = await SolicitudTesis.find({ estado: { $in: ['en_comision', 'en_revision'] } })
+            .populate('estudiante', 'nombre apellido email')
+            .populate('docente', 'nombre apellido email')
+            .populate('tema', 'titulo descripcion tecnologias promptData')
+            .populate('revisor', 'nombre apellido email') 
+            .sort({ updatedAt: 1 });
+        
+        res.status(200).json(tramites);
+    } catch (error) {
+        res.status(500).json({ msg: "Error al obtener trámites" });
+    }
+};
+
+const tomarTramite = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const tramite = await SolicitudTesis.findById(id);
+
+        if (!tramite) return res.status(404).json({ msg: "Trámite no encontrado" });
+        if (tramite.estado !== 'en_comision') {
+            return res.status(400).json({ msg: "Este trámite ya está siendo revisado por otro colega o ya fue resuelto." });
+        }
+
+        tramite.estado = 'en_revision';
+        tramite.revisor = req.comision._id; 
+        tramite.historial.push({ accion: 'En Revisión', detalle: `Bloqueado temporalmente para revisión.` });
+
+        await tramite.save();
+        await tramite.populate([
+            { path: 'estudiante', select: 'nombre apellido email' },
+            { path: 'docente', select: 'nombre apellido email' },
+            { path: 'tema', select: 'titulo descripcion tecnologias promptData' }
+        ]);
+        res.status(200).json({ msg: "Trámite asignado a tu bandeja personal", tramite });
+    } catch (error) {
+        res.status(500).json({ msg: "Error al tomar el trámite" });
+    }
+};
+
+const liberarTramite = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const tramite = await SolicitudTesis.findOne({ _id: id, revisor: req.comision._id });
+
+        if (!tramite) return res.status(404).json({ msg: "Trámite no encontrado o bloqueado por otra persona." });
+
+        tramite.estado = 'en_comision';
+        tramite.revisor = null;
+        tramite.historial.push({ accion: 'Liberado', detalle: 'Devuelto al Pool Global.' });
+
+        await tramite.save();
+        res.status(200).json({ msg: "Trámite liberado correctamente" });
+    } catch (error) {
+        res.status(500).json({ msg: "Error al liberar el trámite" });
+    }
+};
+
+const resolverTramite = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { estadoFinal, feedback } = req.body; 
+        if (!['aprobado_final', 'rechazado_comision'].includes(estadoFinal)) {
+            return res.status(400).json({ msg: "Estado de resolución inválido" });
+        }
+        if (estadoFinal === 'rechazado_comision' && !feedback) {
+            return res.status(400).json({ msg: "El feedback es obligatorio al rechazar" });
+        }
+        const tramite = await SolicitudTesis.findOne({ _id: id, revisor: req.comision._id })
+            .populate('estudiante', 'email nombre apellido')
+            .populate('docente', 'email nombre apellido'); 
+        if (!tramite) return res.status(403).json({ msg: "No tienes permiso para resolver este trámite." });
+        tramite.estado = estadoFinal;
+        tramite.feedback = feedback || "Proyecto aprobado por la comisión. Éxitos en tu titulación.";
+        tramite.historial.push({ 
+            accion: estadoFinal === 'aprobado_final' ? 'Aprobación Final' : 'Rechazo de Comisión', 
+            detalle: tramite.feedback 
+        });
+        if (estadoFinal === 'rechazado_comision') {
+            await Docente.findByIdAndUpdate(tramite.docente, { $inc: { cupos_ocupados: -1 } });
+        }
+        await tramite.save();
+        try {
+            await sendMailResolucionComision(tramite.estudiante.email, estadoFinal, tramite.feedback);
+            const nombreEstudiante = `${tramite.estudiante.nombre} ${tramite.estudiante.apellido}`;
+            await sendMailResolucionComisionDocente(tramite.docente.email, estadoFinal, tramite.feedback, nombreEstudiante);
+            
+        } catch (mailError) {
+            console.error("No se pudo enviar el correo de notificación:", mailError);
+        }
+        res.status(200).json({ msg: `Trámite marcado como ${estadoFinal.replace('_', ' ')}` });
+    } catch (error) {
+        res.status(500).json({ msg: "Error al resolver el trámite" });
+    }
+};
+
+const obtenerHistorialComision = async (req, res) => {
+    try {
+        const historial = await SolicitudTesis.find({
+            estado: { $in: ['aprobado_final', 'rechazado_comision'] }
+        })
+        .populate('estudiante', 'nombre apellido email')
+        .populate('docente', 'nombre apellido email')
+        .populate('tema', 'titulo descripcion tecnologias')
+        .populate('revisor', 'nombre apellido cargo')
+        .sort({ updatedAt: -1 });
+        
+        res.status(200).json(historial);
+    } catch (error) {
+        res.status(500).json({ msg: "Error al obtener el historial de la comisión" });
+    }
+};
 
 export {
     registro,
@@ -182,5 +338,11 @@ export {
     confirmarMail,
     recuperarPassword,
     comprobarTokenPasword,
-    crearNuevoPassword
+    crearNuevoPassword,
+    resolverTramite,
+    obtenerMetricas,
+    liberarTramite,
+    obtenerTramitesPendientes,
+    tomarTramite,
+    obtenerHistorialComision
 }

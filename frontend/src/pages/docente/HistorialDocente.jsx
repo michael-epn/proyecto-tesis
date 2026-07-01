@@ -11,7 +11,8 @@ const HistorialDocente = () => {
         const obtenerHistorial = async () => {
             try {
                 const { data } = await clienteAxios.get('/tesis/historial/recibidas');
-                const gestionadas = data.filter(sol => sol.estado === 'aceptada' || sol.estado === 'rechazada');
+                const estadosGestionados = ['aceptada', 'rechazada', 'en_comision', 'en_revision', 'aprobado_final', 'rechazado_comision'];
+                const gestionadas = data.filter(sol => estadosGestionados.includes(sol.estado));
                 setHistorial(gestionadas);
             } catch (error) {
                 toast.error("Error al cargar el historial de gestiones");
@@ -22,13 +23,57 @@ const HistorialDocente = () => {
         obtenerHistorial();
     }, []);
 
-    const cuposOcupados = historial.filter(sol => sol.estado === 'aceptada').length;
+    const estadosActivos = ['aceptada', 'en_comision', 'en_revision', 'aprobado_final'];
+    const cuposOcupados = historial.filter(sol => estadosActivos.includes(sol.estado)).length;
 
     const historialOrdenado = [...historial].sort((a, b) => {
-        const fechaA = new Date(a.createdAt || 0);
-        const fechaB = new Date(b.createdAt || 0);
+        const fechaA = new Date(a.updatedAt || a.createdAt || 0);
+        const fechaB = new Date(b.updatedAt || b.createdAt || 0);
         return orden === 'reciente' ? fechaB - fechaA : fechaA - fechaB;
     });
+
+    const renderBadgeEstado = (estado) => {
+        switch(estado) {
+            case 'aprobado_final':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Aval Comisión
+                    </span>
+                );
+            case 'rechazado_comision':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-100 text-rose-700 border border-rose-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Devuelto (Comisión)
+                    </span>
+                );
+            case 'en_comision':
+            case 'en_revision':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 border border-amber-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        En Auditoría
+                    </span>
+                );
+            case 'aceptada':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                        Aceptada (Local)
+                    </span>
+                );
+            case 'rechazada':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Rechazada (Local)
+                    </span>
+                );
+            default:
+                return null;
+        }
+    };
 
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
@@ -37,7 +82,7 @@ const HistorialDocente = () => {
                     <div className="flex flex-col gap-4">
                         <div>
                             <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Historial de Tutorías</h2>
-                            <p className="text-slate-500 mt-2 font-medium">Registro de solicitudes de titulación aceptadas o rechazadas.</p>
+                            <p className="text-slate-500 mt-2 font-medium">Audita el estado de tus estudiantes en la Comisión y tus resoluciones locales.</p>
                         </div>
                         <div className="flex items-center gap-3">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Ordenar por:</label>
@@ -46,7 +91,7 @@ const HistorialDocente = () => {
                                 onChange={(e) => setOrden(e.target.value)}
                                 className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 outline-none shadow-sm cursor-pointer"
                             >
-                                <option value="reciente">Más recientes</option>
+                                <option value="reciente">Última actualización</option>
                                 <option value="antiguo">Más antiguos</option>
                             </select>
                         </div>
@@ -59,7 +104,7 @@ const HistorialDocente = () => {
                             </svg>
                         </div>
                         <div>
-                            <p className="text-xs font-bold text-slate-500 uppercase">Proyectos Aceptados</p>
+                            <p className="text-xs font-bold text-slate-500 uppercase">Cupos Activos</p>
                             <p className="text-xl font-extrabold text-slate-800">{cuposOcupados} <span className="text-sm font-medium text-slate-400">estudiantes</span></p>
                         </div>
                     </div>
@@ -71,7 +116,7 @@ const HistorialDocente = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
-                            Gestiones Realizadas
+                            Gestiones y Trazabilidad
                         </h3>
                     </div>
 
@@ -80,8 +125,8 @@ const HistorialDocente = () => {
                             <thead>
                                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider">
                                     <th className="px-6 py-4 font-bold">Estudiante</th>
-                                    <th className="px-6 py-4 font-bold">Tema Propuesto</th>
-                                    <th className="px-6 py-4 font-bold text-center">Estado de Resolución</th>
+                                    <th className="px-6 py-4 font-bold">Tema e Historial de Feedback</th>
+                                    <th className="px-6 py-4 font-bold text-center">Estado Actual</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
@@ -109,23 +154,15 @@ const HistorialDocente = () => {
                                                 <div className="mt-3 bg-slate-100 border border-slate-200 p-3 rounded-lg flex items-start gap-2">
                                                     <svg className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                                                     <div>
-                                                        <span className="text-xs font-bold text-slate-500 uppercase block mb-1">Feedback enviado a la Comisión:</span>
-                                                        <span className="text-sm text-slate-700 italic">"{sol.feedback || 'Sin feedback registrado'}"</span>
+                                                        <span className="text-xs font-bold text-slate-500 uppercase block mb-1">
+                                                            {sol.estado.includes('comision') || sol.estado === 'aprobado_final' ? 'Dictamen de Comisión:' : 'Tu Feedback:'}
+                                                        </span>
+                                                        <span className="text-sm text-slate-700 italic">"{sol.feedback || 'Sin observaciones registradas'}"</span>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 align-middle text-center">
-                                                {sol.estado === 'aceptada' ? (
-                                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-100 text-green-700 border border-green-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                                        Aceptada
-                                                    </span>
-                                                ) : (
-                                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-100 text-red-700 border border-red-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                        Rechazada
-                                                    </span>
-                                                )}
+                                                {renderBadgeEstado(sol.estado)}
                                             </td>
                                         </tr>
                                     ))

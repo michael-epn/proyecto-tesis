@@ -25,12 +25,18 @@ const docenteSchema = new Schema({
         unique: true 
     },
     password: { type: String, required: true },
+    celular: { type: String, trim: true, default: null },
+    cedula: { type: String, trim: true, default: null },
     fotoPerfil: { type: String, default: null },
     bannerPerfil: { type: String, default: null },
     areas_investigacion: { type: [String], default: [] },
     tecnologias_especialidad: { type: [String], default: [] },
     cupos_maximos: { type: Number, required: true, default: 5 },
-    cupos_ocupados: { type: Number, default: 0 },
+    cupos_ocupados: { 
+        type: Number, 
+        default: 0,
+        min: [0, 'Los cupos ocupados no pueden ser menores a 0']
+    },
     disponibilidad: { type: Boolean, default: true },
     status: { type: Boolean, default: true },
     token: { type: String, default: null },

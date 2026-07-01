@@ -27,6 +27,8 @@ const estudianteSchema = new Schema({
         match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Formato de correo inválido']
     },
     password: { type: String, required: true },
+    celular: { type: String, trim: true, default: null },
+    cedula: { type: String, trim: true, default: null },
     fotoPerfil: { type: String, default: null },
     bannerPerfil: { type: String, default: null },
     materias_favoritas: { type: [String], default: [] },
@@ -43,12 +45,10 @@ estudianteSchema.pre('save', async function() {
     this.password = await bcrypt.hash(this.password, salt)
 })
 
-// Método para verificar password en el login
 estudianteSchema.methods.matchPassword = async function(password) {
     return await bcrypt.compare(password, this.password)
 }
 
-// Método para generar token de recuperación o confirmación
 estudianteSchema.methods.createToken = function() {
     const tokenGenerado = Math.random().toString(36).slice(2)
     this.token = tokenGenerado

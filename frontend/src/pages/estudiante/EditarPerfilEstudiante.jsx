@@ -44,6 +44,8 @@ const EditarPerfilEstudiante = () => {
                 const { data } = await clienteAxios.get(`/estudiante/perfil?t=${new Date().getTime()}`);
                 reset({
                     ...data,
+                    cedula: data.cedula || '',
+                    celular: data.celular || '',
                     materias_favoritas: data.materias_favoritas?.map(m => ({ value: m, label: m })) || [],
                     cursos_adicionales: data.cursos_adicionales?.join(', ') || ''
                 });
@@ -82,6 +84,8 @@ const EditarPerfilEstudiante = () => {
             const dataToSend = new FormData();
             dataToSend.append('nombre', dataRestante.nombre);
             dataToSend.append('apellido', dataRestante.apellido);
+            dataToSend.append('cedula', dataRestante.cedula);
+            dataToSend.append('celular', dataRestante.celular);
             dataToSend.append('carrera', dataRestante.carrera);
             dataToSend.append('materias_favoritas', JSON.stringify(materiasArray));
             dataToSend.append('cursos_adicionales', JSON.stringify(cursosArray));
@@ -186,6 +190,8 @@ const EditarPerfilEstudiante = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label="Nombre" register={register} name="nombre" />
                                     <InputField label="Apellido" register={register} name="apellido" />
+                                    <InputField label="Cédula" register={register} name="cedula" />
+                                    <InputField label="Celular" register={register} name="celular" />
                                     <InputField label="Carrera" register={register} name="carrera" disabled={true} />
                                     <InputField label="Correo Electrónico" register={register} name="email" type="email" disabled={true} />
                                 </div>

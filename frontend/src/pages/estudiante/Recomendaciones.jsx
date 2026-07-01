@@ -8,7 +8,7 @@ const Recomendaciones = () => {
     const [cargandoIA, setCargandoIA] = useState(false);
     
     const [recomendaciones, setRecomendaciones] = useState(() => {
-        const borradoresGuardados = localStorage.getItem('borradores_tesis');
+        const borradoresGuardados = localStorage.getItem('borradores_temas');
         return borradoresGuardados ? JSON.parse(borradoresGuardados) : [];
     });
 
@@ -17,7 +17,7 @@ const Recomendaciones = () => {
     const [dropdownAbierto, setDropdownAbierto] = useState(null);
 
     useEffect(() => {
-        localStorage.setItem('borradores_tesis', JSON.stringify(recomendaciones));
+        localStorage.setItem('borradores_temas', JSON.stringify(recomendaciones));
     }, [recomendaciones]);
 
     useEffect(() => {
@@ -80,7 +80,7 @@ const Recomendaciones = () => {
                 docenteId: docenteAsignado
             });
             cancelarBorrador(borrador.id_temporal);
-            toast.success("Tema guardado y solicitud enviada a la Comisión.");
+            toast.success("Tema guardado y solicitud enviada al Docente.");
 
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al enviar solicitud");

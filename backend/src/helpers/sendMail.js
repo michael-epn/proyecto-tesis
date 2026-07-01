@@ -3,7 +3,7 @@ import sendMail from "../config/brevo.js"
 const sendMailToRegister = async (userMail, token, rol) => {
     return await sendMail(
         userMail,
-        "Confirmacion de Cuenta - Sistema de Recomendacion de Tesis ESFOT",
+        "Confirmacion de Cuenta - Sistema de Recomendacion de Temas ESFOT",
         `
         <div style="font-family: 'Inter', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.02);">
             <div style="background-color: #2f227c; padding: 25px; text-align: center;">
@@ -12,7 +12,7 @@ const sendMailToRegister = async (userMail, token, rol) => {
             <div style="padding: 30px; background-color: #ffffff; color: #1f2937;">
                 <h2 style="color: #111827; margin-top: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.01em;">Verificacion de credenciales</h2>
                 <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Saludos cordiales,</p>
-                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Tu registro en el Sistema Inteligente de Recomendacion de Tesis ha sido procesado con exito. Para activar tu perfil, es indispensable confirmar tu direccion de correo electronico.</p>
+                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Tu registro en el Sistema Inteligente de Recomendacion de Temas ha sido procesado con exito. Para activar tu perfil, es indispensable confirmar tu direccion de correo electronico.</p>
                 <div style="text-align: center; margin: 35px 0;">
                     <a href="${process.env.URL_FRONTEND}/auth/confirmar/${token}" style="background-color: #8470ff; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; font-size: 14px; display: inline-block; box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.02);">Confirmar Cuenta</a>
                 </div>
@@ -31,7 +31,7 @@ const sendMailToRegister = async (userMail, token, rol) => {
 const sendMailToRecoveryPassword = async (userMail, token, rol) => {
     return await sendMail(
         userMail,
-        "Recuperacion de Password - Sistema de Recomendacion de Tesis ESFOT",
+        "Recuperacion de Password - Sistema de Recomendacion de Temas ESFOT",
         `
         <div style="font-family: 'Inter', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.02);">
             <div style="background-color: #2f227c; padding: 25px; text-align: center;">
@@ -60,7 +60,7 @@ const sendMailSolicitudActualizada = async (userMail, estado, feedback) => {
     
     return await sendMail(
         userMail,
-        `Actualización de Solicitud de Tesis - ${estado.toUpperCase()}`,
+        `Actualización de Solicitud de Tema - ${estado.toUpperCase()}`,
         `
         <div style="font-family: 'Inter', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.02);">
             <div style="background-color: #2f227c; padding: 25px; text-align: center;">
@@ -69,7 +69,7 @@ const sendMailSolicitudActualizada = async (userMail, estado, feedback) => {
             <div style="padding: 30px; background-color: #ffffff; color: #1f2937;">
                 <h2 style="color: #111827; margin-top: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.01em;">Actualización de Solicitud</h2>
                 <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Saludos cordiales,</p>
-                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Te informamos que el estado de tu solicitud de tesis ha sido actualizado a: <strong style="color: #111827; text-transform: uppercase;">${estado}</strong>.</p>
+                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Te informamos que el estado de tu solicitud de tema ha sido actualizado a: <strong style="color: #111827; text-transform: uppercase;">${estado}</strong>.</p>
                 
                 <div style="font-size: 16px; line-height: 1.5; color: #4b5563; margin: 20px 0; padding: 15px; background-color: #f9fafb; border-left: 4px solid #8470ff; border-radius: 4px;">
                     ${mensajeExtra}
@@ -90,4 +90,100 @@ const sendMailSolicitudActualizada = async (userMail, estado, feedback) => {
     );
 };
 
-export { sendMailToRegister, sendMailToRecoveryPassword, sendMailSolicitudActualizada }
+const sendMailResolucionComision = async (userMail, estado, feedback) => {
+    const esAprobado = estado === 'aprobado_final';
+    const textos = {
+        titulo: esAprobado ? 'Resolución Favorable de Comisión' : 'Observaciones de Comisión',
+        estadoFormateado: esAprobado ? 'APROBADO DEFINITIVAMENTE' : 'RECHAZADO CON OBSERVACIONES',
+        mensajePrincipal: esAprobado 
+            ? 'Nos complace informarte que la Comisión ha revisado y dado luz verde a tu propuesta de titulación. Ya puedes iniciar el desarrollo oficial de tu proyecto.'
+            : 'La Comisión ha revisado tu propuesta y ha determinado que requiere ajustes antes de poder ser aprobada. Tu cupo con el docente ha sido liberado temporalmente.'
+    };
+
+    return await sendMail(
+        userMail,
+        `Resolución de Comisión ESFOT - ${textos.estadoFormateado}`,
+        `
+        <div style="font-family: 'Inter', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.02);">
+            <div style="background-color: #2f227c; padding: 25px; text-align: center;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em;">SISTEMA PREDICTIVO ESFOT</h1>
+            </div>
+            <div style="padding: 30px; background-color: #ffffff; color: #1f2937;">
+                <h2 style="color: #111827; margin-top: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.01em;">${textos.titulo}</h2>
+                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Saludos cordiales,</p>
+                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">${textos.mensajePrincipal}</p>
+                
+                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Dictamen final: <strong style="color: #111827; text-transform: uppercase;">${textos.estadoFormateado}</strong>.</p>
+                
+                <div style="font-size: 16px; line-height: 1.5; color: #4b5563; margin: 20px 0; padding: 15px; background-color: #f9fafb; border-left: 4px solid #8470ff; border-radius: 4px;">
+                    <p style="margin: 0; font-weight: 600; color: #111827; margin-bottom: 5px;">Detalle de la resolución:</p>
+                    <p style="margin: 0;">${feedback}</p>
+                </div>
+
+                <div style="text-align: center; margin: 35px 0;">
+                    <a href="${process.env.URL_FRONTEND}" style="background-color: #8470ff; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; font-size: 14px; display: inline-block; box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.02);">Ingresar al Sistema</a>
+                </div>
+                <p style="font-size: 14px; color: #9ca3af; margin-bottom: 0; border-top: 1px solid #e5e7eb; padding-top: 15px;">Este es un mensaje automático generado por el proceso de gobernanza de la institución.</p>
+            </div>
+            <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280;">
+                <strong>Escuela de Formación de Tecnólogos (ESFOT)</strong><br>
+                Escuela Politécnica Nacional<br>
+                Quito, Ecuador
+            </div>
+        </div>
+        `
+    );
+};
+
+const sendMailResolucionComisionDocente = async (userMail, estado, feedback, estudianteNombre) => {
+    const esAprobado = estado === 'aprobado_final';
+    const textos = {
+        titulo: 'Dictamen de Comisión - Tutoría',
+        estadoFormateado: esAprobado ? 'APROBADO DEFINITIVAMENTE' : 'RECHAZADO CON OBSERVACIONES',
+        mensajePrincipal: esAprobado 
+            ? `La Comisión ha revisado y <strong>aprobado</strong> la propuesta de titulación del estudiante <strong>${estudianteNombre}</strong> bajo tu tutoría. El cupo ha sido consolidado.`
+            : `La Comisión ha revisado la propuesta del estudiante <strong>${estudianteNombre}</strong> y ha determinado que requiere ajustes. El trámite ha sido devuelto y el cupo ha sido liberado temporalmente.`
+    };
+
+    return await sendMail(
+        userMail,
+        `Resolución de Comisión ESFOT - ${estudianteNombre}`,
+        `
+        <div style="font-family: 'Inter', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.02);">
+            <div style="background-color: #2f227c; padding: 25px; text-align: center;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em;">SISTEMA PREDICTIVO ESFOT</h1>
+            </div>
+            <div style="padding: 30px; background-color: #ffffff; color: #1f2937;">
+                <h2 style="color: #111827; margin-top: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.01em;">${textos.titulo}</h2>
+                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Estimado Docente,</p>
+                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">${textos.mensajePrincipal}</p>
+                
+                <p style="font-size: 16px; line-height: 1.5; color: #4b5563;">Dictamen final: <strong style="color: #111827; text-transform: uppercase;">${textos.estadoFormateado}</strong>.</p>
+                
+                <div style="font-size: 16px; line-height: 1.5; color: #4b5563; margin: 20px 0; padding: 15px; background-color: #f9fafb; border-left: 4px solid #8470ff; border-radius: 4px;">
+                    <p style="margin: 0; font-weight: 600; color: #111827; margin-bottom: 5px;">Observaciones de la comisión:</p>
+                    <p style="margin: 0;">${feedback}</p>
+                </div>
+
+                <div style="text-align: center; margin: 35px 0;">
+                    <a href="${process.env.URL_FRONTEND}" style="background-color: #8470ff; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; font-size: 14px; display: inline-block; box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.02);">Ingresar al Sistema</a>
+                </div>
+                <p style="font-size: 14px; color: #9ca3af; margin-bottom: 0; border-top: 1px solid #e5e7eb; padding-top: 15px;">Este es un mensaje automático generado por el proceso de gobernanza de la institución.</p>
+            </div>
+            <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280;">
+                <strong>Escuela de Formación de Tecnólogos (ESFOT)</strong><br>
+                Escuela Politécnica Nacional<br>
+                Quito, Ecuador
+            </div>
+        </div>
+        `
+    );
+};
+
+export { 
+    sendMailToRegister, 
+    sendMailToRecoveryPassword, 
+    sendMailSolicitudActualizada, 
+    sendMailResolucionComision, 
+    sendMailResolucionComisionDocente
+}

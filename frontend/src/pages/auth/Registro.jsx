@@ -49,7 +49,6 @@ const Registro = () => {
                     <h1 className="text-2xl md:text-3xl text-center font-bold text-gray-900 dark:text-white mb-6">Crear Cuenta</h1>
                     
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                        {/* Tipo de Perfil */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tipo de Perfil</label>
                             <select
@@ -62,7 +61,6 @@ const Registro = () => {
                             </select>
                         </div>
 
-                        {/* Nombre y Apellido */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nombre</label>
@@ -84,7 +82,6 @@ const Registro = () => {
                             </div>
                         </div>
 
-                        {/* Correo Institucional */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Correo Electrónico</label>
                             <input
@@ -96,7 +93,6 @@ const Registro = () => {
                             {errors.email && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
                         </div>
 
-                        {/* Carrera (Solo Estudiantes) */}
                         {rolSeleccionado === 'estudiante' && (
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Carrera</label>
@@ -116,7 +112,6 @@ const Registro = () => {
                             </div>
                         )}
 
-                        {/* Áreas de Investigación (Solo Docentes) */}
                         {rolSeleccionado === 'docente' && (
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Áreas de Investigación</label>
@@ -130,7 +125,6 @@ const Registro = () => {
                             </div>
                         )}
 
-                        {/* Cargo (Solo Comisión) */}
                         {rolSeleccionado === 'comision' && (
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Cargo</label>
@@ -144,7 +138,6 @@ const Registro = () => {
                             </div>
                         )}
 
-                        {/* Password */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password</label>
                             <div className="relative">

@@ -10,7 +10,14 @@ const comisionSchema = new Schema({
             message: 'El nombre no puede contener números'
         }
     },
-    apellido: { type: String, required: true, trim: true },
+    apellido: { type: String, required: true, trim: true,
+        validate: {
+            validator: function(value) {
+                return /^[a-zA-Z\s]+$/.test(value);
+            },
+            message: 'El apellido no puede contener números'
+        }
+    },
     cargo: { type: String, required: true, trim: true },
     email: { 
         type: String, 
@@ -19,6 +26,10 @@ const comisionSchema = new Schema({
         unique: true 
     },
     password: { type: String, required: true },
+    celular: { type: String, trim: true, default: null },
+    cedula: { type: String, trim: true, default: null },
+    fotoPerfil: { type: String, default: null },
+    bannerPerfil: { type: String, default: null },
     status: { type: Boolean, default: true },
     token: { type: String, default: null },
     confirmEmail: { type: Boolean, default: false },

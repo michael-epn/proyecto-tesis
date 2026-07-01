@@ -133,13 +133,19 @@ export const enviarListaComision = async (req, res) => {
     try {
         const resultado = await SolicitudTesis.updateMany(
             { docente: req.docente._id, estado: 'aceptada' },
-            { estado: 'en_comision' }
+            { 
+                $set: { estado: 'en_comision' },
+                $push: { 
+                    historial: { 
+                        accion: 'Enviado a Comisión', 
+                        detalle: 'Trámite despachado al Pool Global por el docente tutor.' 
+                    } 
+                }
+            }
         );
-
         if (resultado.modifiedCount === 0) {
             return res.status(400).json({ msg: "No hay estudiantes aceptados para enviar." });
         }
-
         res.status(200).json({ msg: `Se han enviado ${resultado.modifiedCount} solicitudes a la Comisión exitosamente.` });
     } catch (error) {
         res.status(500).json({ msg: "Error al enviar a la comisión" });

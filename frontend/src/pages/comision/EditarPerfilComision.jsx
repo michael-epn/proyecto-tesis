@@ -5,44 +5,45 @@ import { useNavigate } from 'react-router-dom';
 import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
 
-const InputField = ({ label, register, name, type = "text", disabled = false, options = {} }) => (
+const InputField = ({ label, register, name, type = "text", disabled = false }) => (
     <div>
         <label className="block text-sm font-bold text-slate-700 mb-2">{label}</label>
         <input 
             type={type} 
-            {...register(name, options)} 
+            {...register(name)} 
             disabled={disabled}
             className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
         />
     </div>
 );
 
-const EditarPerfilDocente = () => {
-    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
-    const { register: registerPassword, handleSubmit: handleSubmitPassword, reset: resetPassword } = useForm();   
+const EditarPerfilComision = () => {
+    const { register, handleSubmit, reset } = useForm();
+    const { register: registerPassword, handleSubmit: handleSubmitPassword, reset: resetPassword } = useForm();
+    
     const { user, token, rol, setAuth } = useAuthStore();
     const [cargando, setCargando] = useState(true);
     const navigate = useNavigate();
+
     const [fotoPreview, setFotoPreview] = useState(null);
     const [archivoFoto, setArchivoFoto] = useState(null);
+    
     const [bannerPreview, setBannerPreview] = useState(null);
     const [archivoBanner, setArchivoBanner] = useState(null);
+
     const [mostrarPasswordActual, setMostrarPasswordActual] = useState(false);
     const [mostrarPasswordNuevo, setMostrarPasswordNuevo] = useState(false);
-    const [cuposOcupados, setCuposOcupados] = useState(0);
 
     useEffect(() => {
         const cargarPerfil = async () => {
             try {
-                const { data } = await clienteAxios.get(`/docente/perfil?t=${new Date().getTime()}`);
+                const { data } = await clienteAxios.get(`/comision/perfil?t=${new Date().getTime()}`);
                 reset({
                     ...data,
                     cedula: data.cedula || '',
                     celular: data.celular || '',
-                    areas_investigacion: data.areas_investigacion?.join(', ') || '',
-                    tecnologias_especialidad: data.tecnologias_especialidad?.join(', ') || ''
+                    cargo: data.cargo || ''
                 });
-                setCuposOcupados(data.cupos_ocupados || 0);
                 if(data.fotoPerfil) {setFotoPreview(data.fotoPerfil);}
                 if(data.bannerPerfil) {setBannerPreview(data.bannerPerfil);}
             } catch (error) {
@@ -54,17 +55,6 @@ const EditarPerfilDocente = () => {
         cargarPerfil();
     }, [reset]);
 
-    const handleReiniciarCupos = async () => {
-        if(!window.confirm("¿Estás seguro de reiniciar a 0 tu contador de estudiantes?")) return;
-        try {
-            const { data } = await clienteAxios.post('/tesis/docente/reiniciar-cupos');
-            setCuposOcupados(0);
-            toast.success(data.msg);
-        } catch (error) {
-            toast.error("Error al reiniciar cupos");
-        }
-    };
-
     const handleFileChange = (e, setFileState, setPreviewState) => {
         const file = e.target.files[0];
         if (file) {
@@ -73,24 +63,16 @@ const EditarPerfilDocente = () => {
         }
     };
 
-    const cuposMaximosActuales = Number(watch("cupos_maximos")) || 0;
-
     const onSubmit = async (formData) => {
         try {
             const { email, ...dataRestante } = formData;
-
-            const areasArray = typeof dataRestante.areas_investigacion === 'string' ? dataRestante.areas_investigacion.split(',').map(i => i.trim()).filter(Boolean) : [];
-            const techArray = typeof dataRestante.tecnologias_especialidad === 'string' ? dataRestante.tecnologias_especialidad.split(',').map(i => i.trim()).filter(Boolean) : [];
-
+            
             const dataToSend = new FormData();
             dataToSend.append('nombre', dataRestante.nombre);
             dataToSend.append('apellido', dataRestante.apellido);
             dataToSend.append('cedula', dataRestante.cedula);
             dataToSend.append('celular', dataRestante.celular);
-            dataToSend.append('disponibilidad', dataRestante.disponibilidad);
-            dataToSend.append('cupos_maximos', Number(dataRestante.cupos_maximos));
-            dataToSend.append('areas_investigacion', JSON.stringify(areasArray));
-            dataToSend.append('tecnologias_especialidad', JSON.stringify(techArray));
+            dataToSend.append('cargo', dataRestante.cargo);
             
             if (archivoFoto) {
                 dataToSend.append('fotoPerfil', archivoFoto);
@@ -98,11 +80,12 @@ const EditarPerfilDocente = () => {
             if (archivoBanner) {
                 dataToSend.append('bannerPerfil', archivoBanner);
             }
-
-            const { data } = await clienteAxios.put(`/docente/perfil/${user?._id}`, dataToSend);
+            
+            const { data } = await clienteAxios.put(`/comision/perfil/${user?._id}`, dataToSend);
+            
             setAuth(token, data, rol);
             toast.success("Perfil actualizado con éxito");
-            navigate('/docente/perfil');
+            navigate('/comision/perfil');
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al actualizar el perfil");
         }
@@ -110,7 +93,7 @@ const EditarPerfilDocente = () => {
 
     const onSubmitPassword = async (data) => {
         try {
-            await clienteAxios.put('/docente/password', data);
+            await clienteAxios.put('/comision/password', data);
             toast.success("Contraseña actualizada correctamente");
             resetPassword();
             setMostrarPasswordActual(false);
@@ -130,22 +113,23 @@ const EditarPerfilDocente = () => {
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Configuración de Perfil Docente</h2>
-                    <p className="text-slate-500 mt-2 font-medium">Actualiza tu información personal, áreas de tutoría y seguridad.</p>
+                    <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Configuración de Perfil</h2>
+                    <p className="text-slate-500 mt-2 font-medium">Actualiza tu información personal, imágenes y ajusta tus preferencias de seguridad.</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-8">
-                        <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
-                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
+                        <div className="bg-white shadow-xl rounded-2xl border border-slate-200">
+                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 rounded-t-xl">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
-                                    Información Académica y Personal
+                                    Datos Institucionales
                                 </h3>
                             </div>
                             <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8 space-y-8">
+                                
                                 <div className="flex flex-col gap-8 p-6 bg-slate-50 rounded-xl border border-slate-100 mb-6">               
                                     <div className="flex flex-col md:flex-row items-center gap-6">
                                         <div className="w-full md:w-64 h-32 shrink-0 rounded-xl overflow-hidden border-4 border-white shadow-md bg-slate-200 relative flex items-center justify-center">
@@ -189,119 +173,21 @@ const EditarPerfilDocente = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-sm gap-6 mb-6">
-                                    <div className="flex-1 space-y-5">
-                                        <div>
-                                            <label className="block text-base font-extrabold text-slate-800">Control de Disponibilidad</label>
-                                            <p className="text-sm text-slate-600 mt-1 mb-3">
-                                                Puedes pausar la recepción de solicitudes en cualquier momento, incluso si tienes cupos.
-                                            </p>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input 
-                                                    type="checkbox" 
-                                                    {...register("disponibilidad", {
-                                                        onChange: () => {
-                                                            handleSubmit(onSubmit)();
-                                                        }
-                                                    })} 
-                                                    className="sr-only peer"
-                                                />
-                                                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                                                <span className="ml-3 text-sm font-bold text-slate-700">
-                                                    {watch("disponibilidad") !== false ? "Activo (Recibiendo)" : "Pausado (Oculto)"}
-                                                </span>
-                                            </label>
-                                        </div>
-
-                                        {cuposOcupados > 0 && (
-                                            <button 
-                                                type="button"
-                                                onClick={handleReiniciarCupos}
-                                                className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-100/50 hover:bg-indigo-100 px-3 py-2 rounded-lg border border-indigo-200 cursor-pointer"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                </svg>
-                                                Reiniciar contador a 0
-                                            </button>
-                                        )}
-                                    </div>
-                                    <div className="shrink-0 w-full md:w-auto flex flex-col items-center gap-3 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6 md:min-w-[220px]">
-                                        <p className="text-sm text-slate-600 font-medium text-center">
-                                            Tienes <strong>{cuposOcupados}</strong> de <strong>{watch("cupos_maximos") || cuposMaximosActuales || 0}</strong> cupos ocupados.
-                                        </p>
-
-                                        {(() => {
-                                            const disponibilidadActiva = watch("disponibilidad") !== false;
-                                            const cuposMaximosForm = watch("cupos_maximos") || cuposMaximosActuales || 0;
-                                            const estaLleno = cuposOcupados >= cuposMaximosForm;
-
-                                            const obtenerEstado = () => {
-                                                if (!disponibilidadActiva) return {
-                                                    estilo: "text-rose-700 bg-rose-50 border-rose-200",
-                                                    texto: "Oculto (Pausa manual)",
-                                                    icono: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                };
-                                                if (estaLleno) return {
-                                                    estilo: "text-amber-700 bg-amber-50 border-amber-200",
-                                                    texto: "Límite alcanzado",
-                                                    icono: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                                };
-                                                return {
-                                                    estilo: "text-emerald-700 bg-emerald-50 border-emerald-200",
-                                                    texto: `Disponible (${cuposMaximosForm - cuposOcupados} libres)`,
-                                                    icono: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                };
-                                            };
-
-                                            const config = obtenerEstado();
-
-                                            return (
-                                                <div className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border shadow-sm w-full md:w-56 ${config.estilo}`}>
-                                                    <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        {config.icono}
-                                                    </svg>
-                                                    <span className="text-sm font-bold truncate">{config.texto}</span>
-                                                </div>
-                                            );
-                                        })()}
-                                    </div>
-                                </div>
+                                
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label="Nombre" register={register} name="nombre" />
                                     <InputField label="Apellido" register={register} name="apellido" />
                                     <InputField label="Cédula" register={register} name="cedula" />
                                     <InputField label="Celular" register={register} name="celular" />
+                                    <InputField label="Cargo" register={register} name="cargo" disabled={true} />
                                     <InputField label="Correo Electrónico" register={register} name="email" type="email" disabled={true} />
-                                    <InputField label="Cupos Máximos de Tutoría" register={register} name="cupos_maximos" type="number" options={{ required: true }} />
-                                </div>
-                                <div className="space-y-6">
-                                    <div>
-                                        <label className="block text-sm font-bold text-slate-700 mb-2">Áreas de Investigación (separadas por coma)</label>
-                                        <textarea 
-                                            {...register("areas_investigacion", { required: true })} 
-                                            rows="3" 
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow resize-none" 
-                                            placeholder="Ej: Inteligencia Artificial, Redes y Telecomunicaciones..."
-                                        ></textarea>
-                                        {errors.areas_investigacion && <span className="text-xs text-red-500 mt-1 block">Este campo es requerido</span>}
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-bold text-slate-700 mb-2">Tecnologías de Especialidad (separadas por coma)</label>
-                                        <textarea 
-                                            {...register("tecnologias_especialidad")} 
-                                            rows="3" 
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow resize-none" 
-                                            placeholder="Ej: Python, React, Node.js..."
-                                        ></textarea>
-                                    </div>
                                 </div>
 
                                 <div className="flex flex-col md:flex-row gap-4 pt-4 border-t border-slate-100">
                                     <button type="submit" className="flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 transition-colors shadow-md flex items-center justify-center gap-2">
                                         Guardar Cambios
                                     </button>
-                                    <button type="button" onClick={() => navigate('/docente/perfil')} className="flex-1 bg-white border border-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
+                                    <button type="button" onClick={() => navigate('/comision/perfil')} className="flex-1 bg-white border border-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
                                         Cancelar
                                     </button>
                                 </div>
@@ -326,7 +212,7 @@ const EditarPerfilDocente = () => {
                                     <div className="relative">
                                         <input
                                             type={mostrarPasswordActual ? "text" : "password"}
-                                            {...registerPassword("passwordactual", { required: true })}
+                                            {...registerPassword("passwordactual")}
                                             className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
                                         />
                                         <button
@@ -353,7 +239,7 @@ const EditarPerfilDocente = () => {
                                     <div className="relative">
                                         <input
                                             type={mostrarPasswordNuevo ? "text" : "password"}
-                                            {...registerPassword("passwordnuevo", { required: true })}
+                                            {...registerPassword("passwordnuevo")}
                                             className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
                                         />
                                         <button
@@ -387,4 +273,4 @@ const EditarPerfilDocente = () => {
     );
 };
 
-export default EditarPerfilDocente;
+export default EditarPerfilComision;

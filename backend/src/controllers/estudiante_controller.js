@@ -44,8 +44,8 @@ const login = async (req, res) => {
             return res.status(401).json({ msg: "Password incorrecto" })
         }
         const token = crearTokenJWT(estudianteBDD._id, estudianteBDD.rol)
-        const { nombre, apellido, carrera, materias_favoritas, cursos_adicionales, fotoPerfil, _id, rol } = estudianteBDD
-        res.status(200).json({ token, rol, nombre, apellido, carrera, materias_favoritas, cursos_adicionales, fotoPerfil, _id, email: estudianteBDD.email })
+        const { nombre, apellido, carrera, materias_favoritas, cursos_adicionales, fotoPerfil, _id, rol, cedula, celular} = estudianteBDD
+        res.status(200).json({ token, rol, nombre, apellido, carrera, materias_favoritas, cursos_adicionales, fotoPerfil, _id, email: estudianteBDD.email, cedula, celular })
     } catch (error) {
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` })
     }
@@ -59,13 +59,16 @@ const perfil = (req, res) => {
 const actualizarPerfil = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, apellido, carrera, materias_favoritas, cursos_adicionales } = req.body;
+        const { nombre, apellido, carrera, materias_favoritas, cursos_adicionales, celular, cedula } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ msg: `ID invalido: ${id}` });
         }
         const estudianteBDD = await Estudiante.findById(id);
         if (!estudianteBDD) {
             return res.status(404).json({ msg: "Estudiante no encontrado" });
+        }
+        if (Object.values(req.body).includes("")) {
+            return res.status(400).json({ msg: "Debes llenar todos los campos" });
         }
         if (req.files && req.files.fotoPerfil) {
             const archivoTemp = req.files.fotoPerfil.tempFilePath;
@@ -80,6 +83,8 @@ const actualizarPerfil = async (req, res) => {
         estudianteBDD.nombre = nombre ?? estudianteBDD.nombre;
         estudianteBDD.apellido = apellido ?? estudianteBDD.apellido;
         estudianteBDD.carrera = carrera ?? estudianteBDD.carrera;
+        estudianteBDD.celular = celular ?? estudianteBDD.celular;
+        estudianteBDD.cedula = cedula ?? estudianteBDD.cedula;
         if (materias_favoritas) {
             estudianteBDD.materias_favoritas = typeof materias_favoritas === 'string' ? JSON.parse(materias_favoritas) : materias_favoritas;
         }

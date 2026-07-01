@@ -76,6 +76,10 @@ const VerPerfilEstudiante = () => {
                                 <div>
                                     <p className="text-xs text-slate-500 mb-1 font-medium">Correo Electrónico</p>
                                     <p className="text-sm font-semibold text-slate-800 break-all">{perfil?.email}</p>
+                                    <p className="text-xs text-slate-500 mb-1 font-medium">Cédula</p>
+                                    <p className="text-sm font-semibold text-slate-800">{perfil?.cedula}</p>
+                                    <p className="text-xs text-slate-500 mb-1 font-medium">Celular</p>
+                                    <p className="text-sm font-semibold text-slate-800">{perfil?.celular}</p>
                                 </div>
                             </div>
                         </div>

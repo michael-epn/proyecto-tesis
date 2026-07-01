@@ -8,7 +8,13 @@ import {
     confirmarMail,
     recuperarPassword,
     comprobarTokenPasword,
-    crearNuevoPassword
+    crearNuevoPassword,
+    obtenerMetricas,
+    obtenerTramitesPendientes,
+    tomarTramite,
+    liberarTramite,
+    resolverTramite,
+    obtenerHistorialComision
 } from '../controllers/comision_controller.js'
 import { verificarTokenJWT } from '../middlewares/JWT.js'
 
@@ -24,5 +30,12 @@ router.post('/nuevopassword/:token', crearNuevoPassword)
 router.get('/perfil', verificarTokenJWT, perfil)
 router.put('/perfil/:id', verificarTokenJWT, actualizarPerfil)
 router.put('/password', verificarTokenJWT, actualizarPassword)
+
+router.get('/metricas', verificarTokenJWT, obtenerMetricas);
+router.get('/tramites-pendientes', verificarTokenJWT, obtenerTramitesPendientes);
+router.put('/tramites/tomar/:id', verificarTokenJWT, tomarTramite);
+router.put('/tramites/liberar/:id', verificarTokenJWT, liberarTramite);
+router.put('/tramites/resolver/:id', verificarTokenJWT, resolverTramite);
+router.get('/historial', verificarTokenJWT, obtenerHistorialComision);
 
 export default router

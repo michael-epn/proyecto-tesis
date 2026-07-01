@@ -14,7 +14,6 @@ import NuevoPassword from './pages/auth/NuevoPassword'
 import SolicitudesEntrantes from './pages/docente/SolicitudesEntrantes'
 import DashboardGeneral from './pages/comision/DashboardGeneral'
 import AuditoriaTramites from './pages/comision/AuditoriaTramites'
-import PerfilComision from './pages/comision/PerfilComision'
 import Recomendaciones from './pages/estudiante/Recomendaciones'
 import VerPerfilEstudiante from './pages/estudiante/VerPerfilEstudiante'
 import EditarPerfilEstudiante from './pages/estudiante/EditarPerfilEstudiante'
@@ -23,6 +22,9 @@ import VerPerfilDocente from './pages/docente/VerPerfilDocente'
 import HistorialDocente from './pages/docente/HistorialDocente'
 import HistorialEstudiante from './pages/estudiante/HistorialEstudiante'
 import EstudiantesAceptados from './pages/docente/EstudiantesAceptados'
+import VerPerfilComision from './pages/comision/VerPerfilComision'
+import EditarPerfilComision from './pages/comision/EditarPerfilComision'
+import HistorialComision from './pages/comision/HistorialComision'
 
 const App = () => {
     return (
@@ -58,7 +60,9 @@ const App = () => {
             <Route path="/comision" element={<DashboardLayout rolesPermitidos={['comision']} />}>
                 <Route index element={<DashboardGeneral />} />
                 <Route path="auditoria" element={<AuditoriaTramites />} />
-                <Route path="perfil" element={<PerfilComision />} />
+                <Route path="perfil" element={<VerPerfilComision />} />
+                <Route path="configuracion" element={<EditarPerfilComision />} />
+                <Route path="historial" element={<HistorialComision />} />
             </Route>
 
             {/* Ruta por defecto */}
