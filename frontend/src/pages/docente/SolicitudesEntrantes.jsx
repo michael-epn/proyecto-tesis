@@ -70,7 +70,6 @@ const SolicitudesEntrantes = () => {
 
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8 relative">
-            {/* Se reemplazó 'max-w-7xl mx-auto' por 'w-full' para que ocupe todo el ancho y crezca naturalmente */}
             <div className="w-full">
                 <header className="mb-8">
                     <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Bandeja de Solicitudes</h2>

@@ -58,8 +58,11 @@ const EstudiantesAceptados = () => {
 
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
+            <header className="mb-8">
+                <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Estudiantes Aceptados</h2>
+                <p className="text-slate-500 mt-2 font-medium">Gestiona tu lista final de estudiantes y envíala a la Comisión Académica.</p>
+            </header>
             <div className="w-full bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
-                
                 <div className="bg-slate-800 px-6 py-5 border-b border-slate-200 flex justify-between items-center">
                     <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
