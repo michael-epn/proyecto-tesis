@@ -148,7 +148,7 @@ const Recomendaciones = () => {
                                 <button 
                                     type="submit" 
                                     disabled={cargandoIA} 
-                                    className={`w-full font-bold py-3 px-6 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 ${cargandoIA ? 'bg-violet-400 cursor-not-allowed text-white' : 'bg-violet-600 hover:bg-violet-700 text-white'}`}
+                                    className={`w-full font-bold py-3 px-6 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 ${cargandoIA ? 'bg-violet-600 cursor-not-allowed text-white' : 'bg-violet-600 hover:bg-violet-700 text-white'}`}
                                 >
                                     {cargandoIA && (
                                         <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
