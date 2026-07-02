@@ -23,7 +23,7 @@ const VerPerfilDocente = () => {
     
     if (cargando) return (
         <div className="flex justify-center items-center min-h-screen">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600"></div>
         </div>
     );
 
@@ -31,7 +31,7 @@ const VerPerfilDocente = () => {
         <div className="w-full min-h-full bg-slate-50 p-4 md:p-8">
             <div className="w-full max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
                     <div 
-                        className="h-32 md:h-48 bg-gradient-to-r from-indigo-600 to-blue-500 relative flex justify-end p-4 md:p-6"
+                        className="h-32 md:h-48 bg-gradient-to-r from-violet-600 to-blue-500 relative flex justify-end p-4 md:p-6"
                         style={perfil?.bannerPerfil ? { backgroundImage: `url(${perfil.bannerPerfil})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
                     >
                         <Link 
@@ -59,7 +59,7 @@ const VerPerfilDocente = () => {
                         <div className="mt-2 w-full flex flex-col md:flex-row justify-between items-start md:items-end">
                             <div>
                                 <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">{perfil?.nombre} {perfil?.apellido}</h2>
-                                <p className="text-lg text-indigo-600 font-semibold mt-1 flex items-center gap-1.5">
+                                <p className="text-lg text-violet-600 font-semibold mt-1 flex items-center gap-1.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path d="M12 14l9-5-9-5-9 5 9 5z" />
                                         <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
@@ -130,7 +130,7 @@ const VerPerfilDocente = () => {
                                     Capacidad de Tutoría
                                 </h4>
                                 <div className="flex items-center gap-3">
-                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl ${perfil?.cupos_ocupados >= perfil?.cupos_maximos ? 'bg-rose-100 text-rose-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl ${perfil?.cupos_ocupados >= perfil?.cupos_maximos ? 'bg-rose-100 text-rose-700' : 'bg-violet-100 text-violet-700'}`}>
                                         {perfil?.cupos_ocupados || 0}/{perfil?.cupos_maximos || 0}
                                     </div>
                                     <div>
@@ -154,7 +154,7 @@ const VerPerfilDocente = () => {
                                 <div className="flex flex-wrap gap-2.5">
                                     {perfil?.areas_investigacion?.length > 0 ? (
                                         perfil.areas_investigacion.map((area, index) => (
-                                            <span key={index} className="bg-indigo-50 text-indigo-700 border border-indigo-100 text-sm px-4 py-1.5 rounded-full font-semibold">
+                                            <span key={index} className="bg-violet-50 text-violet-700 border border-violet-100 text-sm px-4 py-1.5 rounded-full font-semibold">
                                                 {area}
                                             </span>
                                         ))

@@ -28,7 +28,7 @@ const VerPerfilComision = () => {
             <div className="w-full max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
                 
                 <div 
-                    className="h-32 md:h-48 bg-gradient-to-r from-indigo-600 to-blue-500 relative flex justify-end p-4 md:p-6"
+                    className="h-32 md:h-48 bg-gradient-to-r from-violet-600 to-blue-500 relative flex justify-end p-4 md:p-6"
                     style={perfil?.bannerPerfil ? { backgroundImage: `url(${perfil.bannerPerfil})` } : {}}
                 >
                     <Link 
@@ -55,8 +55,8 @@ const VerPerfilComision = () => {
                         </div>
                         <div className="mt-2 w-full">
                             <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">{perfil?.nombre} {perfil?.apellido}</h2>
-                            <p className="text-lg text-indigo-600 font-semibold mt-1 flex items-center gap-1.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <p className="text-lg text-violet-600 font-semibold mt-1 flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                                 {perfil?.cargo}
@@ -86,8 +86,8 @@ const VerPerfilComision = () => {
 
                         <div className="lg:col-span-2 space-y-6">
                             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col justify-center items-center text-center">
-                                <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div className="w-16 h-16 bg-violet-50 rounded-full flex items-center justify-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4V5a2 2 0 00-2-2H9a2 2 0 00-2 2v7z" />
                                     </svg>
                                 </div>

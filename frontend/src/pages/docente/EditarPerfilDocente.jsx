@@ -12,7 +12,7 @@ const InputField = ({ label, register, name, type = "text", disabled = false, op
             type={type} 
             {...register(name, options)} 
             disabled={disabled}
-            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
+            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
         />
     </div>
 );
@@ -122,7 +122,7 @@ const EditarPerfilDocente = () => {
 
     if (cargando) return (
         <div className="flex justify-center items-center min-h-screen">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600"></div>
         </div>
     );
 
@@ -139,7 +139,7 @@ const EditarPerfilDocente = () => {
                         <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
                             <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                     Información Académica y Personal
@@ -152,7 +152,7 @@ const EditarPerfilDocente = () => {
                                             {bannerPreview ? (
                                                 <img src={bannerPreview} alt="Banner Preview" className="w-full h-full object-cover" />
                                             ) : (
-                                                <div className="w-full h-full bg-gradient-to-r from-indigo-600 to-blue-500 flex items-center justify-center">
+                                                <div className="w-full h-full bg-gradient-to-r from-violet-600 to-blue-500 flex items-center justify-center">
                                                     <span className="text-white/90 text-sm font-semibold text-center px-2 drop-shadow-sm">Subir banner</span>
                                                 </div>
                                             )}
@@ -163,7 +163,7 @@ const EditarPerfilDocente = () => {
                                                 type="file" 
                                                 accept="image/jpeg, image/png, image/webp" 
                                                 onChange={(e) => handleFileChange(e, setArchivoBanner, setBannerPreview)}
-                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" 
+                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 cursor-pointer transition-colors" 
                                             />
                                             <p className="text-xs text-slate-400 mt-2 font-medium">Formato horizontal recomendado. Tamaño máximo 2MB.</p>
                                         </div>
@@ -183,7 +183,7 @@ const EditarPerfilDocente = () => {
                                                 type="file" 
                                                 accept="image/jpeg, image/png, image/webp" 
                                                 onChange={(e) => handleFileChange(e, setArchivoFoto, setFotoPreview)}
-                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" 
+                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 cursor-pointer transition-colors" 
                                             />
                                             <p className="text-xs text-slate-400 mt-2 font-medium">Formatos recomendados: JPG, PNG. Tamaño máximo 2MB.</p>
                                         </div>
@@ -206,7 +206,7 @@ const EditarPerfilDocente = () => {
                                                     })} 
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-violet-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
                                                 <span className="ml-3 text-sm font-bold text-slate-700">
                                                     {watch("disponibilidad") !== false ? "Activo (Recibiendo)" : "Pausado (Oculto)"}
                                                 </span>
@@ -217,7 +217,7 @@ const EditarPerfilDocente = () => {
                                             <button 
                                                 type="button"
                                                 onClick={handleReiniciarCupos}
-                                                className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-100/50 hover:bg-indigo-100 px-3 py-2 rounded-lg border border-indigo-200 cursor-pointer"
+                                                className="inline-flex items-center gap-1.5 text-sm font-bold text-violet-600 hover:text-violet-700 transition-colors bg-violet-100/50 hover:bg-violet-100 px-3 py-2 rounded-lg border border-violet-200 cursor-pointer"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -281,7 +281,7 @@ const EditarPerfilDocente = () => {
                                         <textarea 
                                             {...register("areas_investigacion", { required: true })} 
                                             rows="3" 
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow resize-none" 
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow resize-none" 
                                             placeholder="Ej: Inteligencia Artificial, Redes y Telecomunicaciones..."
                                         ></textarea>
                                         {errors.areas_investigacion && <span className="text-xs text-red-500 mt-1 block">Este campo es requerido</span>}
@@ -291,14 +291,14 @@ const EditarPerfilDocente = () => {
                                         <textarea 
                                             {...register("tecnologias_especialidad")} 
                                             rows="3" 
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow resize-none" 
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow resize-none" 
                                             placeholder="Ej: Python, React, Node.js..."
                                         ></textarea>
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col md:flex-row gap-4 pt-4 border-t border-slate-100">
-                                    <button type="submit" className="flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 transition-colors shadow-md flex items-center justify-center gap-2">
+                                    <button type="submit" className="flex-1 bg-violet-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-violet-700 transition-colors shadow-md flex items-center justify-center gap-2">
                                         Guardar Cambios
                                     </button>
                                     <button type="button" onClick={() => navigate('/docente/perfil')} className="flex-1 bg-white border border-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
@@ -313,7 +313,7 @@ const EditarPerfilDocente = () => {
                         <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
                             <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                     Seguridad
@@ -327,11 +327,11 @@ const EditarPerfilDocente = () => {
                                         <input
                                             type={mostrarPasswordActual ? "text" : "password"}
                                             {...registerPassword("passwordactual", { required: true })}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-all pr-12"
                                         />
                                         <button
                                             type="button"
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-violet-600 transition-colors"
                                             onClick={() => setMostrarPasswordActual(!mostrarPasswordActual)}
                                         >
                                             {mostrarPasswordActual ? (
@@ -354,11 +354,11 @@ const EditarPerfilDocente = () => {
                                         <input
                                             type={mostrarPasswordNuevo ? "text" : "password"}
                                             {...registerPassword("passwordnuevo", { required: true })}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-all pr-12"
                                         />
                                         <button
                                             type="button"
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-violet-600 transition-colors"
                                             onClick={() => setMostrarPasswordNuevo(!mostrarPasswordNuevo)}
                                         >
                                             {mostrarPasswordNuevo ? (

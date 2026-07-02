@@ -5,6 +5,7 @@ import clienteAxios from '../../config/axios';
 const HistorialDocente = () => {
     const [historial, setHistorial] = useState([]);
     const [cargando, setCargando] = useState(true);
+    const [feedbackModal, setFeedbackModal] = useState({ abierto: false, texto: '', titulo: '', remitente: '' });
     const [orden, setOrden] = useState('reciente');
 
     useEffect(() => {
@@ -32,40 +33,50 @@ const HistorialDocente = () => {
         return orden === 'reciente' ? fechaB - fechaA : fechaA - fechaB;
     });
 
+    const abrirModal = (sol) => {
+        const esDeComision = sol.estado.includes('comision') || sol.estado === 'aprobado_final';
+        setFeedbackModal({ 
+            abierto: true, 
+            texto: sol.feedback || 'Sin observaciones registradas.',
+            titulo: sol.tema?.titulo,
+            remitente: esDeComision ? 'Dictamen de Comisión' : 'Tu Feedback Emitido'
+        });
+    };
+
     const renderBadgeEstado = (estado) => {
         switch(estado) {
             case 'aprobado_final':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold uppercase tracking-wide">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Aval Comisión
+                        Aprobado en Comisión
                     </span>
                 );
             case 'rechazado_comision':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-100 text-rose-700 border border-rose-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-100 text-red-700 border border-red-200 rounded-full text-xs font-bold uppercase tracking-wide">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Devuelto (Comisión)
+                        Devuelto en Comisión
                     </span>
                 );
             case 'en_comision':
             case 'en_revision':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 border border-amber-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 border border-amber-200 rounded-full text-xs font-bold uppercase tracking-wide">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         En Auditoría
                     </span>
                 );
             case 'aceptada':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-violet-100 text-violet-700 border border-violet-200 rounded-full text-xs font-bold uppercase tracking-wide">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                         Aceptada (Local)
                     </span>
                 );
             case 'rechazada':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 border border-slate-200 rounded-full text-xs font-bold uppercase tracking-wide">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         Rechazada (Local)
                     </span>
@@ -76,8 +87,8 @@ const HistorialDocente = () => {
     };
 
     return (
-        <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
-            <div className="max-w-7xl mx-auto">
+        <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8 relative">
+            <div className="max-w-[1600px] mx-auto">
                 <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
                     <div className="flex flex-col gap-4">
                         <div>
@@ -89,7 +100,7 @@ const HistorialDocente = () => {
                             <select 
                                 value={orden}
                                 onChange={(e) => setOrden(e.target.value)}
-                                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 outline-none shadow-sm cursor-pointer"
+                                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block p-2 outline-none shadow-sm cursor-pointer"
                             >
                                 <option value="reciente">Última actualización</option>
                                 <option value="antiguo">Más antiguos</option>
@@ -98,7 +109,7 @@ const HistorialDocente = () => {
                     </div>
                     
                     <div className="bg-white border border-slate-200 px-6 py-3 rounded-xl shadow-sm flex items-center gap-4">
-                        <div className="bg-indigo-100 p-2 rounded-lg text-indigo-600">
+                        <div className="bg-violet-100 p-2 rounded-lg text-violet-600">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
@@ -111,58 +122,64 @@ const HistorialDocente = () => {
                 </header>
 
                 <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
-                    <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
+                    <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
                         <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                             Gestiones y Trazabilidad
                         </h3>
+                        <span className="bg-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            {historial.length} gestiones
+                        </span>
                     </div>
 
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider">
-                                    <th className="px-6 py-4 font-bold">Estudiante</th>
-                                    <th className="px-6 py-4 font-bold">Tema e Historial de Feedback</th>
+                                    <th className="px-6 py-4 font-bold w-1/3">Estudiante</th>
+                                    <th className="px-6 py-4 font-bold">Tema de Tesis</th>
                                     <th className="px-6 py-4 font-bold text-center">Estado Actual</th>
+                                    <th className="px-6 py-4 font-bold text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
                                 {cargando ? (
                                     <tr>
-                                        <td colSpan="3" className="px-6 py-12 text-center">
-                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+                                        <td colSpan="4" className="px-6 py-12 text-center">
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto"></div>
                                         </td>
                                     </tr>
                                 ) : historialOrdenado.length === 0 ? (
                                     <tr>
-                                        <td colSpan="3" className="px-6 py-12 text-center text-slate-500 font-medium">
+                                        <td colSpan="4" className="px-6 py-12 text-center text-slate-500 font-medium">
                                             Aún no has gestionado ninguna solicitud.
                                         </td>
                                     </tr>
                                 ) : (
                                     historialOrdenado.map((sol) => (
-                                        <tr key={sol._id} className="hover:bg-slate-50 transition-colors">
-                                            <td className="px-6 py-4 align-top w-1/4">
-                                                <div className="font-bold text-slate-800">{sol.estudiante?.nombre} {sol.estudiante?.apellido}</div>
-                                                <div className="text-sm text-slate-500 mt-1">{sol.estudiante?.email}</div>
+                                        <tr key={sol._id}>
+                                            <td className="px-6 py-4 align-top">
+                                                <div className="font-bold text-slate-800 text-base">{sol.estudiante?.nombre} {sol.estudiante?.apellido}</div>
+                                                <div className="text-xs font-medium text-slate-500 mt-1">{sol.estudiante?.email}</div>
                                             </td>
                                             <td className="px-6 py-4 align-top">
-                                                <div className="font-bold text-slate-800 mb-1">{sol.tema?.titulo}</div>
-                                                <div className="mt-3 bg-slate-100 border border-slate-200 p-3 rounded-lg flex items-start gap-2">
-                                                    <svg className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                                                    <div>
-                                                        <span className="text-xs font-bold text-slate-500 uppercase block mb-1">
-                                                            {sol.estado.includes('comision') || sol.estado === 'aprobado_final' ? 'Dictamen de Comisión:' : 'Tu Feedback:'}
-                                                        </span>
-                                                        <span className="text-sm text-slate-700 italic">"{sol.feedback || 'Sin observaciones registradas'}"</span>
-                                                    </div>
-                                                </div>
+                                                <div className="font-medium text-slate-700">{sol.tema?.titulo}</div>
                                             </td>
                                             <td className="px-6 py-4 align-middle text-center">
                                                 {renderBadgeEstado(sol.estado)}
+                                                <div className="text-[10px] text-slate-400 font-medium mt-2">
+                                                    {new Date(sol.updatedAt).toLocaleDateString()}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 align-middle text-center">
+                                                <button 
+                                                    onClick={() => abrirModal(sol)}
+                                                    className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-violet-600 font-bold text-xs py-2 px-4 rounded-lg transition-colors shadow-sm"
+                                                >
+                                                    Ver Detalles
+                                                </button>
                                             </td>
                                         </tr>
                                     ))
@@ -172,6 +189,41 @@ const HistorialDocente = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Modal de Detalles replicado */}
+            {feedbackModal.abierto && (
+                <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+                        <div className="bg-slate-800 px-6 py-4 flex justify-between items-center">
+                            <h3 className="font-bold text-white flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Registro de Observaciones
+                            </h3>
+                            <button onClick={() => setFeedbackModal({ abierto: false, texto: '', titulo: '', remitente: '' })} className="text-slate-300 hover:text-white transition-colors">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        <div className="p-6">
+                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tema de Tesis</h4>
+                            <p className="text-slate-800 font-bold mb-4 pb-4 border-b border-slate-100">{feedbackModal.titulo}</p>
+                            
+                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">{feedbackModal.remitente}</h4>
+                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <p className="text-slate-700 leading-relaxed font-medium italic">"{feedbackModal.texto}"</p>
+                            </div>
+
+                            <button 
+                                onClick={() => setFeedbackModal({ abierto: false, texto: '', titulo: '', remitente: '' })}
+                                className="mt-6 w-full bg-slate-800 text-white font-bold py-3 px-4 rounded-xl hover:bg-slate-900 transition-colors shadow-md"
+                            >
+                                Cerrar Ventana
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

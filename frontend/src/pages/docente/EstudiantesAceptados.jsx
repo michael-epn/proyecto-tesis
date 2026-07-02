@@ -58,10 +58,16 @@ const EstudiantesAceptados = () => {
 
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
-            <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
+            <div className="w-full bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
+                
                 <div className="bg-slate-800 px-6 py-5 border-b border-slate-200 flex justify-between items-center">
-                    <h2 className="text-xl font-extrabold text-white">Mis Estudiantes Aceptados</h2>
-                    <span className="bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                    <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Mis Estudiantes Aceptados
+                    </h2>
+                    <span className="bg-violet-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                         {solicitudes.length} estudiantes
                     </span>
                 </div>
@@ -74,7 +80,7 @@ const EstudiantesAceptados = () => {
                     ) : (
                         <div className="space-y-4 mb-8">
                             {solicitudes.map(sol => (
-                                <div key={sol._id} className="flex flex-col md:flex-row justify-between items-center p-5 border border-slate-200 rounded-xl hover:shadow-md transition-shadow bg-slate-50">
+                                <div key={sol._id} className="flex flex-col md:flex-row justify-between items-center p-5 border border-slate-200 rounded-xl bg-slate-50">
                                     <div>
                                         <h3 className="font-bold text-slate-800 text-lg">
                                             {sol.estudiante?.nombre} {sol.estudiante?.apellido}
@@ -112,7 +118,7 @@ const EstudiantesAceptados = () => {
                         <button 
                             onClick={handleEnviarComision}
                             disabled={!puedeEnviar}
-                            className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-lg disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none flex justify-center items-center gap-2"
+                            className="w-full bg-violet-600 text-white font-bold py-4 rounded-xl hover:bg-violet-700 transition-colors shadow-lg disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none flex justify-center items-center gap-2"
                         >
                             Confirmar Tutorías y Enviar a Comisión
                         </button>

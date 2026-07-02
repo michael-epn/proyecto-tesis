@@ -70,7 +70,8 @@ const SolicitudesEntrantes = () => {
 
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8 relative">
-            <div className="max-w-7xl mx-auto">
+            {/* Se reemplazó 'max-w-7xl mx-auto' por 'w-full' para que ocupe todo el ancho y crezca naturalmente */}
+            <div className="w-full">
                 <header className="mb-8">
                     <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Bandeja de Solicitudes</h2>
                     <p className="text-slate-500 mt-2 font-medium">Revisa y gestiona las propuestas de titulación recibidas.</p>
@@ -79,12 +80,12 @@ const SolicitudesEntrantes = () => {
                 <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
                     <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
                         <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                             Trámites Pendientes
                         </h3>
-                        <span className="bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        <span className="bg-violet-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                             {solicitudes.length} en cola
                         </span>
                     </div>
@@ -103,7 +104,7 @@ const SolicitudesEntrantes = () => {
                                     <tr>
                                         <td colSpan="3" className="px-6 py-12 text-center">
                                             <div className="flex justify-center items-center">
-                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600"></div>
                                             </div>
                                         </td>
                                     </tr>
@@ -115,7 +116,7 @@ const SolicitudesEntrantes = () => {
                                     </tr>
                                 ) : (
                                     solicitudes.map((sol) => (
-                                        <tr key={sol._id} className="hover:bg-slate-50 transition-colors">
+                                        <tr key={sol._id}>
                                             <td className="px-6 py-4 align-top">
                                                 <div className="font-bold text-slate-800 text-base">
                                                     {sol.estudiante?.nombre} {sol.estudiante?.apellido}
@@ -137,7 +138,7 @@ const SolicitudesEntrantes = () => {
                                                 <div className="flex flex-col gap-2 justify-center">
                                                     <button 
                                                         onClick={() => aceptarSolicitud(sol._id)} 
-                                                        className="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm text-sm"
+                                                        className="w-full bg-violet-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-violet-700 transition-colors shadow-sm text-sm"
                                                     >
                                                         Aceptar
                                                     </button>

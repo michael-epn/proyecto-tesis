@@ -93,12 +93,12 @@ function DashboardGeneral() {
                         <div className="text-sm text-slate-500 font-medium mt-2">Herramienta más sugerida por la IA</div>
                     </div>
 
-                    <div className="flex flex-col col-span-full sm:col-span-12 xl:col-span-4 bg-indigo-600 shadow-xl rounded-2xl border border-indigo-700 p-6 text-white">
-                        <h3 className="text-sm font-bold text-indigo-200 uppercase tracking-wider mb-2">Atención Comisión</h3>
+                    <div className="flex flex-col col-span-full sm:col-span-12 xl:col-span-4 bg-violet-600 shadow-xl rounded-2xl border border-violet-700 p-6 text-white">
+                        <h3 className="text-sm font-bold text-violet-200 uppercase tracking-wider mb-2">Atención Comisión</h3>
                         <div className="text-4xl font-extrabold">
                             {metricas.estados.find(e => e._id === 'en_comision')?.total || 0}
                         </div>
-                        <div className="text-sm text-indigo-100 font-medium mt-2">Trámites esperando revisión final</div>
+                        <div className="text-sm text-violet-100 font-medium mt-2">Trámites esperando revisión final</div>
                     </div>
 
                     <div className="flex flex-col col-span-full xl:col-span-5 bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">

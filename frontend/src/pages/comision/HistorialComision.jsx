@@ -68,7 +68,7 @@ const HistorialComision = () => {
                             <select 
                                 value={orden}
                                 onChange={(e) => setOrden(e.target.value)}
-                                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 outline-none shadow-sm cursor-pointer"
+                                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-violet-500 focus:border-violet-500 block p-2 outline-none shadow-sm cursor-pointer"
                             >
                                 <option value="reciente">Resoluciones recientes</option>
                                 <option value="antiguo">Resoluciones antiguas</option>
@@ -80,12 +80,12 @@ const HistorialComision = () => {
                 <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
                     <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
                         <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                             Archivo General
                         </h3>
-                        <span className="bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        <span className="bg-violet-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                             {historial.length} dictámenes
                         </span>
                     </div>
@@ -105,7 +105,7 @@ const HistorialComision = () => {
                                 {cargando ? (
                                     <tr>
                                         <td colSpan="5" className="px-6 py-12 text-center">
-                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto"></div>
                                         </td>
                                     </tr>
                                 ) : historialOrdenado.length === 0 ? (
@@ -116,7 +116,7 @@ const HistorialComision = () => {
                                     </tr>
                                 ) : (
                                     historialOrdenado.map((sol) => (
-                                        <tr key={sol._id} className="hover:bg-slate-50 transition-colors">
+                                        <tr key={sol._id}>
                                             <td className="px-6 py-4 align-top">
                                                 <div className="font-bold text-slate-800 text-base">{sol.estudiante?.nombre} {sol.estudiante?.apellido}</div>
                                                 <div className="text-xs font-medium text-slate-500 mb-2">{sol.estudiante?.email}</div>
@@ -130,7 +130,7 @@ const HistorialComision = () => {
 
                                             <td className="px-6 py-4 align-top">
                                                 <div className="font-bold text-slate-800">{sol.revisor?.nombre} {sol.revisor?.apellido}</div>
-                                                <span className="inline-block mt-1 bg-indigo-50 text-indigo-600 border border-indigo-100 text-xs px-2 py-0.5 rounded font-medium">{sol.revisor?.cargo || 'Miembro Comisión'}</span>
+                                                <span className="inline-block mt-1 bg-violet-50 text-violet-600 border border-violet-100 text-xs px-2 py-0.5 rounded font-medium">{sol.revisor?.cargo || 'Miembro Comisión'}</span>
                                             </td>
 
                                             <td className="px-6 py-4 align-middle text-center">
@@ -143,7 +143,7 @@ const HistorialComision = () => {
                                             <td className="px-6 py-4 align-middle text-center">
                                                 <button 
                                                     onClick={() => abrirModal(sol)}
-                                                    className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-indigo-600 font-bold text-xs py-2 px-4 rounded-lg transition-colors shadow-sm"
+                                                    className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-violet-600 font-bold text-xs py-2 px-4 rounded-lg transition-colors shadow-sm"
                                                 >
                                                     Ver Dictamen
                                                 </button>
@@ -163,7 +163,7 @@ const HistorialComision = () => {
                     <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
                         <div className="bg-slate-800 px-6 py-4 flex justify-between items-center">
                             <h3 className="font-bold text-white flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 Dictamen Oficial

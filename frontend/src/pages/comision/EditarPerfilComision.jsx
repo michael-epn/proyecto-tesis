@@ -12,7 +12,7 @@ const InputField = ({ label, register, name, type = "text", disabled = false }) 
             type={type} 
             {...register(name)} 
             disabled={disabled}
-            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
+            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
         />
     </div>
 );
@@ -105,7 +105,7 @@ const EditarPerfilComision = () => {
 
     if (cargando) return (
         <div className="flex justify-center items-center min-h-screen">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600"></div>
         </div>
     );
 
@@ -122,7 +122,7 @@ const EditarPerfilComision = () => {
                         <div className="bg-white shadow-xl rounded-2xl border border-slate-200">
                             <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 rounded-t-xl">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                     Datos Institucionales
@@ -136,7 +136,7 @@ const EditarPerfilComision = () => {
                                             {bannerPreview ? (
                                                 <img src={bannerPreview} alt="Banner Preview" className="w-full h-full object-cover" />
                                             ) : (
-                                                <div className="w-full h-full bg-gradient-to-r from-indigo-600 to-blue-500 flex items-center justify-center">
+                                                <div className="w-full h-full bg-gradient-to-r from-violet-600 to-blue-500 flex items-center justify-center">
                                                     <span className="text-white/90 text-sm font-semibold text-center px-2 drop-shadow-sm">Subir banner</span>
                                                 </div>
                                             )}
@@ -147,7 +147,7 @@ const EditarPerfilComision = () => {
                                                 type="file" 
                                                 accept="image/jpeg, image/png, image/webp" 
                                                 onChange={(e) => handleFileChange(e, setArchivoBanner, setBannerPreview)}
-                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" 
+                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 cursor-pointer transition-colors" 
                                             />
                                             <p className="text-xs text-slate-400 mt-2 font-medium">Formato horizontal recomendado. Tamaño máximo 2MB.</p>
                                         </div>
@@ -167,7 +167,7 @@ const EditarPerfilComision = () => {
                                                 type="file" 
                                                 accept="image/jpeg, image/png, image/webp" 
                                                 onChange={(e) => handleFileChange(e, setArchivoFoto, setFotoPreview)}
-                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" 
+                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 cursor-pointer transition-colors" 
                                             />
                                             <p className="text-xs text-slate-400 mt-2 font-medium">Formatos recomendados: JPG, PNG. Tamaño máximo 2MB.</p>
                                         </div>
@@ -184,7 +184,7 @@ const EditarPerfilComision = () => {
                                 </div>
 
                                 <div className="flex flex-col md:flex-row gap-4 pt-4 border-t border-slate-100">
-                                    <button type="submit" className="flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 transition-colors shadow-md flex items-center justify-center gap-2">
+                                    <button type="submit" className="flex-1 bg-violet-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-violet-700 transition-colors shadow-md flex items-center justify-center gap-2">
                                         Guardar Cambios
                                     </button>
                                     <button type="button" onClick={() => navigate('/comision/perfil')} className="flex-1 bg-white border border-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
@@ -199,7 +199,7 @@ const EditarPerfilComision = () => {
                         <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
                             <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                     Seguridad
@@ -213,11 +213,11 @@ const EditarPerfilComision = () => {
                                         <input
                                             type={mostrarPasswordActual ? "text" : "password"}
                                             {...registerPassword("passwordactual")}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-all pr-12"
                                         />
                                         <button
                                             type="button"
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-violet-600 transition-colors"
                                             onClick={() => setMostrarPasswordActual(!mostrarPasswordActual)}
                                         >
                                             {mostrarPasswordActual ? (
@@ -240,11 +240,11 @@ const EditarPerfilComision = () => {
                                         <input
                                             type={mostrarPasswordNuevo ? "text" : "password"}
                                             {...registerPassword("passwordnuevo")}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 transition-all pr-12"
+                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-all pr-12"
                                         />
                                         <button
                                             type="button"
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-violet-600 transition-colors"
                                             onClick={() => setMostrarPasswordNuevo(!mostrarPasswordNuevo)}
                                         >
                                             {mostrarPasswordNuevo ? (

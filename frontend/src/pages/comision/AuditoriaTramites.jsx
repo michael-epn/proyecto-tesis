@@ -109,16 +109,17 @@ function AuditoriaTramites() {
                     <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Pool Global de Auditoría</h2>
                     <p className="text-slate-500 mt-2 font-medium">Revisa y oficializa las duplas de estudiante/tutor aceptadas en la ESFOT.</p>
                 </header>
-
-                {/* Cambio principal: lg:grid-cols-2 asegura 50% / 50% */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                    
-                    {/* Caja 1: Bandeja - Ocupa 2 columnas si no hay trámite, o 1 si lo hay */}
                     <div className={`${tramiteActivo ? 'lg:col-span-1' : 'lg:col-span-2'} transition-all duration-300 w-full`}>
                         <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
-                            <div className="bg-slate-800 px-6 py-5 border-b border-slate-200 flex justify-between items-center">
-                                <h3 className="text-lg font-bold text-white">Bandeja de Entrada</h3>
-                                <span className="bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-700 flex justify-between items-center rounded-t-2xl">
+                                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                    </svg>
+                                    Bandeja de Entrada
+                                </h3>
+                                <span className="bg-violet-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                                     {tramites.length} Pendientes
                                 </span>
                             </div>
@@ -131,29 +132,56 @@ function AuditoriaTramites() {
                                 ) : (
                                     <ul className="divide-y divide-slate-100">
                                         {tramites.map((t) => (
-                                            <li key={t._id} className="p-5 hover:bg-slate-50 transition-colors">
-                                                <div className="flex justify-between items-start">
-                                                    <div>
-                                                        <h4 className="font-bold text-slate-800">{t.estudiante?.nombre} {t.estudiante?.apellido}</h4>
-                                                        <p className="text-sm text-slate-500 font-medium mt-1">Tutor: {t.docente?.nombre} {t.docente?.apellido}</p>
-                                                        
-                                                        {t.estado === 'en_revision' ? (
-                                                            <span className="inline-block mt-2 text-xs font-bold px-2 py-1 bg-amber-100 text-amber-700 rounded-md">
-                                                                En revisión por: {t.revisor?.nombre || 'Colega'}
-                                                            </span>
-                                                        ) : (
-                                                            <span className="inline-block mt-2 text-xs font-bold px-2 py-1 bg-emerald-100 text-emerald-700 rounded-md">
-                                                                Libre (En Comisión)
-                                                            </span>
-                                                        )}
+                                            <li key={t._id} className="p-5 border-b border-slate-100 last:border-0 group">
+                                                <div className="flex justify-between items-center gap-4">
+                                                    
+                                                    {/* Bloque de Información */}
+                                                    <div className="flex-1">
+                                                        {/* Docente - Nivel Primario */}
+                                                        <div className="flex items-center gap-2 mb-1.5">
+                                                            <div className="bg-slate-200/50 p-1.5 rounded-lg text-slate-600">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                                </svg>
+                                                            </div>
+                                                            <h4 className="font-extrabold text-slate-800 text-base">
+                                                                Tutor: {t.docente?.nombre} {t.docente?.apellido}
+                                                            </h4>
+                                                        </div>
+
+                                                        {/* Estudiante - Nivel Secundario */}
+                                                        <div className="ml-9">
+                                                            <p className="text-sm text-slate-500 font-medium">
+                                                                Estudiante: <span className="text-slate-700 font-bold">{t.estudiante?.nombre} {t.estudiante?.apellido}</span>
+                                                            </p>
+                                                            
+                                                            {/* Badges de Estado */}
+                                                            <div className="mt-2">
+                                                                {t.estado === 'en_revision' ? (
+                                                                    <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-md border border-amber-200">
+                                                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                                        En revisión por: {t.revisor?.nombre || 'Colega'}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-md border border-emerald-200">
+                                                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.5)]"></span>
+                                                                        Libre (En Comisión)
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     
+                                                    {/* Acción */}
                                                     {t.estado === 'en_comision' && !tramiteActivo && (
                                                         <button 
                                                             onClick={() => tomarTramite(t)}
-                                                            className="bg-indigo-50 border border-indigo-200 text-indigo-800 hover:bg-indigo-100 hover:border-indigo-300 font-bold py-2 px-4 rounded-lg text-sm transition-colors"
+                                                            className="flex-shrink-0 bg-white border border-violet-200 text-violet-700 hover:bg-violet-50 hover:border-violet-300 hover:text-violet-800 font-bold py-2.5 px-5 rounded-xl text-sm transition-all shadow-sm flex items-center gap-2"
                                                         >
                                                             Revisar
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                                            </svg>
                                                         </button>
                                                     )}
                                                 </div>
@@ -165,51 +193,67 @@ function AuditoriaTramites() {
                         </div>
                     </div>
 
-                    {/* Caja 2: Resolución - Ocupa 1 columna */}
                     {tramiteActivo && (
                         <div className="lg:col-span-1 lg:sticky lg:top-8 bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden w-full">
-                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-700 flex justify-between items-center">
+                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-700 flex justify-between items-center rounded-t-2xl">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
                                     Resolución de Trámite
                                 </h3>
-                                <button onClick={liberarTramite} className="text-slate-300 hover:text-white text-sm font-medium underline">
-                                    Liberar y cerrar
+                                <button 
+                                    onClick={liberarTramite} 
+                                    className="flex items-center gap-1.5 bg-slate-500/10 hover:bg-violet-500/20 text-slate-300 hover:text-violet-300 border border-slate-500/20 hover:border-violet-500/30 py-1.5 px-3 rounded-full transition-all text-xs font-bold"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    Cerrar
                                 </button>
                             </div>
                             
-                            <div className="p-6 space-y-5">
-                                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Propuesta del Estudiante</h4>
-                                    <h2 className="text-lg font-extrabold text-slate-800 leading-tight">{tramiteActivo.tema?.titulo}</h2>
-                                    <p className="text-slate-600 text-sm font-medium mt-2">{tramiteActivo.tema?.descripcion}</p>
+                            <div className="p-6 space-y-6">
+                                <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-sm">
+                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </svg>
+                                        Propuesta del Estudiante
+                                    </h4>
+                                    <h2 className="text-lg font-extrabold text-slate-800 leading-tight mb-2">{tramiteActivo.tema?.titulo}</h2>
+                                    <p className="text-slate-600 text-sm font-medium mb-4">{tramiteActivo.tema?.descripcion}</p>
                                     
-                                    <div className="mt-3 flex flex-wrap gap-2">
+                                    <div className="flex flex-wrap gap-2">
                                         {tramiteActivo.tema?.tecnologias?.map((tech, i) => (
-                                            <span key={i} className="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-800 rounded-md text-xs font-bold border border-indigo-100">
+                                            <span key={i} className="inline-flex items-center px-3 py-1 bg-white text-violet-500 rounded-lg text-xs font-bold border border-slate-200 shadow-sm">
                                                 {tech}
                                             </span>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-                                    <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Aval del Docente</h4>
-                                    <p className="text-sm font-bold text-slate-700">Tutor asignado: {tramiteActivo.docente?.nombre} {tramiteActivo.docente?.apellido}</p>
-                                    <p className="text-sm text-slate-600 italic mt-1 font-medium">"{tramiteActivo.feedback}"</p>
+                                <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-sm">
+                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        Aval del Docente
+                                    </h4>
+                                    <div className="bg-white p-3 rounded-lg border border-slate-200 mt-2">
+                                        <p className="text-sm text-slate-600 italic font-medium">"{tramiteActivo.feedback}"</p>
+                                    </div>
                                 </div>
 
-                                <div className="pt-4 flex gap-4 border-t border-slate-200">
+                                <div className="flex gap-4 pt-2">
                                     <button 
                                         onClick={abrirModalRechazo}
-                                        className="flex-1 bg-white border text-sm border-red-300 text-red-600 font-bold py-3 px-6 rounded-xl hover:bg-red-50 transition-colors shadow-sm"                                        >
-                                        Rechazar con Observaciones
+                                        className="flex-1 bg-white border border-slate-300 text-slate-700 text-sm font-bold py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm"                                        >
+                                        Rechazar (Observaciones)
                                     </button>
                                     <button 
                                         onClick={resolverAprobacion}
-                                        className="flex-1 bg-indigo-700 text-white text-sm font-bold py-3 px-4 rounded-xl hover:bg-indigo-800 transition-all shadow-md flex justify-center items-center"
+                                        className="flex-1 bg-violet-600 text-white text-sm font-bold py-3 px-4 rounded-xl hover:bg-violet-700 transition-all shadow-md flex justify-center items-center"
                                     >
                                         Aprobar Definitivamente
                                     </button>

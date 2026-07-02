@@ -27,7 +27,7 @@ const VerPerfilEstudiante = () => {
         <div className="w-full min-h-full bg-slate-50 p-4 md:p-8">
             <div className="w-full max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
                     <div 
-                        className="h-32 md:h-48 bg-gradient-to-r from-indigo-600 to-blue-500 relative flex justify-end p-4 md:p-6"
+                        className="h-32 md:h-48 bg-gradient-to-r from-violet-600 to-blue-500 relative flex justify-end p-4 md:p-6"
                         style={perfil?.bannerPerfil ? { backgroundImage: `url(${perfil.bannerPerfil})` } : {}}
                     >
                         <Link 
@@ -54,8 +54,8 @@ const VerPerfilEstudiante = () => {
                         </div>
                         <div className="mt-2 w-full">
                             <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">{perfil?.nombre} {perfil?.apellido}</h2>
-                            <p className="text-lg text-indigo-600 font-semibold mt-1 flex items-center gap-1.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <p className="text-lg text-violet-600 font-semibold mt-1 flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                                 </svg>
@@ -95,7 +95,7 @@ const VerPerfilEstudiante = () => {
                                 <div className="flex flex-wrap gap-2.5">
                                     {perfil?.materias_favoritas?.length > 0 ? (
                                         perfil.materias_favoritas.map((materia, index) => (
-                                            <span key={index} className="bg-indigo-50 text-indigo-700 border border-indigo-100 text-sm px-4 py-1.5 rounded-full font-semibold">
+                                            <span key={index} className="bg-violet-50 text-violet-700 border border-violet-100 text-sm px-4 py-1.5 rounded-full font-semibold">
                                                 {materia}
                                             </span>
                                         ))
