@@ -14,9 +14,9 @@ export const generarTema = async (req, res) => {
     if (solicitudAceptada) return res.status(403).json({ msg: "Ya tienes una tutoría aceptada." });
     const solicitudesActivas = await SolicitudTesis.countDocuments({
         estudiante: estudianteId,
-        estado: { $nin: ['rechazada', 'rechazado_comision'] }
+        estado: { $nin: ['rechazada', 'rechazado_comision', 'finalizado'] }
     });
-    if (solicitudesActivas >= 2) {
+    if (solicitudesActivas >= 1) {
         return res.status(403).json({ msg: "Límite de temas o trámites activos alcanzado." });
     }
     const historial = await TemaGenerado.find({ estudiante: estudianteId }).limit(5);
@@ -40,9 +40,9 @@ export const enviarSolicitud = async (req, res) => {
     }
     const solicitudesActivas = await SolicitudTesis.countDocuments({
         estudiante: estudianteId,
-        estado: { $nin: ['rechazada', 'rechazado_comision'] }
+        estado: { $nin: ['rechazada', 'rechazado_comision', 'finalizado'] }
     });
-    if (solicitudesActivas >= 2) {
+    if (solicitudesActivas >= 1) {
         return res.status(403).json({ msg: "Límite de temas o trámites activos alcanzado." });
     }
     const nuevoTema = await TemaGenerado.create({
