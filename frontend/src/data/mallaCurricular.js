@@ -123,7 +123,11 @@ export const mallaCurricular = {
         "Manejo de Bodegas e Inventarios",
         "Desarrollo de Producto - Diseño De Espacios",
         "Tecnología de la Construcción II",
-        "Empresa y su Entorno - Gestión de la Calidad"
+        "Empresa y su Entorno - Gestión de la Calidad",
+        "Emprendimiento",
+        "Deportes",
+        "Ética Profesional y Social",
+        "Inglés"
     ]
 };
 
