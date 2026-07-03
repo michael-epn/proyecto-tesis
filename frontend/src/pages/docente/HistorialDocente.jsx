@@ -85,6 +85,17 @@ const HistorialDocente = () => {
                 return null;
         }
     };
+    const handleReiniciarCupos = async () => {
+        if(!window.confirm("¿Estás seguro? Esto limpiará tu contador. Si no tienes permiso de la comisión, la acción será rechazada.")) return;
+        
+        try {
+            const { data } = await clienteAxios.post('/tesis/docente/reiniciar-cupos');
+            toast.success(data.msg);
+            setTimeout(() => window.location.reload(), 1500);
+        } catch (error) {
+            toast.error(error.response?.data?.msg || "Error al solicitar reinicio");
+        }
+    };
 
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8 relative">
@@ -108,16 +119,28 @@ const HistorialDocente = () => {
                         </div>
                     </div>
                     
-                    <div className="bg-white border border-slate-200 px-6 py-3 rounded-xl shadow-sm flex items-center gap-4">
-                        <div className="bg-violet-100 p-2 rounded-lg text-violet-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    <div className="flex flex-col gap-3">
+                        <div className="bg-white border border-slate-200 px-6 py-3 rounded-xl shadow-sm flex items-center gap-4">
+                            <div className="bg-violet-100 p-2 rounded-lg text-violet-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-500 uppercase">Cupos Activos</p>
+                                <p className="text-xl font-extrabold text-slate-800">{cuposOcupados} <span className="text-sm font-medium text-slate-400">estudiantes</span></p>
+                            </div>
+                        </div>
+                        
+                        <button 
+                            onClick={handleReiniciarCupos}
+                            className="w-full flex items-center justify-center gap-2 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300 font-bold py-2.5 px-4 rounded-xl text-xs transition-colors shadow-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                             </svg>
-                        </div>
-                        <div>
-                            <p className="text-xs font-bold text-slate-500 uppercase">Cupos Activos</p>
-                            <p className="text-xl font-extrabold text-slate-800">{cuposOcupados} <span className="text-sm font-medium text-slate-400">estudiantes</span></p>
-                        </div>
+                            Ejecutar Reinicio de Cupos
+                        </button>
                     </div>
                 </header>
 

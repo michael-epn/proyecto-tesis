@@ -29,6 +29,7 @@ const docenteSchema = new Schema({
     cedula: { type: String, trim: true, default: null },
     fotoPerfil: { type: String, default: null },
     bannerPerfil: { type: String, default: null },
+    permiso_reinicio: { type: Boolean, default: false },
     areas_investigacion: { type: [String], default: [] },
     tecnologias_especialidad: { type: [String], default: [] },
     cupos_maximos: { type: Number, required: true, default: 5 },

@@ -157,7 +157,6 @@ const HistorialComision = () => {
                 </div>
             </div>
 
-            {/* Modal de Dictamen (Mismo estilo que HistorialEstudiante) */}
             {feedbackModal.abierto && (
                 <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">

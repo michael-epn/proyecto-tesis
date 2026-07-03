@@ -329,6 +329,40 @@ const obtenerHistorialComision = async (req, res) => {
     }
 };
 
+const obtenerDocentesComision = async (req, res) => {
+    try {
+        const docentes = await Docente.find()
+            .select('nombre apellido email disponibilidad cupos_ocupados cupos_maximos permiso_reinicio')
+            .sort({ nombre: 1 });
+        
+        res.status(200).json(docentes);
+    } catch (error) {
+        res.status(500).json({ msg: `Error al obtener directorio de docentes: ${error.message}` });
+    }
+};
+
+const togglePermisoReinicio = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { permiso_reinicio } = req.body;
+
+        const docente = await Docente.findByIdAndUpdate(
+            id,
+            { permiso_reinicio },
+            { new: true }
+        ).select('-password -token');
+
+        if (!docente) {
+            return res.status(404).json({ msg: "Docente no encontrado" });
+        }
+
+        const estadoString = permiso_reinicio ? "concedido" : "revocado";
+        res.status(200).json({ msg: `Permiso de reinicio ${estadoString} exitosamente`, docente });
+    } catch (error) {
+        res.status(500).json({ msg: `Error al actualizar permiso: ${error.message}` });
+    }
+};
+
 export {
     registro,
     login,
@@ -344,5 +378,7 @@ export {
     liberarTramite,
     obtenerTramitesPendientes,
     tomarTramite,
-    obtenerHistorialComision
+    obtenerHistorialComision,
+    obtenerDocentesComision,
+    togglePermisoReinicio
 }

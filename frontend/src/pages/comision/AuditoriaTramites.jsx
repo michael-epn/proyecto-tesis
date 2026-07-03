@@ -135,9 +135,7 @@ function AuditoriaTramites() {
                                             <li key={t._id} className="p-5 border-b border-slate-100 last:border-0 group">
                                                 <div className="flex justify-between items-center gap-4">
                                                     
-                                                    {/* Bloque de Información */}
                                                     <div className="flex-1">
-                                                        {/* Docente - Nivel Primario */}
                                                         <div className="flex items-center gap-2 mb-1.5">
                                                             <div className="bg-slate-200/50 p-1.5 rounded-lg text-slate-600">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -148,14 +146,10 @@ function AuditoriaTramites() {
                                                                 Tutor: {t.docente?.nombre} {t.docente?.apellido}
                                                             </h4>
                                                         </div>
-
-                                                        {/* Estudiante - Nivel Secundario */}
                                                         <div className="ml-9">
                                                             <p className="text-sm text-slate-500 font-medium">
                                                                 Estudiante: <span className="text-slate-700 font-bold">{t.estudiante?.nombre} {t.estudiante?.apellido}</span>
                                                             </p>
-                                                            
-                                                            {/* Badges de Estado */}
                                                             <div className="mt-2">
                                                                 {t.estado === 'en_revision' ? (
                                                                     <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-md border border-amber-200">
@@ -171,8 +165,6 @@ function AuditoriaTramites() {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
-                                                    {/* Acción */}
                                                     {t.estado === 'en_comision' && !tramiteActivo && (
                                                         <button 
                                                             onClick={() => tomarTramite(t)}

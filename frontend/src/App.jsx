@@ -25,6 +25,7 @@ import EstudiantesAceptados from './pages/docente/EstudiantesAceptados'
 import VerPerfilComision from './pages/comision/VerPerfilComision'
 import EditarPerfilComision from './pages/comision/EditarPerfilComision'
 import HistorialComision from './pages/comision/HistorialComision'
+import GestionDocentes from './pages/comision/GestionDocentes'
 
 const App = () => {
     return (
@@ -62,6 +63,7 @@ const App = () => {
                 <Route path="auditoria" element={<AuditoriaTramites />} />
                 <Route path="perfil" element={<VerPerfilComision />} />
                 <Route path="configuracion" element={<EditarPerfilComision />} />
+                <Route path="docentes" element={<GestionDocentes />} />
                 <Route path="historial" element={<HistorialComision />} />
             </Route>
 

@@ -160,13 +160,20 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       </div>
                     </NavLink>
                   </li>
+                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/comision/docentes' && 'bg-slate-900'}`}>
+                    <NavLink end to="/comision/docentes" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/comision/docentes' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Gestión de Docentes</span>
+                      </div>
+                    </NavLink>
+                  </li>
                   <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/comision/historial' && 'bg-slate-900'}`}>
                     <NavLink end to="/comision/historial" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/comision/historial' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
                         <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Historial de Tramites</span>
                       </div>
                     </NavLink>
-                  </li>
+                  </li>                  
                 </>
               )}
 

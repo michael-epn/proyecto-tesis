@@ -14,7 +14,9 @@ import {
     tomarTramite,
     liberarTramite,
     resolverTramite,
-    obtenerHistorialComision
+    obtenerHistorialComision,
+    togglePermisoReinicio,
+    obtenerDocentesComision
 } from '../controllers/comision_controller.js'
 import { verificarTokenJWT } from '../middlewares/JWT.js'
 
@@ -37,5 +39,7 @@ router.put('/tramites/tomar/:id', verificarTokenJWT, tomarTramite);
 router.put('/tramites/liberar/:id', verificarTokenJWT, liberarTramite);
 router.put('/tramites/resolver/:id', verificarTokenJWT, resolverTramite);
 router.get('/historial', verificarTokenJWT, obtenerHistorialComision);
+router.get('/docentes', verificarTokenJWT, obtenerDocentesComision);
+router.put('/docentes/permiso-reinicio/:id', verificarTokenJWT, togglePermisoReinicio);
 
 export default router

@@ -54,17 +54,6 @@ const EditarPerfilDocente = () => {
         cargarPerfil();
     }, [reset]);
 
-    const handleReiniciarCupos = async () => {
-        if(!window.confirm("¿Estás seguro de reiniciar a 0 tu contador de estudiantes?")) return;
-        try {
-            const { data } = await clienteAxios.post('/tesis/docente/reiniciar-cupos');
-            setCuposOcupados(0);
-            toast.success(data.msg);
-        } catch (error) {
-            toast.error("Error al reiniciar cupos");
-        }
-    };
-
     const handleFileChange = (e, setFileState, setPreviewState) => {
         const file = e.target.files[0];
         if (file) {
@@ -212,19 +201,6 @@ const EditarPerfilDocente = () => {
                                                 </span>
                                             </label>
                                         </div>
-
-                                        {cuposOcupados > 0 && (
-                                            <button 
-                                                type="button"
-                                                onClick={handleReiniciarCupos}
-                                                className="inline-flex items-center gap-1.5 text-sm font-bold text-violet-600 hover:text-violet-700 transition-colors bg-violet-100/50 hover:bg-violet-100 px-3 py-2 rounded-lg border border-violet-200 cursor-pointer"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                </svg>
-                                                Reiniciar contador a 0
-                                            </button>
-                                        )}
                                     </div>
                                     <div className="shrink-0 w-full md:w-auto flex flex-col items-center gap-3 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6 md:min-w-[220px]">
                                         <p className="text-sm text-slate-600 font-medium text-center">

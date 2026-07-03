@@ -12,11 +12,15 @@ export const generarTema = async (req, res) => {
         estado: { $in: ['aceptada', 'en_comision'] } 
     });
     if (solicitudAceptada) return res.status(403).json({ msg: "Ya tienes una tutoría aceptada." });
-    const conteoTemas = await TemaGenerado.countDocuments({ estudiante: estudianteId });
-    if (conteoTemas >= 2) return res.status(403).json({ msg: "Límite de 2 temas alcanzado." });
+    const solicitudesActivas = await SolicitudTesis.countDocuments({
+        estudiante: estudianteId,
+        estado: { $nin: ['rechazada', 'rechazado_comision'] }
+    });
+    if (solicitudesActivas >= 2) {
+        return res.status(403).json({ msg: "Límite de temas o trámites activos alcanzado." });
+    }
     const historial = await TemaGenerado.find({ estudiante: estudianteId }).limit(5);
     const IA_Response = await generarPropuestaTesis(req.body, historial);
-
     if (!IA_Response) return res.status(500).json({ msg: "Error al generar tema con IA" });
     res.status(200).json({
         id_temporal: Date.now().toString(),
@@ -34,8 +38,13 @@ export const enviarSolicitud = async (req, res) => {
     if (!docente.disponibilidad || docente.cupos_ocupados >= docente.cupos_maximos) {
         return res.status(403).json({ msg: "El docente ya no tiene cupos disponibles o no está disponible." });
     }
-    const conteoTemas = await TemaGenerado.countDocuments({ estudiante: estudianteId });
-    if (conteoTemas >= 2) return res.status(403).json({ msg: "Límite de 2 temas guardados alcanzado." });
+    const solicitudesActivas = await SolicitudTesis.countDocuments({
+        estudiante: estudianteId,
+        estado: { $nin: ['rechazada', 'rechazado_comision'] }
+    });
+    if (solicitudesActivas >= 2) {
+        return res.status(403).json({ msg: "Límite de temas o trámites activos alcanzado." });
+    }
     const nuevoTema = await TemaGenerado.create({
         estudiante: estudianteId,
         titulo: temaData.titulo,
@@ -89,41 +98,39 @@ export const responderSolicitud = async (req, res) => {
 
 export const reiniciarCuposDocente = async (req, res) => {
     try {
+        const docente = await Docente.findById(req.docente._id);
+        if (!docente.permiso_reinicio) {
+            return res.status(403).json({ msg: "Requiere permiso de la comisión para reiniciar cupos." });
+        }
         const resultado = await SolicitudTesis.updateMany(
             { docente: req.docente._id, estado: 'aceptada' },
-            { 
-                estado: 'rechazada', 
-                feedback: 'El docente ha reiniciado su disponibilidad de cupos y cancelado los trámites previos no confirmados.' 
-            }
+            { estado: 'rechazada', feedback: 'Trámites previos cancelados por reinicio.' }
         );
-        const docenteActualizado = await Docente.findByIdAndUpdate(
-            req.docente._id, 
-            { cupos_ocupados: 0 }, 
-            { new: true }
-        ).select("-password -token -confirmEmail");
-        res.status(200).json({ 
-            msg: `Contador reiniciado exitosamente. Se despejaron ${resultado.modifiedCount} estudiantes de la lista.`, 
-            docente: docenteActualizado 
-        });
+        docente.cupos_ocupados = 0;
+        docente.permiso_reinicio = false;
+        await docente.save();
+        res.status(200).json({ msg: "Contador reiniciado exitosamente.", docente });
     } catch (error) {
-        res.status(500).json({ msg: "Error al reiniciar cupos y limpiar la lista" });
+        res.status(500).json({ msg: "Error al reiniciar cupos" });
     }
 };
 
 export const eliminarEstudianteAceptado = async (req, res) => {
     try {
         const { idSolicitud } = req.params;
-        
+        const { feedback } = req.body;
+        if (!feedback) return res.status(400).json({ msg: "El feedback es obligatorio para eliminar." });
         const solicitud = await SolicitudTesis.findById(idSolicitud);
         if (!solicitud) return res.status(404).json({ msg: "Solicitud no encontrada" });
-
         solicitud.estado = 'rechazada';
-        solicitud.feedback = "Tutoría cancelada por el docente posterior a la aceptación.";
+        solicitud.feedback = feedback;
+        solicitud.historial.push({ 
+            accion: 'Eliminación por Docente', 
+            detalle: feedback 
+        });
         await solicitud.save();
-
         await Docente.findByIdAndUpdate(req.docente._id, { $inc: { cupos_ocupados: -1 } });
-
-        res.status(200).json({ msg: "Estudiante removido exitosamente" });
+        res.status(200).json({ msg: "Estudiante removido exitosamente e historial actualizado" });
     } catch (error) {
         res.status(500).json({ msg: "Error al remover estudiante" });
     }
