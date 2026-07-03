@@ -12,7 +12,7 @@ const HistorialDocente = () => {
         const obtenerHistorial = async () => {
             try {
                 const { data } = await clienteAxios.get('/tesis/historial/recibidas');
-                const estadosGestionados = ['aceptada', 'rechazada', 'en_comision', 'en_revision', 'aprobado_final', 'rechazado_comision'];
+                const estadosGestionados = ['aceptada', 'rechazada', 'en_comision', 'en_revision', 'aprobado_final', 'rechazado_comision', 'finalizado'];
                 const gestionadas = data.filter(sol => estadosGestionados.includes(sol.estado));
                 setHistorial(gestionadas);
             } catch (error) {
@@ -47,47 +47,45 @@ const HistorialDocente = () => {
         switch(estado) {
             case 'aprobado_final':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Aprobado en Comisión
+                    <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Aprobado en<br/>Comisión</span>
                     </span>
                 );
             case 'rechazado_comision':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-100 text-red-700 border border-red-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Devuelto en Comisión
+                    <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-red-100 text-red-700 border border-red-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Devuelto en<br/>Comisión</span>
                     </span>
                 );
             case 'en_comision':
             case 'en_revision':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 border border-amber-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        En Auditoría
+                    <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-amber-100 text-amber-700 border border-amber-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>En<br/>Auditoría</span>
                     </span>
                 );
             case 'aceptada':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-violet-100 text-violet-700 border border-violet-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                        Aceptada (Local)
+                    <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-violet-100 text-violet-700 border border-violet-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span>Aceptada<br/>(Local)</span>
                     </span>
                 );
             case 'rechazada':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 border border-slate-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        Rechazada (Local)
+                    <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-slate-100 text-slate-700 border border-slate-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        <span>Rechazada<br/>(Local)</span>
                     </span>
                 );
             case 'finalizado':
                 return (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Tutoría Concluida
+                    <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span>Tutoría<br/>Concluida</span>
                     </span>
                 );
             default:

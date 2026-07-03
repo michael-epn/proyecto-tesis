@@ -25,24 +25,24 @@ const HistorialComision = () => {
     const getBadgeEstilo = (estado) => {
         if (estado === 'aprobado_final') {
             return (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Aprobado
+                <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Estado<br/>Aprobado</span>
                 </span>
             );
         }
         if (estado === 'finalizado') {
             return (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                    Tutoría Concluida
+                <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                    <span>Tutoría<br/>Concluida</span>
                 </span>
             );
         }
         return (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-100 text-rose-700 border border-rose-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Rechazado
+            <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-rose-100 text-rose-700 border border-rose-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Estado<br/>Rechazado</span>
             </span>
         );
     };
