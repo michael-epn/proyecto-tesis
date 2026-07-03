@@ -102,14 +102,28 @@ export const reiniciarCuposDocente = async (req, res) => {
         if (!docente.permiso_reinicio) {
             return res.status(403).json({ msg: "Requiere permiso de la comisión para reiniciar cupos." });
         }
-        const resultado = await SolicitudTesis.updateMany(
+        await SolicitudTesis.updateMany(
             { docente: req.docente._id, estado: 'aceptada' },
-            { estado: 'rechazada', feedback: 'Trámites previos cancelados por reinicio.' }
+            { 
+                estado: 'rechazada', 
+                feedback: 'Trámite cancelado por reinicio de ciclo académico del docente.' 
+            }
+        );
+        const resultadoFinalizados = await SolicitudTesis.updateMany(
+            { docente: req.docente._id, estado: 'aprobado_final' },
+            { 
+                estado: 'finalizado', 
+                feedback: 'Tutoría concluida exitosamente. Ciclo académico finalizado por el docente.' 
+            }
         );
         docente.cupos_ocupados = 0;
         docente.permiso_reinicio = false;
         await docente.save();
-        res.status(200).json({ msg: "Contador reiniciado exitosamente.", docente });
+        const docenteActualizado = await Docente.findById(req.docente._id).select("-password -token -confirmEmail");
+        res.status(200).json({ 
+            msg: `Contador reiniciado. Se concluyeron ${resultadoFinalizados.modifiedCount} tutorías exitosamente.`, 
+            docente: docenteActualizado 
+        });
     } catch (error) {
         res.status(500).json({ msg: "Error al reiniciar cupos" });
     }

@@ -81,6 +81,15 @@ const HistorialDocente = () => {
                         Rechazada (Local)
                     </span>
                 );
+            case 'finalizado':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Tutoría Concluida
+                    </span>
+                );
             default:
                 return null;
         }

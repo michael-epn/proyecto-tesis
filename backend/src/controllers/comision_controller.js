@@ -315,7 +315,7 @@ const resolverTramite = async (req, res) => {
 const obtenerHistorialComision = async (req, res) => {
     try {
         const historial = await SolicitudTesis.find({
-            estado: { $in: ['aprobado_final', 'rechazado_comision'] }
+            estado: { $in: ['aprobado_final', 'rechazado_comision', 'finalizado'] }
         })
         .populate('estudiante', 'nombre apellido email')
         .populate('docente', 'nombre apellido email')

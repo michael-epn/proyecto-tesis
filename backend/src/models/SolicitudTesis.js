@@ -13,7 +13,7 @@ const solicitudSchema = new Schema({
     revisor: { type: Schema.Types.ObjectId, ref: 'Comision', default: null },
     estado: { 
         type: String, 
-        enum: ['enviada', 'aceptada', 'rechazada', 'en_comision', 'en_revision', 'aprobado_final', 'rechazado_comision'], 
+        enum: ['enviada', 'aceptada', 'rechazada', 'en_comision', 'en_revision', 'aprobado_final', 'rechazado_comision', 'finalizado'], 
         default: 'enviada'
     },
     feedback: { type: String, default: null },

@@ -31,6 +31,13 @@ const HistorialEstudiante = () => {
                         Aprobado (Final)
                     </span>
                 );
+            case 'finalizado':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                        Finalizado por Docente
+                    </span>
+                );
             case 'aceptada':
                 return (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-violet-100 text-violet-700 border border-violet-200 rounded-full text-xs font-bold uppercase tracking-wide">
@@ -169,8 +176,6 @@ const HistorialEstudiante = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Modal de Dictamen replicado */}
             {feedbackModal.abierto && (
                 <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
