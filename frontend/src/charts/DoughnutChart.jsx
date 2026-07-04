@@ -1,47 +1,59 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useThemeProvider } from '../utils/ThemeContext';
-
-import { chartColors } from './ChartjsConfig';
 import {
-  Chart, DoughnutController, ArcElement, TimeScale, Tooltip,
+  Chart, DoughnutController, ArcElement, TimeScale, Tooltip, Legend
 } from 'chart.js';
 import 'chartjs-adapter-moment';
 
-Chart.register(DoughnutController, ArcElement, TimeScale, Tooltip);
+Chart.register(DoughnutController, ArcElement, TimeScale, Tooltip, Legend);
 
-function DoughnutChart({
-  data,
-  width,
-  height
-}) {
-
-  const [chart, setChart] = useState(null)
+function DoughnutChart({ data, width, height }) {
   const canvas = useRef(null);
   const legend = useRef(null);
+  // CORRECCIÓN CLAVE: Usar useRef en lugar de useState para la instancia del gráfico.
+  // Esto previene errores de "ownerDocument" al desmontar el componente.
+  const chartRef = useRef(null); 
   const { currentTheme } = useThemeProvider();
-  const darkMode = currentTheme === 'dark';
-  const { tooltipTitleColor, tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors; 
 
   useEffect(() => {
-    const ctx = canvas.current;
-    // eslint-disable-next-line no-unused-vars
-    const newChart = new Chart(ctx, {
+    // Si el elemento canvas aún no existe en el DOM, abortamos.
+    if (!canvas.current) return;
+
+    // Destrucción síncrona de la instancia previa si existe
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+
+    const newChart = new Chart(canvas.current, {
       type: 'doughnut',
       data: data,
       options: {
-        cutout: '80%',
+        cutout: '78%', 
         layout: {
-          padding: 24,
+          padding: 16,
         },
         plugins: {
           legend: {
-            display: false,
+            display: false, 
           },
           tooltip: {
-            titleColor: darkMode ? tooltipTitleColor.dark : tooltipTitleColor.light,
-            bodyColor: darkMode ? tooltipBodyColor.dark : tooltipBodyColor.light,
-            backgroundColor: darkMode ? tooltipBgColor.dark : tooltipBgColor.light,
-            borderColor: darkMode ? tooltipBorderColor.dark : tooltipBorderColor.light,
+            padding: 12,
+            cornerRadius: 8,
+            backgroundColor: '#1e293b', 
+            titleColor: '#ffffff',      
+            bodyColor: '#cbd5e1',       
+            borderColor: '#334155',     
+            borderWidth: 1,
+            displayColors: true,
+            boxPadding: 4,
+            callbacks: {
+              label: function(context) {
+                const value = context.raw || 0;
+                const total = context.chart._metasets[context.datasetIndex].total;
+                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                return ` ${context.label}: ${value} solicitudes (${percentage})`;
+              }
+            }
           },
         },
         interaction: {
@@ -49,7 +61,9 @@ function DoughnutChart({
           mode: 'nearest',
         },
         animation: {
-          duration: 500,
+          duration: 800, 
+          easing: 'easeOutQuart', 
+          animateScale: true, 
         },
         maintainAspectRatio: false,
         resizeDelay: 200,
@@ -57,79 +71,80 @@ function DoughnutChart({
       plugins: [
         {
           id: 'htmlLegend',
-          afterUpdate(c, args, options) {
+          afterUpdate(c) {
             const ul = legend.current;
             if (!ul) return;
-            // Remove old legend items
+            
             while (ul.firstChild) {
               ul.firstChild.remove();
             }
-            // Reuse the built-in legendItems generator
-            const items = c.options.plugins.legend.labels.generateLabels(c);
+            
+            const generateLabels = c?.options?.plugins?.legend?.labels?.generateLabels || Chart.defaults.plugins.legend.labels.generateLabels;
+            if (typeof generateLabels !== 'function') return;
+
+            const items = generateLabels(c);
+            
             items.forEach((item) => {
               const li = document.createElement('li');
-              li.style.margin = '4px';
-              // Button element
+              li.style.margin = '4px 6px';
+              
               const button = document.createElement('button');
-              button.classList.add('btn-xs', 'bg-white', 'dark:bg-gray-700', 'text-gray-500', 'dark:text-gray-400', 'shadow-xs', 'shadow-black/[0.08]', 'rounded-full');
-              button.style.opacity = item.hidden ? '.3' : '';
+              button.className = 'flex items-center px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 font-semibold text-xs rounded-full border border-slate-200 transition-colors duration-200 shadow-sm';
+              button.style.opacity = item.hidden ? '.4' : '1';
               button.onclick = () => {
                 c.toggleDataVisibility(item.index);
                 c.update();
               };
-              // Color box
+              
               const box = document.createElement('span');
               box.style.display = 'block';
-              box.style.width = '8px';
-              box.style.height = '8px';
+              box.style.width = '10px';
+              box.style.height = '10px';
               box.style.backgroundColor = item.fillStyle;
-              box.style.borderRadius = '4px';
-              box.style.marginRight = '4px';
+              box.style.borderRadius = '50%';
+              box.style.marginRight = '8px';
               box.style.pointerEvents = 'none';
-              // Label
+              box.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
+              
               const label = document.createElement('span');
-              label.style.display = 'flex';
-              label.style.alignItems = 'center';
               const labelText = document.createTextNode(item.text);
+              
               label.appendChild(labelText);
-              li.appendChild(button);
               button.appendChild(box);
               button.appendChild(label);
+              li.appendChild(button);
               ul.appendChild(li);
             });
           },
         },
       ],
     });
-    setChart(newChart);
-    return () => newChart.destroy();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    
+    // Guardamos la referencia inmediatamente de forma síncrona
+    chartRef.current = newChart;
+    
+    // Función de limpieza estricta (aquí es donde el bug desaparece)
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy();
+        chartRef.current = null;
+      }
+    };
+  }, [data]); 
 
+  // Actualización del tema
   useEffect(() => {
-    if (!chart) return;
-
-    if (darkMode) {
-      chart.options.plugins.tooltip.titleColor = tooltipTitleColor.dark;
-      chart.options.plugins.tooltip.bodyColor = tooltipBodyColor.dark;
-      chart.options.plugins.tooltip.backgroundColor = tooltipBgColor.dark;
-      chart.options.plugins.tooltip.borderColor = tooltipBorderColor.dark;
-    } else {
-      chart.options.plugins.tooltip.titleColor = tooltipTitleColor.light;
-      chart.options.plugins.tooltip.bodyColor = tooltipBodyColor.light;
-      chart.options.plugins.tooltip.backgroundColor = tooltipBgColor.light;
-      chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light;
-    }
-    chart.update('none');
+    if (!chartRef.current) return;
+    chartRef.current.update('none');
   }, [currentTheme]);
 
   return (
-    <div className="grow flex flex-col justify-center">
-      <div>
+    <div className="grow flex flex-col justify-center h-full">
+      <div className="relative flex justify-center items-center grow">
         <canvas ref={canvas} width={width} height={height}></canvas>
       </div>
-      <div className="px-5 pt-2 pb-6">
-        <ul ref={legend} className="flex flex-wrap justify-center -m-1"></ul>
+      <div className="px-2 pt-4 pb-2">
+        <ul ref={legend} className="flex flex-wrap justify-center gap-y-2"></ul>
       </div>
     </div>
   );

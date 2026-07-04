@@ -193,23 +193,36 @@ const obtenerMetricas = async (req, res) => {
         const estados = await SolicitudTesis.aggregate([
             { $group: { _id: "$estado", total: { $sum: 1 } } }
         ]);
-
         const cargaDocente = await Docente.find()
             .sort({ cupos_ocupados: -1 })
             .limit(5)
             .select('nombre apellido cupos_ocupados cupos_maximos');
-
         const tecnologias = await SolicitudTesis.aggregate([
-            { $match: { estado: { $in: ['aprobado_final', 'en_comision', 'en_revision'] } } },
+            { $match: { estado: { $in: ['aprobado_final', 'en_comision', 'en_revision', 'finalizado'] } } },
             { $lookup: { from: 'temagenerados', localField: 'tema', foreignField: '_id', as: 'temaInfo' } },
             { $unwind: "$temaInfo" },
             { $unwind: "$temaInfo.tecnologias" },
             { $group: { _id: "$temaInfo.tecnologias", count: { $sum: 1 } } },
             { $sort: { count: -1 } },
-            { $limit: 10 }
+            { $limit: 7 }
         ]);
-
-        res.status(200).json({ estados, cargaDocente, tecnologias });
+        const docentesGlobal = await Docente.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalOcupados: { $sum: "$cupos_ocupados" },
+                    totalMaximos: { $sum: "$cupos_maximos" },
+                    promedioCarga: { $avg: "$cupos_ocupados" }
+                }
+            }
+        ]);
+        const capacidadGlobal = docentesGlobal[0] || { totalOcupados: 0, totalMaximos: 0, promedioCarga: 0 };
+        res.status(200).json({ 
+            estados, 
+            cargaDocente, 
+            tecnologias,
+            capacidadGlobal
+        });
     } catch (error) {
         res.status(500).json({ msg: `Error obteniendo métricas: ${error.message}` });
     }
