@@ -1,7 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useThemeProvider } from '../utils/ThemeContext';
-
-import { chartColors } from './ChartjsConfig';
 import {
   Chart, LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip,
 } from 'chart.js';
@@ -9,6 +7,7 @@ import 'chartjs-adapter-moment';
 
 // Import utilities
 import { formatValue } from '../utils/Utils';
+import { getChartColors } from './ChartjsConfig';
 
 Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip);
 
@@ -23,7 +22,7 @@ function LineChart02({
   const legend = useRef(null);
   const { currentTheme } = useThemeProvider();
   const darkMode = currentTheme === 'dark';
-  const { textColor, gridColor, tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors;  
+  const chartColors = getChartColors();  
 
   useEffect(() => {
     const ctx = canvas.current;
@@ -128,7 +127,7 @@ function LineChart02({
               box.style.pointerEvents = 'none';
               // Label
               const label = document.createElement('span');
-              label.classList.add('text-gray-500', 'dark:text-gray-400');
+              label.classList.add('text-slate-500 dark:text-slate-400', 'dark:text-slate-400');
               label.style.fontSize = '14px';
               label.style.lineHeight = 'calc(1.25 / 0.875)';
               const labelText = document.createTextNode(item.text);
@@ -173,7 +172,7 @@ function LineChart02({
       <div className="px-5 py-3">
         <div className="flex flex-wrap justify-between items-end gap-y-2 gap-x-4">
           <div className="flex items-start">
-            <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">$1,482</div>
+            <div className="text-3xl font-bold text-slate-800 dark:text-slate-200 dark:text-slate-100 mr-2">$1,482</div>
             <div className="text-sm font-medium text-red-700 px-1.5 bg-red-500/20 rounded-full">-22%</div>
           </div>
           <div className="grow mb-1">

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useThemeProvider } from '../utils/ThemeContext';
 
-import { chartColors } from './ChartjsConfig';
+
 import {
   Chart, LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip,
 } from 'chart.js';
@@ -9,6 +9,7 @@ import 'chartjs-adapter-moment';
 
 // Import utilities
 import { formatValue } from '../utils/Utils';
+import { getChartColors } from './ChartjsConfig';
 
 Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip);
 
@@ -22,7 +23,7 @@ function LineChart01({
   const canvas = useRef(null);
   const { currentTheme } = useThemeProvider();
   const darkMode = currentTheme === 'dark';
-  const { tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors; 
+  const chartColors = getChartColors();
 
   useEffect(() => {
     const ctx = canvas.current;

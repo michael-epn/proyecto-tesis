@@ -36,14 +36,14 @@ function DropdownHelp({
     <div className="relative inline-flex">
       <button
         ref={trigger}
-        className={`w-8 h-8 flex items-center justify-center hover:bg-gray-100 lg:hover:bg-gray-200 dark:hover:bg-gray-700/50 dark:lg:hover:bg-gray-800 rounded-full ${dropdownOpen && 'bg-gray-200 dark:bg-gray-800'}`}
+        className={`w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:bg-slate-800 lg:hover:bg-slate-200 dark:hover:bg-slate-700/50 dark:lg:hover:bg-slate-800 rounded-full ${dropdownOpen && 'bg-slate-200 dark:bg-slate-800'}`}
         aria-haspopup="true"
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
       >
         <span className="sr-only">Need help?</span>
         <svg
-          className="fill-current text-gray-500/80 dark:text-gray-400/80"
+          className="fill-current text-slate-500 dark:text-slate-400/80 dark:text-slate-400/80"
           width={16}
           height={16}
           viewBox="0 0 16 16"
@@ -58,7 +58,7 @@ function DropdownHelp({
       </button>
 
       <Transition
-        className={`origin-top-right z-10 absolute top-full min-w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 py-1.5 rounded-lg shadow-lg overflow-hidden mt-1 ${align === 'right' ? 'right-0' : 'left-0'}`}
+        className={`origin-top-right z-10 absolute top-full min-w-44 bg-white dark:bg-slate-900 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:border-slate-700/60 py-1.5 rounded-lg shadow-lg overflow-hidden mt-1 ${align === 'right' ? 'right-0' : 'left-0'}`}
         show={dropdownOpen}
         enter="transition ease-out duration-200 transform"
         enterStart="opacity-0 -translate-y-2"
@@ -72,7 +72,7 @@ function DropdownHelp({
           onFocus={() => setDropdownOpen(true)}
           onBlur={() => setDropdownOpen(false)}
         >
-          <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase pt-1.5 pb-2 px-3">Need help?</div>
+          <div className="text-xs font-semibold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase pt-1.5 pb-2 px-3">Need help?</div>
           <ul>
             <li>
               <Link

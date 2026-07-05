@@ -3,6 +3,7 @@ import clienteAxios from '../../config/axios';
 import { toast } from 'react-toastify';
 import DoughnutChart from '../../charts/DoughnutChart';
 import { Chart, BarController, BarElement, LinearScale, CategoryScale, Tooltip as ChartTooltip } from 'chart.js';
+import { useThemeProvider } from '../../utils/ThemeContext';
 
 Chart.register(BarController, BarElement, LinearScale, CategoryScale, ChartTooltip);
 
@@ -15,21 +16,19 @@ function DashboardGeneral() {
         cargaDocente: [],
         capacidadGlobal: { totalOcupados: 0, totalMaximos: 0, promedioCarga: 0 }
     });
-
+    const { currentTheme } = useThemeProvider();
+    const isDark = currentTheme === 'dark';
     const techCanvasRef = useRef(null);
     const techChartInstanceRef = useRef(null);
 
     useEffect(() => {
         cargarMetricas();
     }, []);
+
     useEffect(() => {
         if (cargando || metricas.tecnologias.length === 0 || !techCanvasRef.current) return;
-
-        if (techChartInstanceRef.current) {
-            techChartInstanceRef.current.destroy();
-        }
-
-        const ctx = techCanvasRef.current.getContext('2d');
+        const ctx = techCanvasRef.current;
+        if (!ctx) return;
         
         techChartInstanceRef.current = new Chart(ctx, {
             type: 'bar',
@@ -51,12 +50,12 @@ function DashboardGeneral() {
                 scales: {
                     x: {
                         beginAtZero: true,
-                        grid: { color: '#f1f5f9' },
-                        ticks: { stepSize: 1, color: '#64748b' }
+                        grid: { color: isDark ? '#334155' : '#f1f5f9' },
+                        ticks: { stepSize: 1, color: isDark ? '#94a3b8' : '#64748b' }
                     },
                     y: {
                         grid: { display: false },
-                        ticks: { color: '#1e293b', font: { weight: 600 } }
+                        ticks: { color: isDark ? '#f8fafc' : '#1e293b', font: { weight: 600 } }
                     }
                 },
                 plugins: {
@@ -64,7 +63,7 @@ function DashboardGeneral() {
                     tooltip: {
                         padding: 10,
                         cornerRadius: 6,
-                        backgroundColor: '#1e293b'
+                        backgroundColor: isDark ? '#0f172a' : '#1e293b'
                     }
                 }
             }
@@ -73,7 +72,7 @@ function DashboardGeneral() {
         return () => {
             if (techChartInstanceRef.current) techChartInstanceRef.current.destroy();
         };
-    }, [cargando, metricas.tecnologias]);
+    }, [cargando, metricas.tecnologias, currentTheme]);
 
     const cargarMetricas = async () => {
         try {
@@ -133,7 +132,7 @@ function DashboardGeneral() {
 
     if (cargando) {
         return (
-            <div className="w-full min-h-screen bg-slate-50 flex flex-col justify-center items-center gap-4">
+            <div className="w-full min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col justify-center items-center gap-4">
                 <div className="w-12 h-12 border-4 border-violet-600 border-t-transparent rounded-full animate-spin"></div>
                 <p className="font-semibold text-slate-600 animate-pulse">Cargando ecosistema de datos ESFOT...</p>
             </div>
@@ -141,31 +140,31 @@ function DashboardGeneral() {
     }
 
     return (
-        <div className="w-full min-h-screen bg-slate-50/50 p-4 md:p-8 text-slate-800 transition-all duration-300">
+        <div className="w-full min-h-screen">
             <div className="max-w-[1600px] mx-auto space-y-8">
-                <header className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-5 gap-4">
+                <header className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 dark:border-slate-700 pb-5 gap-4">
                     <div>
-                        <h2 className="text-3xl font-black text-slate-900 tracking-tight">Panel de Control General</h2>
+                        <h2 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Panel de Control General</h2>
                         <p className="text-slate-500 font-medium text-sm mt-1">Métricas analíticas institucionales para la gestión de titulación y comisiones.</p>
                     </div>
-                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-xs border border-slate-200 self-start md:self-auto">
+                    <div className="flex items-center gap-2 bg-white dark:bg-slate-900 px-4 py-2 rounded-xl shadow-xs border border-slate-200 dark:border-slate-700 self-start md:self-auto">
                         <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
                         <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Sincronizado en tiempo real</span>
                     </div>
                 </header>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-                    <div className="bg-white shadow-sm hover:shadow-md transition-all duration-200 rounded-2xl border border-slate-200 p-6 flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-bl-full -z-0 transition-all group-hover:bg-slate-100/70"></div>
+                    <div className="bg-white dark:bg-slate-900 shadow-sm hover:shadow-md rounded-2xl border border-slate-200 dark:border-slate-700 p-6 flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-bl-full -z-0 group-hover:bg-slate-100/70"></div>
                         <div className="z-10">
                             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Historial de Trámites</h3>
-                            <div className="text-4xl font-black text-slate-900 mt-2 tracking-tight">{totalSolicitudesCentro}</div>
+                            <div className="text-4xl font-black text-slate-900 dark:text-slate-100 mt-2 tracking-tight">{totalSolicitudesCentro}</div>
                         </div>
                         <div className="text-xs text-slate-500 font-semibold mt-4 flex items-center gap-1">
                             <span className="text-slate-400">•</span> Total de solicitudes registradas
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm hover:shadow-md transition-all duration-200 rounded-2xl border border-slate-200 p-6 flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full -z-0"></div>
+                    <div className="bg-white dark:bg-slate-900 shadow-sm hover:shadow-md rounded-2xl border border-slate-200 dark:border-slate-700 p-6 flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 dark:bg-amber-900/20 rounded-bl-full -z-0"></div>
                         <div className="z-10">
                             <h3 className="text-xs font-bold text-amber-600 uppercase tracking-widest">Pendientes Comisión</h3>
                             <div className="text-4xl font-black text-amber-600 mt-2 tracking-tight">{totalPendientesAtencion}</div>
@@ -174,8 +173,8 @@ function DashboardGeneral() {
                             <span className="text-amber-500 font-bold">↑</span> {tramitesEnComision} en pool global y {tramitesEnRevision} en revisión
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm hover:shadow-md transition-all duration-200 rounded-2xl border border-slate-200 p-6 flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -z-0"></div>
+                    <div className="bg-white dark:bg-slate-900 shadow-sm hover:shadow-md  rounded-2xl border border-slate-200 dark:border-slate-700 p-6 flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-bl-full -z-0"></div>
                         <div className="z-10">
                             <h3 className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Tasa de Aprobación</h3>
                             <div className="text-4xl font-black text-emerald-600 mt-2 tracking-tight">{tasaExito}%</div>
@@ -184,7 +183,7 @@ function DashboardGeneral() {
                             <span className="text-emerald-500 font-bold">✓</span> Proyectos aprobados y finalizados
                         </div>
                     </div>
-                    <div className="bg-violet-700 shadow-md hover:shadow-xl transition-all duration-200 rounded-2xl p-6 flex flex-col justify-between text-white relative overflow-hidden">
+                    <div className="bg-violet-700 shadow-md hover:shadow-xl  rounded-2xl p-6 flex flex-col justify-between text-white relative overflow-hidden">
                         <div className="absolute -right-4 -top-4 w-24 h-24 bg-violet-600/50 rounded-full"></div>
                         <div>
                             <h3 className="text-xs font-bold text-violet-200 uppercase tracking-widest">Capacidad de Carga Global</h3>
@@ -195,9 +194,9 @@ function DashboardGeneral() {
                         </div>
                     </div>
                 </div>
-                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs">
                     <div className="mb-4">
-                        <h3 className="text-base font-bold text-slate-900">Embudo del Flujo de Solicitudes</h3>
+                        <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Embudo del Flujo de Solicitudes</h3>
                         <p className="text-xs text-slate-400 font-medium">Distribución volumétrica actual en cada etapa del proceso de titulación.</p>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 relative">
@@ -209,10 +208,10 @@ function DashboardGeneral() {
                             { label: 'Aprobada', key: 'aprobado_final', color: 'bg-emerald-500' },
                             { label: 'Finalizada', key: 'finalizado', color: 'bg-blue-500' },
                         ].map((step, index) => (
-                            <div key={index} className="bg-slate-100 border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
+                            <div key={index} className="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-3 flex items-center justify-between shadow-2xs">
                                 <div className="space-y-0.5">
                                     <span className="text-xs font-bold text-slate-400 block uppercase tracking-wider">{step.label}</span>
-                                    <span className="text-xl font-extrabold text-slate-800">{getCount(step.key)}</span>
+                                    <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200">{getCount(step.key)}</span>
                                 </div>
                                 <span className={`w-3 h-3 ${step.color} rounded-full flex-shrink-0`}></span>
                             </div>
@@ -220,9 +219,9 @@ function DashboardGeneral() {
                     </div>
                 </div>
                 <div className="grid grid-cols-12 gap-6">
-                    <div className="col-span-full xl:col-span-7 bg-white shadow-sm border border-slate-200 rounded-2xl overflow-hidden flex flex-col">
-                        <header className="px-6 py-4 border-b border-slate-100 bg-slate-50/70">
-                            <h3 className="text-lg font-bold text-slate-900">Top 5: Carga por Tutor</h3>
+                    <div className="col-span-full xl:col-span-7 bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden flex flex-col">
+                        <header className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/70">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Top 5: Carga por Tutor</h3>
                             <p className="text-xs text-slate-400 font-medium mt-0.5">Balance de cupos asignados y disponibilidad institucional.</p>
                         </header>
                         
@@ -237,11 +236,11 @@ function DashboardGeneral() {
                                         <div key={docente._id || idx} className="space-y-1.5 group">
                                             <div className="flex justify-between items-center text-sm">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-bold text-slate-800 truncate max-w-[220px]">
+                                                    <span className="font-bold text-slate-800 dark:text-slate-200 truncate max-w-[220px]">
                                                         {docente.nombre} {docente.apellido}
                                                     </span>
                                                     {estaLleno && (
-                                                        <span className="text-[10px] bg-rose-100 text-rose-700 font-black px-2 py-0.5 rounded-md uppercase border border-rose-200 animate-pulse">
+                                                        <span className="text-[10px] bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 font-black px-2 py-0.5 rounded-md uppercase border border-rose-200 dark:border-rose-800/50 animate-pulse">
                                                             Capacidad Máxima
                                                         </span>
                                                     )}
@@ -251,9 +250,9 @@ function DashboardGeneral() {
                                                     <span className={`text-xs font-bold ${estaLleno ? 'text-rose-600' : 'text-violet-600'}`}>{pct}%</span>
                                                 </div>
                                             </div>
-                                            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200/40 relative">
+                                            <div className="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700/40 relative">
                                                 <div 
-                                                    className={`h-full rounded-full transition-all duration-500 ${estaLleno ? 'bg-gradient-to-r from-rose-500 to-rose-600' : 'bg-gradient-to-r from-violet-500 to-violet-600'}`}
+                                                    className={`h-full rounded-full ${estaLleno ? 'bg-gradient-to-r from-rose-500 to-rose-600' : 'bg-gradient-to-r from-violet-500 to-violet-600'}`}
                                                     style={{ width: `${Math.min(pct, 100)}%` }}
                                                 ></div>
                                             </div>
@@ -263,9 +262,9 @@ function DashboardGeneral() {
                             )}
                         </div>
                     </div>
-                    <div className="col-span-full xl:col-span-5 bg-white shadow-sm border border-slate-200 rounded-2xl overflow-hidden flex flex-col">
-                        <header className="px-6 py-4 border-b border-slate-100 bg-slate-50/70">
-                            <h3 className="text-lg font-bold text-slate-900">Estado Global de Solicitudes</h3>
+                    <div className="col-span-full xl:col-span-5 bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden flex flex-col">
+                        <header className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/70">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Estado Global de Solicitudes</h3>
                             <p className="text-xs text-slate-400 font-medium mt-0.5">Distribución proporcional en tiempo real.</p>
                         </header>
                         <div className="p-6 flex-grow flex flex-col justify-center items-center relative min-h-[320px]">
@@ -274,7 +273,7 @@ function DashboardGeneral() {
                             ) : (
                                 <>
                                     <div className="absolute flex flex-col items-center justify-center top-[30%] pointer-events-none">
-                                        <span className="text-3xl font-black text-slate-900 tracking-tight">{totalSolicitudesCentro}</span>
+                                        <span className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">{totalSolicitudesCentro}</span>
                                         <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Trámites</span>
                                     </div>
                                     <div className="w-full h-full max-h-[250px]">
@@ -284,9 +283,9 @@ function DashboardGeneral() {
                             )}
                         </div>
                     </div>
-                    <div className="col-span-full xl:col-span-6 bg-white shadow-sm border border-slate-200 rounded-2xl overflow-hidden flex flex-col">
-                        <header className="px-6 py-4 border-b border-slate-100 bg-slate-50/70">
-                            <h3 className="text-lg font-bold text-slate-900">Tecnologías más Utilizadas</h3>
+                    <div className="col-span-full xl:col-span-6 bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden flex flex-col">
+                        <header className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/70">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Tecnologías más Utilizadas</h3>
                             <p className="text-xs text-slate-400 font-medium mt-0.5">Top de stacks y lenguajes sugeridos por la Inteligencia Artificial.</p>
                         </header>
                         <div className="p-6 flex-grow min-h-[280px] relative">
@@ -297,15 +296,15 @@ function DashboardGeneral() {
                             )}
                         </div>
                     </div>
-                    <div className="col-span-full xl:col-span-6 bg-white shadow-sm border border-slate-200 rounded-2xl overflow-hidden flex flex-col">
-                        <header className="px-6 py-4 border-b border-slate-100 bg-slate-50/70">
-                            <h3 className="text-lg font-bold text-slate-900">Capacidad Docente y Ocupación</h3>
+                    <div className="col-span-full xl:col-span-6 bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden flex flex-col">
+                        <header className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/70">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Capacidad Docente y Ocupación</h3>
                             <p className="text-xs text-slate-400 font-medium mt-0.5">Balance operativo interno de tutorías de la institución.</p>
                         </header>
                         <div className="p-6 flex-grow flex flex-col justify-around space-y-6">
-                            <div className="flex items-center justify-between gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div className="flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                                 <div>
-                                    <h4 className="text-sm font-bold text-slate-700">Promedio de Carga Actual</h4>
+                                    <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200">Promedio de Carga Actual</h4>
                                     <p className="text-xs text-slate-400 font-medium mt-0.5">Estudiantes asignados promedio por docente.</p>
                                 </div>
                                 <div className="text-2xl font-black text-violet-700">
@@ -316,11 +315,11 @@ function DashboardGeneral() {
                             <div className="space-y-3">
                                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Mapeo de Disponibilidad Total</h4>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="border border-slate-100 p-3 rounded-xl bg-slate-50/40">
+                                    <div className="border border-slate-100 dark:border-slate-800 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
                                         <span className="text-[11px] font-bold text-slate-400 block uppercase">Cupos Utilizados</span>
-                                        <span className="text-2xl font-extrabold text-slate-800">{globalOcupados}</span>
+                                        <span className="text-2xl font-extrabold text-slate-800 dark:text-slate-200">{globalOcupados}</span>
                                     </div>
-                                    <div className="border border-slate-100 p-3 rounded-xl bg-slate-50/40">
+                                    <div className="border border-slate-100 dark:border-slate-800 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
                                         <span className="text-[11px] font-bold text-slate-400 block uppercase">Cupos Disponibles</span>
                                         <span className="text-2xl font-extrabold text-emerald-600">
                                             {Math.max(0, globalMaximos - globalOcupados)}

@@ -1,11 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useThemeProvider } from '../utils/ThemeContext';
-
-import { chartColors } from './ChartjsConfig';
 import {
   Chart, BarController, BarElement, LinearScale, TimeScale, Tooltip, Legend,
 } from 'chart.js';
 import 'chartjs-adapter-moment';
+import { getChartColors } from './ChartjsConfig';
 
 Chart.register(BarController, BarElement, LinearScale, TimeScale, Tooltip, Legend);
 
@@ -20,7 +19,7 @@ function BarChart01({
   const legend = useRef(null);
   const { currentTheme } = useThemeProvider();
   const darkMode = currentTheme === 'dark';
-  const { textColor, gridColor, tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors;
+  const chartColors = getChartColors();
 
   useEffect(() => {
     const ctx = canvas.current;
@@ -127,14 +126,14 @@ function BarChart01({
               labelContainer.style.display = 'flex';
               labelContainer.style.alignItems = 'center';
               const value = document.createElement('span');
-              value.classList.add('text-gray-800', 'dark:text-gray-100');
+              value.classList.add('text-slate-800 dark:text-slate-200', 'dark:text-slate-100');
               value.style.fontSize = '30px';
               value.style.lineHeight = 'calc(2.25 / 1.875)';
               value.style.fontWeight = '700';
               value.style.marginRight = '8px';
               value.style.pointerEvents = 'none';
               const label = document.createElement('span');
-              label.classList.add('text-gray-500', 'dark:text-gray-400');
+              label.classList.add('text-slate-500 dark:text-slate-400', 'dark:text-slate-400');
               label.style.fontSize = '14px';
               label.style.lineHeight = 'calc(1.25 / 0.875)';
               const theValue = c.data.datasets[item.datasetIndex].data.reduce((a, b) => a + b, 0);

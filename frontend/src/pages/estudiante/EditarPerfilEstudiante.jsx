@@ -11,12 +11,12 @@ import MultiSelectMaterias from '../../components/MultiSelectMaterias.jsx';
 
 const InputField = ({ label, register, name, type = "text", disabled = false }) => (
     <div>
-        <label className="block text-sm font-bold text-slate-700 mb-2">{label}</label>
+        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{label}</label>
         <input 
             type={type} 
             {...register(name)} 
             disabled={disabled}
-            className={`w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200' : ''}`} 
+            className={`w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow ${disabled ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-200 dark:border-slate-700' : ''}`} 
         />
     </div>
 );
@@ -124,17 +124,17 @@ const EditarPerfilEstudiante = () => {
     );
 
     return (
-        <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
+        <div className="w-full min-h-screen">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Configuración de Perfil</h2>
+                    <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-200 tracking-tight">Configuración de Perfil</h2>
                     <p className="text-slate-500 mt-2 font-medium">Actualiza tu información personal y ajusta tus preferencias de seguridad.</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-8">
-                        <div className="bg-white shadow-xl rounded-2xl border border-slate-200">
-                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 rounded-t-xl">
+                        <div className="bg-white dark:bg-slate-900 shadow-xl rounded-2xl border border-slate-200 dark:border-slate-700">
+                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 dark:border-slate-700 rounded-t-2xl">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -143,50 +143,49 @@ const EditarPerfilEstudiante = () => {
                                 </h3>
                             </div>
                             <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8 space-y-8">
-                                <div className="flex flex-col gap-8 p-6 bg-slate-50 rounded-xl border border-slate-100 mb-6">               
+                                <div className="flex flex-col gap-8 p-6 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700 mb-6">               
                                     <div className="flex flex-col md:flex-row items-center gap-6">
-                                        <div className="w-full md:w-64 h-32 shrink-0 rounded-xl overflow-hidden border-4 border-white shadow-md bg-slate-200 relative flex items-center justify-center">
+                                        <div className="w-full md:w-64 h-32 shrink-0 rounded-xl overflow-hidden border-4 border-slate-100 dark:border-slate-900 shadow-md bg-slate-200 relative flex items-center justify-center">
                                             {bannerPreview ? (
                                                 <img src={bannerPreview} alt="Banner Preview" className="w-full h-full object-cover" />
                                             ) : (
                                                 <div className="w-full h-full bg-gradient-to-r from-violet-600 to-blue-500 flex items-center justify-center">
-                                                    <span className="text-white/90 text-sm font-semibold text-center px-2 drop-shadow-sm">Subir banner</span>
+                                                    <span className="text-white/90 dark:text-slate-200 text-sm font-semibold text-center px-2 drop-shadow-sm">Subir banner</span>
                                                 </div>
                                             )}
                                         </div>
                                         <div className="flex-1 w-full text-center md:text-left">
-                                            <label className="block text-sm font-bold text-slate-700 mb-2">Banner de Perfil</label>
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Banner de Perfil</label>
                                             <input 
                                                 type="file" 
                                                 accept="image/jpeg, image/png, image/webp" 
                                                 onChange={(e) => handleFileChange(e, setArchivoBanner, setBannerPreview)}
-                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 cursor-pointer transition-colors" 
+                                                className="block w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-violet-50 dark:file:bg-violet-900/30 file:text-violet-700 dark:file:text-violet-400 hover:file:bg-violet-100 dark:hover:file:bg-violet-900/50 cursor-pointer transition-colors"
                                             />
-                                            <p className="text-xs text-slate-400 mt-2 font-medium">Formato horizontal recomendado. Tamaño máximo 2MB.</p>
+                                            <p className="text-xs text-slate-400 dark:text-slate-300 mt-2 font-medium">Formato horizontal recomendado. Tamaño máximo 2MB.</p>
                                         </div>
                                     </div>
-                                    <div className="w-full h-px bg-slate-200"></div>
+                                    <div className="w-full h-px bg-slate-200 dark:bg-slate-700"></div>
                                     <div className="flex flex-col md:flex-row items-center gap-6">
-                                        <div className="w-28 h-28 shrink-0 rounded-full overflow-hidden border-4 border-white shadow-md bg-slate-200 flex items-center justify-center">
+                                        <div className="w-28 h-28 shrink-0 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-900 shadow-md bg-slate-200 flex items-center justify-center">
                                             {fotoPreview ? (
                                                 <img src={fotoPreview} alt="Preview" className="w-full h-full object-cover" />
                                             ) : (
-                                                <span className="text-slate-400 text-sm font-semibold text-center px-2">Subir foto</span>
+                                                <span className="text-slate-600 text-sm font-semibold text-center px-2">Subir foto</span>
                                             )}
                                         </div>
                                         <div className="flex-1 w-full text-center md:text-left">
-                                            <label className="block text-sm font-bold text-slate-700 mb-2">Fotografía de Perfil</label>
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Fotografía de Perfil</label>
                                             <input 
                                                 type="file" 
                                                 accept="image/jpeg, image/png, image/webp" 
                                                 onChange={(e) => handleFileChange(e, setArchivoFoto, setFotoPreview)}
-                                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 cursor-pointer transition-colors" 
+                                                className="block w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-violet-50 dark:file:bg-violet-900/30 file:text-violet-700 dark:file:text-violet-400 hover:file:bg-violet-100 dark:hover:file:bg-violet-900/50 cursor-pointer transition-colors"
                                             />
-                                            <p className="text-xs text-slate-400 mt-2 font-medium">Formatos recomendados: JPG, PNG. Tamaño máximo 2MB.</p>
+                                            <p className="text-xs text-slate-400 dark:text-slate-300 mt-2 font-medium">Formatos recomendados: JPG, PNG. Tamaño máximo 2MB.</p>
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label="Nombre" register={register} name="nombre" />
                                     <InputField label="Apellido" register={register} name="apellido" />
@@ -198,7 +197,7 @@ const EditarPerfilEstudiante = () => {
 
                                 <div className="space-y-6">
                                     <div>
-                                        <label className="block text-sm font-bold text-slate-700 mb-2">Materias Favoritas</label>
+                                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Materias Favoritas</label>
                                         <Controller
                                             name="materias_favoritas"
                                             control={control}
@@ -217,16 +216,20 @@ const EditarPerfilEstudiante = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-slate-700 mb-2">Cursos Adicionales (separados por coma)</label>
-                                        <textarea {...register("cursos_adicionales")} rows="3" className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow resize-none"  placeholder="Ej: curso 1, curso 2..."></textarea>
+                                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Cursos Adicionales (separados por coma)</label>
+                                        <textarea {...register("cursos_adicionales")} rows="3" 
+                                            className="w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none"  
+                                            placeholder="Ej: curso 1, curso 2...">
+                                        </textarea>
                                     </div>
                                 </div>
-
-                                <div className="flex flex-col md:flex-row gap-4 pt-4 border-t border-slate-100">
+                                <div className="flex flex-col md:flex-row gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                                     <button type="submit" className="flex-1 bg-violet-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-violet-700 transition-colors shadow-md flex items-center justify-center gap-2">
                                         Guardar Cambios
                                     </button>
-                                    <button type="button" onClick={() => navigate('/estudiante/perfil')} className="flex-1 bg-white border border-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
+                                    <button type="button" onClick={() => navigate('/estudiante/perfil')} 
+                                        className="flex-1 font-bold py-3 px-6 bg-slate-800 text-white rounded-xl hover:bg-slate-900 dark:hover:bg-slate-700 transition-colors shadow-sm"
+                                    >
                                         Cancelar
                                     </button>
                                 </div>
@@ -235,8 +238,8 @@ const EditarPerfilEstudiante = () => {
                     </div>
 
                     <div className="lg:col-span-1">
-                        <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
-                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
+                        <div className="bg-white dark:bg-slate-900 shadow-xl rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                            <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -245,18 +248,17 @@ const EditarPerfilEstudiante = () => {
                                 </h3>
                             </div>
                             <form onSubmit={handleSubmitPassword(onSubmitPassword)} className="p-6 space-y-6">
-                                
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-2">Contraseña Actual</label>
+                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Contraseña Actual</label>
                                     <div className="relative">
                                         <input
                                             type={mostrarPasswordActual ? "text" : "password"}
                                             {...registerPassword("passwordactual")}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-all pr-12"
+                                            className="w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 pr-12"
                                         />
                                         <button
                                             type="button"
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-violet-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 dark:text-slate-500 hover:text-violet-600 transition-colors"
                                             onClick={() => setMostrarPasswordActual(!mostrarPasswordActual)}
                                         >
                                             {mostrarPasswordActual ? (
@@ -272,18 +274,17 @@ const EditarPerfilEstudiante = () => {
                                         </button>
                                     </div>
                                 </div>
-
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-2">Nueva Contraseña</label>
+                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Nueva Contraseña</label>
                                     <div className="relative">
                                         <input
                                             type={mostrarPasswordNuevo ? "text" : "password"}
                                             {...registerPassword("passwordnuevo")}
-                                            className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-all pr-12"
+                                            className="w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 pr-12"
                                         />
                                         <button
                                             type="button"
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-violet-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 dark:text-slate-500 hover:text-violet-600 transition-colors"
                                             onClick={() => setMostrarPasswordNuevo(!mostrarPasswordNuevo)}
                                         >
                                             {mostrarPasswordNuevo ? (
@@ -299,8 +300,7 @@ const EditarPerfilEstudiante = () => {
                                         </button>
                                     </div>
                                 </div>
-
-                                <button type="submit" className="w-full bg-slate-800 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-900 transition-colors shadow-md flex justify-center items-center gap-2 mt-4">
+                                <button type="submit" className="w-full bg-slate-800 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-700 transition-colors shadow-md flex justify-center items-center gap-2 mt-4">
                                     Actualizar Password
                                 </button>
                             </form>

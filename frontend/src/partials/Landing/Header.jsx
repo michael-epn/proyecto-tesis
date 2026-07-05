@@ -17,7 +17,7 @@ function Header() {
           <nav className="flex grow justify-end">
             <ul className="flex grow justify-end flex-wrap items-center space-x-4">
               <li>
-                <Link to="/auth/login" className="text-gray-200 hover:text-white transition duration-150 ease-in-out font-medium">
+                <Link to="/auth/login" className="text-slate-200 hover:text-white transition duration-150 ease-in-out font-medium">
                   Iniciar Sesión
                 </Link>
               </li>

@@ -1,11 +1,8 @@
-// Import Chart.js
 import { Chart, Tooltip } from 'chart.js';
-// Import Tailwind config
 import { adjustColorOpacity, getCssVariable } from '../utils/Utils';
 
 Chart.register(Tooltip);
 
-// Define Chart.js default settings
 Chart.defaults.font.family = '"Inter", sans-serif';
 Chart.defaults.font.weight = 500;
 Chart.defaults.plugins.tooltip.borderWidth = 1;
@@ -18,7 +15,6 @@ Chart.defaults.plugins.tooltip.caretPadding = 20;
 Chart.defaults.plugins.tooltip.cornerRadius = 8;
 Chart.defaults.plugins.tooltip.padding = 8;
 
-// Function that generates a gradient for line charts
 export const chartAreaGradient = (ctx, chartArea, colorStops) => {
   if (!ctx || !chartArea || !colorStops || colorStops.length === 0) {
     return 'transparent';
@@ -30,33 +26,15 @@ export const chartAreaGradient = (ctx, chartArea, colorStops) => {
   return gradient;
 };
 
-export const chartColors = {
-  textColor: {
-    light: getCssVariable('--color-gray-400'),
-    dark: getCssVariable('--color-gray-500'),
-  },
-  gridColor: {
-    light: getCssVariable('--color-gray-100'),
-    dark: adjustColorOpacity(getCssVariable('--color-gray-700'), 0.6),
-  },
-  backdropColor: {
-    light: getCssVariable('--color-white'),
-    dark: getCssVariable('--color-gray-800'),
-  },
-  tooltipTitleColor: {
-    light: getCssVariable('--color-gray-800'),
-    dark: getCssVariable('--color-gray-100'),
-  },
-  tooltipBodyColor : {
-    light: getCssVariable('--color-gray-500'),
-    dark: getCssVariable('--color-gray-400')
-  },
-  tooltipBgColor: {
-    light: getCssVariable('--color-white'),
-    dark: getCssVariable('--color-gray-700'),
-  },
-  tooltipBorderColor: {
-    light: getCssVariable('--color-gray-200'),
-    dark: getCssVariable('--color-gray-600'),
-  },
-};
+// Modificado para leer el color de forma dinámica según el tema activo en el DOM
+const isDark = () => document.documentElement.classList.contains('dark');
+
+export const getChartColors = () => ({
+  textColor: isDark() ? getCssVariable('--color-slate-400') : getCssVariable('--color-slate-500'),
+  gridColor: isDark() ? adjustColorOpacity(getCssVariable('--color-slate-700'), 0.6) : getCssVariable('--color-slate-100'),
+  backdropColor: isDark() ? getCssVariable('--color-slate-800') : getCssVariable('--color-white'),
+  tooltipTitleColor: isDark() ? getCssVariable('--color-slate-100') : getCssVariable('--color-slate-800'),
+  tooltipBodyColor: isDark() ? getCssVariable('--color-slate-400') : getCssVariable('--color-slate-500'),
+  tooltipBgColor: isDark() ? getCssVariable('--color-slate-700') : getCssVariable('--color-white'),
+  tooltipBorderColor: isDark() ? getCssVariable('--color-slate-600') : getCssVariable('--color-slate-200'),
+});

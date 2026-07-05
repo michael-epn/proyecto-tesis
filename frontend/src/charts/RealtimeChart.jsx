@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useThemeProvider } from '../utils/ThemeContext';
 
-import { chartColors } from './ChartjsConfig';
+
 import {
   Chart, LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip,
 } from 'chart.js';
@@ -9,6 +9,7 @@ import 'chartjs-adapter-moment';
 
 // Import utilities
 import { adjustColorOpacity, getCssVariable, formatValue } from '../utils/Utils';
+import { getChartColors } from './ChartjsConfig';
 
 Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip);
 
@@ -24,7 +25,7 @@ function RealtimeChart({
   const chartDeviation = useRef(null);
   const { currentTheme } = useThemeProvider();
   const darkMode = currentTheme === 'dark';  
-  const { textColor, gridColor, tooltipTitleColor, tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors;
+  const chartColors = getChartColors();
 
   useEffect(() => {
     const ctx = canvas.current;
@@ -149,7 +150,7 @@ function RealtimeChart({
     <React.Fragment>
       <div className="px-5 py-3">
         <div className="flex items-start">
-          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2 tabular-nums">$<span ref={chartValue}>57.81</span></div>
+          <div className="text-3xl font-bold text-slate-800 dark:text-slate-200 dark:text-slate-100 mr-2 tabular-nums">$<span ref={chartValue}>57.81</span></div>
           <div ref={chartDeviation} className="text-sm font-medium px-1.5 rounded-full"></div>
         </div>
       </div>

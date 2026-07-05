@@ -1,13 +1,29 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 import { useState } from 'react';
+import CustomSelect from '../../components/CustomSelect';
+
+const opcionesRoles = [
+    { value: "estudiante", label: "Estudiante" },
+    { value: "docente", label: "Docente" },
+    { value: "comision", label: "Comisión Académica" },
+];
+
+const opcionesCarreras = [
+    { value: "Tecnología Superior en Agua y Saneamiento Ambiental", label: "Tecnología Superior en Agua y Saneamiento Ambiental" },
+    { value: "Tecnología Superior en Desarrollo de Software", label: "Tecnología Superior en Desarrollo de Software" },
+    { value: "Tecnología Superior en Electromecánica", label: "Tecnología Superior en Electromecánica" },
+    { value: "Tecnología Superior en Redes y Telecomunicaciones", label: "Tecnología Superior en Redes y Telecomunicaciones" },
+    { value: "Tecnología Superior en Procesamiento de Alimentos", label: "Tecnología Superior en Procesamiento de Alimentos" },
+    { value: "Tecnología Superior en Procesamiento Industrial de la Madera", label: "Tecnología Superior en Procesamiento Industrial de la Madera" }
+];
 
 const Registro = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    const { register, handleSubmit, watch, control, formState: { errors } } = useForm({
         defaultValues: {
-            rol: 'estudiante',
+            rol: '',
             carrera: ''
         },
         shouldUnregister: true
@@ -35,8 +51,8 @@ const Registro = () => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex bg-white dark:bg-gray-900">
-            <div className="hidden md:block md:w-1/2 relative bg-gray-900">
+        <div className="fixed inset-0 z-50 flex bg-white dark:bg-slate-900 dark:bg-slate-900">
+            <div className="hidden md:block md:w-1/2 relative bg-slate-900">
                 <img 
                     src="https://images.unsplash.com/photo-1644325349124-d1756b79dd42?q=80&w=1475&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                     alt="Registro Background" 
@@ -46,48 +62,55 @@ const Registro = () => {
             </div>
             <div className="w-full md:w-1/2 flex flex-col p-4 py-8 md:p-12 lg:p-16 overflow-y-auto h-full">
                 <div className="w-full max-w-md m-auto">
-                    <h1 className="text-2xl md:text-3xl text-center font-bold text-gray-900 dark:text-white mb-6">Crear Cuenta</h1>
+                    <h1 className="text-2xl md:text-3xl text-center font-bold text-slate-900 dark:text-slate-100 dark:text-white mb-6">Crear Cuenta</h1>
                     
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tipo de Perfil</label>
-                            <select
-                                {...register("rol", { required: true })}
-                                className="form-select w-full transition-all"
-                            >
-                                <option value="estudiante">Estudiante</option>
-                                <option value="docente">Docente</option>
-                                <option value="comision">Comisión Académica</option>
-                            </select>
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Tipo de Perfil</label>
+                            <Controller
+                                name="rol"
+                                control={control}
+                                rules={{ required: "El perfil es obligatorio" }}
+                                render={({ field: { value, onChange } }) => (
+                                    <CustomSelect
+                                        value={value}
+                                        onChange={onChange}
+                                        options={opcionesRoles}
+                                        placeholder="Selecciona un perfil..."
+                                        error={!!errors.rol}
+                                    />
+                                )}
+                            />
+                            {errors.rol && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nombre</label>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Nombre</label>
                                 <input
                                     type="text"
                                     {...register("nombre", { required: true })}
-                                    className="form-input w-full transition-all"
+                                    className="w-full px-4 rounded-xl py-3 form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
                                 />
                                 {errors.nombre && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Apellido</label>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Apellido</label>
                                 <input
                                     type="text"
                                     {...register("apellido", { required: true })}
-                                    className="form-input w-full transition-all"
+                                    className="w-full px-4 py-3 rounded-xl form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
                                 />
                                 {errors.apellido && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Correo Electrónico</label>
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Correo Electrónico</label>
                             <input
                                 type="email"
                                 {...register("email", { required: true })}
-                                className="form-input w-full transition-all"
+                                className="w-full rounded-xl px-4 py-3 form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none"
                                 placeholder="usuario@email.com"
                             />
                             {errors.email && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
@@ -95,31 +118,33 @@ const Registro = () => {
 
                         {rolSeleccionado === 'estudiante' && (
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Carrera</label>
-                                <select
-                                    {...register("carrera", { required: true })}
-                                    className="form-select w-full transition-all"
-                                >
-                                    <option value="">Selecciona tu carrera</option>
-                                    <option value="Tecnología Superior en Agua y Saneamiento Ambiental">Tecnología Superior en Agua y Saneamiento Ambiental</option>
-                                    <option value="Tecnología Superior en Desarrollo de Software">Tecnología Superior en Desarrollo de Software</option>
-                                    <option value="Tecnología Superior en Electromecánica">Tecnología Superior en Electromecánica</option>
-                                    <option value="Tecnología Superior en Redes y Telecomunicaciones">Tecnología Superior en Redes y Telecomunicaciones</option>
-                                    <option value="Tecnología Superior en Procesamiento de Alimentos">Tecnología Superior en Procesamiento de Alimentos</option>
-                                    <option value="Tecnología Superior en Procesamiento Industrial de la Madera">Tecnología Superior en Procesamiento Industrial de la Madera</option>
-                                </select>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Carrera</label>
+                                <Controller
+                                    name="carrera"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field: { value, onChange } }) => (
+                                        <CustomSelect
+                                            value={value}
+                                            onChange={onChange}
+                                            options={opcionesCarreras}
+                                            placeholder="Selecciona tu carrera..."
+                                            error={!!errors.carrera}
+                                        />
+                                    )}
+                                />
                                 {errors.carrera && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
                             </div>
                         )}
 
                         {rolSeleccionado === 'docente' && (
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Áreas de Investigación</label>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Áreas de Investigación</label>
                                 <input
                                     type="text"
                                     {...register("areas_investigacion", { required: true })}
-                                    className="form-input w-full transition-all"
-                                    placeholder="Separadas por comas (IA, Datos)"
+                                    className="w-full px-4 py-3 rounded-xl form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
+                                    placeholder="Separadas por comas"
                                 />
                                 {errors.areas_investigacion && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
                             </div>
@@ -127,11 +152,11 @@ const Registro = () => {
 
                         {rolSeleccionado === 'comision' && (
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Cargo</label>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Cargo</label>
                                 <input
                                     type="text"
                                     {...register("cargo", { required: true })}
-                                    className="form-input w-full transition-all"
+                                    className="w-full rounded-xl px-4 py-3 form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none"
                                     placeholder="Ej. Coordinador"
                                 />
                                 {errors.cargo && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
@@ -139,16 +164,16 @@ const Registro = () => {
                         )}
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password</label>
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
                             <div className="relative">
                                 <input
                                     type={mostrarPassword ? "text" : "password"}
                                     {...register("password", { required: true })}
-                                    className="form-input w-full transition-all pr-10"
+                                    className="w-full px-4 py-3 rounded-xl form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
                                 />
                                 <button
                                     type="button"
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 dark:text-slate-400 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                                     onClick={() => setMostrarPassword(!mostrarPassword)}
                                 >
                                     {mostrarPassword ? (
@@ -168,14 +193,14 @@ const Registro = () => {
 
                         <button
                             type="submit"
-                            className="btn btn-lg w-full bg-violet-600 hover:bg-violet-700 text-white active:scale-[0.98] mt-4 shadow-sm"
+                            className="btn btn-lg rounded-xl w-full bg-violet-600 hover:bg-violet-700 text-white active:scale-[0.98] mt-4 shadow-sm"
                         >
                             Registrarse
                         </button>
                     </form>
 
-                    <div className="mt-8 text-center border-t border-gray-200 dark:border-gray-700 pt-6">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="mt-8 text-center border-t border-slate-200 dark:border-slate-700 dark:border-slate-700 pt-6">
+                        <p className="text-sm text-slate-600 dark:text-slate-400 dark:text-slate-400">
                             ¿Ya tienes una cuenta? <Link to="/auth/login" className="text-violet-600 dark:text-violet-400 font-bold hover:underline">Inicia Sesión</Link>
                         </p>
                     </div>

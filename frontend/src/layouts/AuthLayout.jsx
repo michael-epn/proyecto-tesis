@@ -9,7 +9,7 @@ const AuthLayout = () => {
     }
 
     return (
-        <main className="bg-white">
+        <main className="bg-white dark:bg-slate-900">
             <div className="relative flex">
                 <div className="w-full md:w-1/2">
                     <div className="min-h-screen h-full flex flex-col after:flex-1">

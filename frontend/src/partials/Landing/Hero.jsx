@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 
 function Hero() {
   return (
-    <section className="relative pt-32 pb-12 md:pt-40 md:pb-20 bg-white">
+    <section className="relative pt-32 pb-12 md:pt-40 md:pb-20 bg-white dark:bg-slate-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center pb-12 md:pb-16">
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 text-[#0033A0]">
             Encuentra tu tema de tesis ideal con <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C8102E] to-red-500">Inteligencia Artificial</span>
           </h1>
           <div className="max-w-3xl mx-auto">
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-slate-600 dark:text-slate-400 mb-8">
               Olvídate de la frustración al elegir tu trabajo de titulación. Nuestro sistema cruza tu historial académico, habilidades y los perfiles docentes de la ESFOT para recomendarte el proyecto y tutor perfectos.
             </p>
             <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
@@ -20,7 +20,7 @@ function Hero() {
                 </Link>
               </div>
               <div>
-                <a href="#solucion" className="btn text-[#0033A0] bg-gray-100 hover:bg-gray-200 w-full sm:w-auto px-6 py-3 rounded-lg shadow font-semibold transition-all">
+                <a href="#solucion" className="btn text-[#0033A0] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 w-full sm:w-auto px-6 py-3 rounded-lg shadow font-semibold transition-all">
                   Conocer más
                 </a>
               </div>

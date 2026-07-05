@@ -25,7 +25,7 @@ const HistorialComision = () => {
     const getBadgeEstilo = (estado) => {
         if (estado === 'aprobado_final') {
             return (
-                <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-100 border border-emerald-200 dark:border-emerald-700 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
                     <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span>Estado<br/>Aprobado</span>
                 </span>
@@ -33,14 +33,14 @@ const HistorialComision = () => {
         }
         if (estado === 'finalizado') {
             return (
-                <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+                <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-100 border border-blue-200 dark:border-blue-700 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
                     <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                     <span>Tutoría<br/>Concluida</span>
                 </span>
             );
         }
         return (
-            <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-rose-100 text-rose-700 border border-rose-200 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
+            <span className="inline-flex items-center justify-center gap-2 w-44 h-12 px-3 py-1 bg-rose-100 dark:bg-rose-800 text-rose-700 dark:text-rose-100 border border-rose-200 dark:border-rose-700 rounded-2xl text-xs font-bold uppercase tracking-wide text-center leading-tight">
                 <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span>Estado<br/>Rechazado</span>
             </span>
@@ -62,13 +62,13 @@ const HistorialComision = () => {
     };
 
     return (
-        <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8 relative">
+        <div className="w-full min-h-screen relative">
             <div className="max-w-[1600px] mx-auto">
                 
                 <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
                     <div className="flex flex-col gap-4">
                         <div>
-                            <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Historial de Resoluciones</h2>
+                            <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-200 tracking-tight">Historial de Resoluciones</h2>
                             <p className="text-slate-500 mt-2 font-medium">Registro auditable de todos los dictámenes emitidos por el Pool de la Comisión.</p>
                         </div>
                         <div className="flex items-center gap-3">
@@ -76,7 +76,7 @@ const HistorialComision = () => {
                             <select 
                                 value={orden}
                                 onChange={(e) => setOrden(e.target.value)}
-                                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-violet-500 focus:border-violet-500 block p-2 outline-none shadow-sm cursor-pointer"
+                                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 text-sm rounded-lg focus:ring-violet-500 focus:border-violet-500 block p-2 outline-none shadow-sm cursor-pointer"
                             >
                                 <option value="reciente">Resoluciones recientes</option>
                                 <option value="antiguo">Resoluciones antiguas</option>
@@ -85,8 +85,8 @@ const HistorialComision = () => {
                     </div>
                 </header>
 
-                <div className="bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden">
-                    <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                <div className="bg-white dark:bg-slate-900 shadow-xl rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                    <div className="bg-slate-800 px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
                         <h3 className="text-lg font-bold text-white flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -99,9 +99,9 @@ const HistorialComision = () => {
                     </div>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
+                        <table className="w-full text-left border-collapse dark:text-slate-300">
                             <thead>
-                                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider">
+                                <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-200 text-sm uppercase tracking-wider">
                                     <th className="px-6 py-4 font-bold w-1/3">Estudiante y Tema</th>
                                     <th className="px-6 py-4 font-bold">Tutor Académico</th>
                                     <th className="px-6 py-4 font-bold">Auditor (Comisión)</th>
@@ -109,7 +109,7 @@ const HistorialComision = () => {
                                     <th className="px-6 py-4 font-bold text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                                 {cargando ? (
                                     <tr>
                                         <td colSpan="5" className="px-6 py-12 text-center">
@@ -126,19 +126,19 @@ const HistorialComision = () => {
                                     historialOrdenado.map((sol) => (
                                         <tr key={sol._id}>
                                             <td className="px-6 py-4 align-top">
-                                                <div className="font-bold text-slate-800 text-base">{sol.estudiante?.nombre} {sol.estudiante?.apellido}</div>
+                                                <div className="font-bold text-slate-800 dark:text-slate-300 text-base">{sol.estudiante?.nombre} {sol.estudiante?.apellido}</div>
                                                 <div className="text-xs font-medium text-slate-500 mb-2">{sol.estudiante?.email}</div>
-                                                <div className="font-medium text-slate-700 text-sm">{sol.tema?.titulo}</div>
+                                                <div className="font-medium text-slate-700 dark:text-slate-400 text-sm">{sol.tema?.titulo}</div>
                                             </td>
                                             
                                             <td className="px-6 py-4 align-top">
-                                                <div className="font-bold text-slate-800">{sol.docente?.nombre} {sol.docente?.apellido}</div>
-                                                <span className="inline-block mt-1 bg-slate-100 text-slate-600 border border-slate-200 text-xs px-2 py-0.5 rounded font-medium">Docente Guía</span>
+                                                <div className="font-bold text-slate-800 dark:text-slate-300">{sol.docente?.nombre} {sol.docente?.apellido}</div>
+                                                <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded-xl font-medium bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">Docente Guía</span>
                                             </td>
 
                                             <td className="px-6 py-4 align-top">
-                                                <div className="font-bold text-slate-800">{sol.revisor?.nombre} {sol.revisor?.apellido}</div>
-                                                <span className="inline-block mt-1 bg-violet-50 text-violet-600 border border-violet-100 text-xs px-2 py-0.5 rounded font-medium">{sol.revisor?.cargo || 'Miembro Comisión'}</span>
+                                                <div className="font-bold text-slate-800 dark:text-slate-300">{sol.revisor?.nombre} {sol.revisor?.apellido}</div>
+                                                <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded-xl font-medium bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">{sol.revisor?.cargo || 'Miembro Comisión'}</span>
                                             </td>
 
                                             <td className="px-6 py-4 align-middle text-center">
@@ -151,7 +151,7 @@ const HistorialComision = () => {
                                             <td className="px-6 py-4 align-middle text-center">
                                                 <button 
                                                     onClick={() => abrirModal(sol)}
-                                                    className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-violet-600 font-bold text-xs py-2 px-4 rounded-lg transition-colors shadow-sm"
+                                                    className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-900 hover:text-violet-600 dark:hover:text-violet-400 font-bold text-xs py-2 px-4 rounded-lg shadow-sm"
                                                 >
                                                     Ver Dictamen
                                                 </button>
@@ -167,7 +167,7 @@ const HistorialComision = () => {
 
             {feedbackModal.abierto && (
                 <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200 dark:border-slate-700">
                         <div className="bg-slate-800 px-6 py-4 flex justify-between items-center">
                             <h3 className="font-bold text-white flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -181,16 +181,16 @@ const HistorialComision = () => {
                         </div>
                         <div className="p-6">
                             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tema de Tesis</h4>
-                            <p className="text-slate-800 font-bold mb-4 pb-4 border-b border-slate-100">{feedbackModal.titulo}</p>
+                            <p className="text-slate-800 dark:text-slate-200 font-bold mb-4 pb-4 border-b border-slate-100 dark:border-slate-700">{feedbackModal.titulo}</p>
                             
                             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Resolución de Comisión</h4>
-                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <p className="text-slate-700 leading-relaxed font-medium italic">"{feedbackModal.texto}"</p>
+                            <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium italic">"{feedbackModal.texto}"</p>
                             </div>
 
                             <button 
                                 onClick={() => setFeedbackModal({ abierto: false, texto: '', titulo: '' })}
-                                className="mt-6 w-full bg-slate-800 text-white font-bold py-3 px-4 rounded-xl hover:bg-slate-900 transition-colors shadow-md"
+                                className="mt-6 w-full bg-slate-800 text-white font-bold py-3 px-4 rounded-xl hover:bg-slate-900 dark:hover:bg-slate-700 transition-colors shadow-md"
                             >
                                 Cerrar Ventana
                             </button>

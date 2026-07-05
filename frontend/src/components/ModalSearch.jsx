@@ -40,7 +40,7 @@ function ModalSearch({
     <>
       {/* Modal backdrop */}
       <Transition
-        className="fixed inset-0 bg-gray-900/30 z-50 transition-opacity"
+        className="fixed inset-0 bg-slate-900/30 z-50 transition-opacity"
         show={modalOpen}
         enter="transition ease-out duration-200"
         enterStart="opacity-0"
@@ -66,24 +66,24 @@ function ModalSearch({
       >
         <div
           ref={modalContent}
-          className="bg-white dark:bg-gray-800 border border-transparent dark:border-gray-700/60 overflow-auto max-w-2xl w-full max-h-full rounded-lg shadow-lg"
+          className="bg-white dark:bg-slate-900 dark:bg-slate-800 border border-transparent dark:border-slate-700/60 overflow-auto max-w-2xl w-full max-h-full rounded-lg shadow-lg"
         >
           {/* Search form */}
-          <form className="border-b border-gray-200 dark:border-gray-700/60">
+          <form className="border-b border-slate-200 dark:border-slate-700 dark:border-slate-700/60">
             <div className="relative">
               <label htmlFor={searchId} className="sr-only">
                 Search
               </label>
               <input
                 id={searchId}
-                className="w-full dark:text-gray-300 bg-white dark:bg-gray-800 border-0 focus:ring-transparent placeholder-gray-400 dark:placeholder-gray-500 appearance-none py-3 pl-10 pr-4"
+                className="w-full dark:text-slate-300 bg-white dark:bg-slate-900 dark:bg-slate-800 border-0 focus:ring-transparent placeholder-slate-400 dark:placeholder-slate-500 appearance-none py-3 pl-10 pr-4"
                 type="search"
                 placeholder="Search Anything…"
                 ref={searchInput}
               />
               <button className="absolute inset-0 right-auto group" type="submit" aria-label="Search">
                 <svg
-                  className="shrink-0 fill-current text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400 ml-4 mr-2"
+                  className="shrink-0 fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 group-hover:text-slate-500 dark:text-slate-400 dark:group-hover:text-slate-400 ml-4 mr-2"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -98,16 +98,16 @@ function ModalSearch({
           <div className="py-4 px-2">
             {/* Recent searches */}
             <div className="mb-3 last:mb-0">
-              <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">Recent searches</div>
+              <div className="text-xs font-semibold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase px-2 mb-2">Recent searches</div>
               <ul className="text-sm">
                 <li>
                   <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                    className="flex items-center p-2 text-slate-800 dark:text-slate-200 dark:text-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/20 rounded-lg"
                     to="#0"
                     onClick={() => setModalOpen(!modalOpen)}
                   >
                     <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
+                  className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 shrink-0 mr-3"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -119,12 +119,12 @@ function ModalSearch({
                 </li>
                 <li>
                   <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                    className="flex items-center p-2 text-slate-800 dark:text-slate-200 dark:text-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/20 rounded-lg"
                     to="#0"
                     onClick={() => setModalOpen(!modalOpen)}
                   >
                     <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
+                  className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 shrink-0 mr-3"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -136,12 +136,12 @@ function ModalSearch({
                 </li>
                 <li>
                   <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                    className="flex items-center p-2 text-slate-800 dark:text-slate-200 dark:text-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/20 rounded-lg"
                     to="#0"
                     onClick={() => setModalOpen(!modalOpen)}
                   >
                     <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
+                  className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 shrink-0 mr-3"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -153,12 +153,12 @@ function ModalSearch({
                 </li>
                 <li>
                   <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                    className="flex items-center p-2 text-slate-800 dark:text-slate-200 dark:text-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/20 rounded-lg"
                     to="#0"
                     onClick={() => setModalOpen(!modalOpen)}
                   >
                     <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
+                  className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 shrink-0 mr-3"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -170,12 +170,12 @@ function ModalSearch({
                 </li>
                 <li>
                   <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                    className="flex items-center p-2 text-slate-800 dark:text-slate-200 dark:text-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/20 rounded-lg"
                     to="#0"
                     onClick={() => setModalOpen(!modalOpen)}
                   >
                     <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
+                  className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 shrink-0 mr-3"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -187,12 +187,12 @@ function ModalSearch({
                 </li>
                 <li>
                   <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                    className="flex items-center p-2 text-slate-800 dark:text-slate-200 dark:text-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/20 rounded-lg"
                     to="#0"
                     onClick={() => setModalOpen(!modalOpen)}
                   >
                     <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
+                  className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 shrink-0 mr-3"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -206,16 +206,16 @@ function ModalSearch({
             </div>
             {/* Recent pages */}
             <div className="mb-3 last:mb-0">
-              <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">Recent pages</div>
+              <div className="text-xs font-semibold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase px-2 mb-2">Recent pages</div>
               <ul className="text-sm">
                 <li>
                   <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                    className="flex items-center p-2 text-slate-800 dark:text-slate-200 dark:text-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/20 rounded-lg"
                     to="#0"
                     onClick={() => setModalOpen(!modalOpen)}
                   >
                     <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
+                  className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 shrink-0 mr-3"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -224,18 +224,18 @@ function ModalSearch({
                     </svg>
                     <span>
                       <span className="font-medium">Messages</span> -{' '}
-                      <span className="text-gray-600 dark:text-gray-400">Conversation / … / Mike Mills</span>
+                      <span className="text-slate-600 dark:text-slate-400 dark:text-slate-400">Conversation / … / Mike Mills</span>
                     </span>
                   </Link>
                 </li>
                 <li>
                   <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                    className="flex items-center p-2 text-slate-800 dark:text-slate-200 dark:text-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/20 rounded-lg"
                     to="#0"
                     onClick={() => setModalOpen(!modalOpen)}
                   >
                     <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
+                  className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400 shrink-0 mr-3"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -244,7 +244,7 @@ function ModalSearch({
                     </svg>
                     <span>
                       <span className="font-medium">Messages</span> -{' '}
-                      <span className="text-gray-600 dark:text-gray-400">Conversation / … / Eva Patrick</span>
+                      <span className="text-slate-600 dark:text-slate-400 dark:text-slate-400">Conversation / … / Eva Patrick</span>
                     </span>
                   </Link>
                 </li>

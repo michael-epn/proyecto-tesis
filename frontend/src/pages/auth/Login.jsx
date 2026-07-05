@@ -1,12 +1,18 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
 import { useState } from 'react';
+import CustomSelect from '../../components/CustomSelect';
 
+const opcionesRoles = [
+    { value: "estudiante", label: "Estudiante" },
+    { value: "docente", label: "Docente" },
+    { value: "comision", label: "Comisión Académica" },
+];
 const Login = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, control, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const setAuth = useAuthStore((state) => state.setAuth);
     const [mostrarPassword, setMostrarPassword] = useState(false);
@@ -28,47 +34,54 @@ const Login = () => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex bg-white dark:bg-gray-900">
+        <div className="fixed inset-0 z-50 flex bg-white dark:bg-slate-900 dark:bg-slate-900">
             <div className="w-full md:w-1/2 flex flex-col p-4 py-8 md:p-12 lg:p-16 overflow-y-auto h-full">
                 <div className="w-full max-w-md m-auto">
-                    <h1 className="text-2xl md:text-3xl text-center font-bold text-gray-900 dark:text-white mb-6">
+                    <h1 className="text-2xl md:text-3xl text-center font-bold text-slate-900 dark:text-slate-100 dark:text-white mb-6">
                         Sistema Predictivo <span className="text-violet-600 dark:text-violet-400">ESFOT</span>
                     </h1>
                     
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Perfil de Acceso</label>
-                            <select
-                                {...register("rol", { required: true })}
-                                className="form-select w-full transition-all"
-                            >
-                                <option value="estudiante">Estudiante</option>
-                                <option value="docente">Docente</option>
-                                <option value="comision">Comisión Académica</option>
-                            </select>
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Perfil de Acceso</label>
+                            <Controller
+                                name="rol"
+                                control={control}
+                                rules={{ required: "El perfil es obligatorio" }}
+                                render={({ field: { value, onChange } }) => (
+                                    <CustomSelect
+                                        value={value}
+                                        onChange={onChange}
+                                        options={opcionesRoles}
+                                        placeholder="Selecciona un perfil..."
+                                        error={!!errors.rol}
+                                    />
+                                )}
+                            />
+                            {errors.rol && <span className="text-xs text-red-500 mt-1 block">Requerido</span>}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Correo Electrónico</label>
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Correo Electrónico</label>
                             <input
                                 type="email"
                                 {...register("email", { required: true })}
-                                className="form-input w-full transition-all"
+                                className="w-full rounded-xl form-input px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
                                 placeholder="usuario@email.com"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password</label>
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
                             <div className="relative">
                                 <input
                                     type={mostrarPassword ? "text" : "password"}
                                     {...register("password", { required: true })}
-                                    className="form-input w-full transition-all pr-10"
+                                    className="w-full rounded-xl px-4 py-3 form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
                                 />
                                 <button
                                     type="button"
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 dark:text-slate-400 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                                     onClick={() => setMostrarPassword(!mostrarPassword)}
                                 >
                                     {mostrarPassword ? (
@@ -94,20 +107,20 @@ const Login = () => {
 
                         <button
                             type="submit"
-                            className="btn btn-lg w-full bg-violet-600 hover:bg-violet-700 text-white active:scale-[0.98] mt-4 shadow-sm"
+                            className="btn btn-lg rounded-xl w-full bg-violet-600 hover:bg-violet-700 text-white active:scale-[0.98] mt-4 shadow-sm"
                         >
                             Iniciar Sesión
                         </button>
                     </form>
 
-                    <div className="mt-8 text-center border-t border-gray-200 dark:border-gray-700 pt-6">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="mt-8 text-center border-t border-slate-200 dark:border-slate-700 dark:border-slate-700 pt-6">
+                        <p className="text-sm text-slate-600 dark:text-slate-400 dark:text-slate-400">
                             ¿No tienes una cuenta? <Link to="/auth/registro" className="text-violet-600 dark:text-violet-400 font-bold hover:underline">Registrate aquí</Link>
                         </p>
                     </div>
                 </div>
             </div>
-            <div className="hidden md:block md:w-1/2 relative bg-gray-900">
+            <div className="hidden md:block md:w-1/2 relative bg-slate-900">
                 <img 
                     src="https://images.unsplash.com/photo-1758073519996-6d3c63b4922c?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                     alt="Login Background" 

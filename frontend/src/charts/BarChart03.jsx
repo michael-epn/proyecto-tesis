@@ -1,7 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useThemeProvider } from '../utils/ThemeContext';
-
-import { chartColors } from './ChartjsConfig';
 import {
   Chart, BarController, BarElement, LinearScale, TimeScale, Tooltip, Legend,
 } from 'chart.js';
@@ -9,6 +7,7 @@ import 'chartjs-adapter-moment';
 
 // Import utilities
 import { formatThousands } from '../utils/Utils';
+import { getChartColors } from './ChartjsConfig';
 
 Chart.register(BarController, BarElement, LinearScale, TimeScale, Tooltip, Legend);
 
@@ -23,7 +22,7 @@ function BarChart03({
   const legend = useRef(null);
   const { currentTheme } = useThemeProvider();
   const darkMode = currentTheme === 'dark';
-  const { textColor, gridColor, tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors; 
+  const chartColors = getChartColors(); 
 
   useEffect(() => {
     const ctx = canvas.current;
@@ -137,7 +136,7 @@ function BarChart03({
             box.style.pointerEvents = 'none';
             // Label
             const label = document.createElement('span')
-            label.classList.add('text-gray-500', 'dark:text-gray-400');
+            label.classList.add('text-slate-500 dark:text-slate-400', 'dark:text-slate-400');
             label.style.fontSize = '14px';
             label.style.lineHeight = 'calc(1.25 / 0.875)';
             const labelText = document.createTextNode(item.text)

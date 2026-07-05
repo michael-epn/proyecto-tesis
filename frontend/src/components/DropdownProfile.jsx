@@ -48,7 +48,7 @@ function DropdownProfile({ align }) {
         aria-expanded={dropdownOpen}
       >
         <div className="flex items-center truncate">
-          <span className="truncate ml-2 text-sm font-medium text-slate-600 group-hover:text-slate-800">
+          <span className="truncate ml-2 text-sm font-medium text-slate-600 group-hover:text-slate-800 dark:text-slate-200">
             {user ? `${user.nombre} ${user.apellido}` : 'Usuario'}
           </span>
           <svg className="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
@@ -58,7 +58,7 @@ function DropdownProfile({ align }) {
       </button>
 
       <Transition
-        className={`origin-top-right z-10 absolute top-full min-w-44 bg-white border border-slate-200 py-1.5 rounded shadow-lg mt-1 ${
+        className={`origin-top-right z-10 absolute top-full min-w-44 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 py-1.5 rounded shadow-lg mt-1 ${
           align === 'right' ? 'right-0' : 'left-0'
         }`}
         show={dropdownOpen}
@@ -70,14 +70,14 @@ function DropdownProfile({ align }) {
         leaveEnd="opacity-0 -translate-y-2"
       >
         <div ref={dropdown}>
-          <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200">
-            <div className="font-medium text-slate-800">{user?.nombre}</div>
+          <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200 dark:border-slate-700">
+            <div className="font-medium text-slate-800 dark:text-slate-200">{user?.nombre}</div>
             <div className="text-xs text-slate-500 capitalize">{rol}</div>
           </div>
           <ul>
             <li>
               <Link
-                className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
+                className="font-medium text-sm text-violet-500 hover:text-violet-600 flex items-center py-1 px-3"
                 to={`/${rol}/configuracion`}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
@@ -86,7 +86,7 @@ function DropdownProfile({ align }) {
             </li>
             <li>
               <button
-                className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3 w-full text-left"
+                className="font-medium text-sm text-violet-500 hover:text-violet-600 flex items-center py-1 px-3 w-full text-left"
                 onClick={handleLogout}
               >
                 Cerrar Sesión

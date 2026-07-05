@@ -89,7 +89,7 @@ function DoughnutChart({ data, width, height }) {
               li.style.margin = '4px 6px';
               
               const button = document.createElement('button');
-              button.className = 'flex items-center px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 font-semibold text-xs rounded-full border border-slate-200 transition-colors duration-200 shadow-sm';
+              button.className = 'flex items-center px-3 py-1.5 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 text-slate-600 dark:text-slate-400 font-semibold text-xs rounded-full border border-slate-200 dark:border-slate-700 transition-colors duration-200 shadow-sm';
               button.style.opacity = item.hidden ? '.4' : '1';
               button.onclick = () => {
                 c.toggleDataVisibility(item.index);

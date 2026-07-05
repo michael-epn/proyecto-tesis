@@ -40,11 +40,11 @@ function Tooltip({
   const colorClasses = (bg) => {
     switch (bg) {
       case 'light':
-        return 'bg-white text-gray-600 border-gray-200';
+        return 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700';
       case 'dark':
-        return 'bg-gray-800 text-gray-100 border-gray-700/60';
+        return 'bg-slate-800 text-slate-100 border-slate-700/60';
       default:
-        return 'text-gray-600 bg-white dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-700/60';
+        return 'text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 dark:bg-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700 dark:border-slate-700/60';
     }
   };    
 
@@ -70,7 +70,7 @@ function Tooltip({
       onBlur={() => setTooltipOpen(false)}
     >
       <button className="block" aria-haspopup="true" aria-expanded={tooltipOpen} onClick={(e) => e.preventDefault()}>
-        <svg className="fill-current text-gray-400 dark:text-gray-500" width="16" height="16" viewBox="0 0 16 16">
+        <svg className="fill-current text-slate-400 dark:text-slate-500 dark:text-slate-400" width="16" height="16" viewBox="0 0 16 16">
           <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
         </svg>
       </button>

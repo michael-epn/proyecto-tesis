@@ -56,7 +56,7 @@ function DropdownFilter({ align }) {
     <div className="relative inline-flex">
       <button
         ref={trigger}
-        className="btn px-2.5 bg-white dark:bg-gray-800 border-gray-200 hover:border-gray-300 dark:border-gray-700/60 dark:hover:border-gray-600 text-gray-400 dark:text-gray-500"
+        className="btn px-2.5 bg-white dark:bg-slate-900 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:border-slate-600 dark:border-slate-700/60 dark:hover:border-slate-600 text-slate-400 dark:text-slate-500 dark:text-slate-400"
         aria-haspopup="true"
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
@@ -75,7 +75,7 @@ function DropdownFilter({ align }) {
       <Transition
         show={dropdownOpen}
         tag="div"
-        className={`origin-top-right z-10 absolute top-full left-0 right-auto min-w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 pt-1.5 rounded-lg shadow-lg overflow-hidden mt-1 ${
+        className={`origin-top-right z-10 absolute top-full left-0 right-auto min-w-56 bg-white dark:bg-slate-900 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:border-slate-700/60 pt-1.5 rounded-lg shadow-lg overflow-hidden mt-1 ${
           align === "right"
             ? "md:left-auto md:right-0"
             : "md:left-0 md:right-auto"
@@ -88,7 +88,7 @@ function DropdownFilter({ align }) {
         leaveEnd="opacity-0"
       >
         <div ref={dropdown}>
-          <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase pt-1.5 pb-2 px-3">
+          <div className="text-xs font-semibold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase pt-1.5 pb-2 px-3">
             Filters
           </div>
           <ul className="mb-4">
@@ -159,19 +159,19 @@ function DropdownFilter({ align }) {
               </label>
             </li>
           </ul>
-          <div className="py-2 px-3 border-t border-gray-200 dark:border-gray-700/60 bg-gray-50 dark:bg-gray-700/20">
+          <div className="py-2 px-3 border-t border-slate-200 dark:border-slate-700 dark:border-slate-700/60 bg-slate-50 dark:bg-slate-800/50 dark:bg-slate-700/20">
             <ul className="flex items-center justify-between">
               <li>
                 <button
                   onClick={handleFilters}
-                  className="btn-xs bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-red-500"
+                  className="btn-xs bg-white dark:bg-slate-900 dark:bg-slate-800 border-slate-200 dark:border-slate-700 dark:border-slate-700/60 hover:border-slate-300 dark:border-slate-600 dark:hover:border-slate-600 text-red-500"
                 >
                   Clear
                 </button>
               </li>
               <li>
                 <button
-                  className="btn-xs bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
+                  className="btn-xs bg-slate-900 text-slate-100 hover:bg-slate-800 dark:bg-slate-100 dark:bg-slate-800 dark:text-slate-800 dark:text-slate-200 dark:hover:bg-white dark:bg-slate-900"
                   onClick={() => setDropdownOpen(false)}
                   onBlur={() => setDropdownOpen(false)}
                 >

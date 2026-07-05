@@ -24,15 +24,15 @@ const VerPerfilEstudiante = () => {
     if (cargando) return <div className="text-center mt-10">Cargando información...</div>;
 
     return (
-        <div className="w-full min-h-full bg-slate-50 p-4 md:p-8">
-            <div className="w-full max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
+        <div className="w-full min-h-full">
+            <div className="w-full max-w-6xl mx-auto bg-white dark:bg-slate-900 shadow-xl rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
                     <div 
                         className="h-32 md:h-48 bg-gradient-to-r from-violet-600 to-blue-500 relative flex justify-end p-4 md:p-6"
                         style={perfil?.bannerPerfil ? { backgroundImage: `url(${perfil.bannerPerfil})` } : {}}
                     >
                         <Link 
                             to="/estudiante/configuracion" 
-                            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-sm font-bold py-2.5 px-5 rounded-lg transition-all flex items-center gap-2 border border-white/30 shadow-sm h-fit"
+                            className="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-bold py-2.5 px-5 rounded-lg flex items-center gap-2 border border-slate-200 dark:border-slate-700 shadow-sm h-fit"
                         >
                             <svg className="w-4 h-4 fill-current" viewBox="0 0 16 16">
                                 <path d="M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z" />
@@ -53,7 +53,7 @@ const VerPerfilEstudiante = () => {
                             )}
                         </div>
                         <div className="mt-2 w-full">
-                            <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">{perfil?.nombre} {perfil?.apellido}</h2>
+                            <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-200 tracking-tight">{perfil?.nombre} {perfil?.apellido}</h2>
                             <p className="text-lg text-violet-600 font-semibold mt-1 flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -66,7 +66,7 @@ const VerPerfilEstudiante = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-1 space-y-8">
-                            <div className="bg-slate-50 p-6 rounded-xl border border-slate-100 shadow-sm">
+                            <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
                                 <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -75,17 +75,17 @@ const VerPerfilEstudiante = () => {
                                 </h4>
                                 <div>
                                     <p className="text-xs text-slate-500 mb-1 font-medium">Correo Electrónico</p>
-                                    <p className="text-sm font-semibold text-slate-800 break-all">{perfil?.email}</p>
+                                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 break-all">{perfil?.email}</p>
                                     <p className="text-xs text-slate-500 mb-1 font-medium">Cédula</p>
-                                    <p className="text-sm font-semibold text-slate-800">{perfil?.cedula}</p>
+                                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{perfil?.cedula}</p>
                                     <p className="text-xs text-slate-500 mb-1 font-medium">Celular</p>
-                                    <p className="text-sm font-semibold text-slate-800">{perfil?.celular}</p>
+                                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{perfil?.celular}</p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="lg:col-span-2 space-y-6">
-                            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                                 <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /> 
@@ -95,19 +95,19 @@ const VerPerfilEstudiante = () => {
                                 <div className="flex flex-wrap gap-2.5">
                                     {perfil?.materias_favoritas?.length > 0 ? (
                                         perfil.materias_favoritas.map((materia, index) => (
-                                            <span key={index} className="bg-violet-50 text-violet-700 border border-violet-100 text-sm px-4 py-1.5 rounded-full font-semibold">
+                                            <span key={index} className="bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-400 border border-violet-100 dark:border-violet-800/50 text-sm px-4 py-1.5 rounded-full font-semibold">
                                                 {materia}
                                             </span>
                                         ))
                                     ) : (
-                                        <p className="text-sm text-slate-500 italic w-full p-4 bg-slate-50 rounded-lg text-center border border-dashed border-slate-300">
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 italic w-full p-4 bg-slate-50 dark:bg-slate-900 rounded-lg text-center border border-dashed border-slate-300 dark:border-slate-700">
                                             Aún no has registrado tus materias favoritas.
                                         </p>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                                 <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -117,12 +117,12 @@ const VerPerfilEstudiante = () => {
                                 <div className="flex flex-wrap gap-2.5">
                                     {perfil?.cursos_adicionales?.length > 0 ? (
                                         perfil.cursos_adicionales.map((curso, index) => (
-                                            <span key={index} className="bg-emerald-50 text-emerald-700 border border-emerald-100 text-sm px-4 py-1.5 rounded-full font-semibold">
+                                            <span key={index} className="bg-emerald-50 text-emerald-700 border border-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/50 text-sm px-4 py-1.5 rounded-full font-semibold">
                                                 {curso}
                                             </span>
                                         ))
                                     ) : (
-                                        <p className="text-sm text-slate-500 italic w-full p-4 bg-slate-50 rounded-lg text-center border border-dashed border-slate-300">
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 italic w-full p-4 bg-slate-50 dark:bg-slate-900 rounded-lg text-center border border-dashed border-slate-300 dark:border-slate-700">
                                             Aún no has registrado tus cursos adicionales.
                                         </p>
                                     )}

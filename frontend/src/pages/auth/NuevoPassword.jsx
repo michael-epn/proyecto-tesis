@@ -56,29 +56,29 @@ const NuevoPassword = () => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex bg-white dark:bg-gray-900">
+        <div className="fixed inset-0 z-50 flex bg-white dark:bg-slate-900 dark:bg-slate-900">
             <div className="w-full md:w-1/2 flex flex-col p-4 py-8 md:p-12 lg:p-16 overflow-y-auto h-full">
                 <div className="w-full max-w-md m-auto">
-                    <h1 className="text-2xl md:text-3xl text-center font-bold text-gray-900 dark:text-white mb-6">Crear Nuevo Password</h1>
+                    <h1 className="text-2xl md:text-3xl text-center font-bold text-slate-900 dark:text-slate-100 dark:text-white mb-6">Crear Nuevo Password</h1>
                     
                     {cargando ? (
                         <div className="text-center py-10">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4"></div>
-                            <p className="text-gray-600 dark:text-gray-300 font-medium">Verificando enlace...</p>
+                            <p className="text-slate-600 dark:text-slate-400 dark:text-slate-300 font-medium">Verificando enlace...</p>
                         </div>
                     ) : tokenValido ? (
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password</label>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
                                 <div className="relative">
                                     <input
                                         type={mostrarPassword ? "text" : "password"}
                                         {...register("password", { required: true })}
-                                        className="form-input w-full transition-all pr-10"
+                                        className="w-full px-4 py-3 rounded-xl form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
                                     />
                                     <button
                                         type="button"
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 dark:text-slate-400 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                                         onClick={() => setMostrarPassword(!mostrarPassword)}
                                     >
                                         {mostrarPassword ? (
@@ -97,16 +97,16 @@ const NuevoPassword = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Confirmar Password</label>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Confirmar Password</label>
                                 <div className="relative">
                                     <input
                                         type={mostrarConfirmar ? "text" : "password"}
                                         {...register("confirmpassword", { required: true })}
-                                        className="form-input w-full transition-all pr-10"
+                                        className="w-full rounded-xl px-4 py-3 form-input bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none"
                                     />
                                     <button
                                         type="button"
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 dark:text-slate-400 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                                         onClick={() => setMostrarConfirmar(!mostrarConfirmar)}
                                     >
                                         {mostrarConfirmar ? (
@@ -126,17 +126,17 @@ const NuevoPassword = () => {
 
                             <button
                                 type="submit"
-                                className="btn btn-lg w-full bg-violet-600 hover:bg-violet-700 text-white active:scale-[0.98] mt-4 shadow-sm"
+                                className="btn btn-lg rounded-xl w-full bg-violet-600 hover:bg-violet-700 text-white active:scale-[0.98] mt-4 shadow-sm"
                             >
                                 Guardar Nuevo Password
                             </button>
                         </form>
                     ) : (
                         <div className="text-center">
-                            <p className="text-gray-600 dark:text-gray-300 mb-6">El enlace de recuperación no es válido o ya expiró.</p>
+                            <p className="text-slate-600 dark:text-slate-400 dark:text-slate-300 mb-6">El enlace de recuperación no es válido o ya expiró.</p>
                             <Link 
                                 to="/auth/recuperarpassword" 
-                                className="btn btn-lg w-full bg-gray-800 hover:bg-gray-900 text-white active:scale-[0.98] transition-all"
+                                className="btn btn-lg rounded-xl w-full bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white active:scale-[0.98] transition-all"
                             >
                                 Solicitar uno nuevo
                             </Link>
@@ -144,7 +144,7 @@ const NuevoPassword = () => {
                     )}
                 </div>
             </div>
-            <div className="hidden md:block md:w-1/2 relative bg-gray-900">
+            <div className="hidden md:block md:w-1/2 relative bg-slate-900">
                 <img 
                     src="https://images.unsplash.com/photo-1554228422-b8d4e6b3fa1e?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                     alt="Nuevo Password Background" 

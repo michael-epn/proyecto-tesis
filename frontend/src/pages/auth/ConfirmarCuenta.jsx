@@ -33,15 +33,15 @@ const ConfirmarCuenta = () => {
     }, [token]);
 
     return (
-        <div className="fixed inset-0 z-50 flex bg-white dark:bg-gray-900">
+        <div className="fixed inset-0 z-50 flex bg-white dark:bg-slate-900 dark:bg-slate-900">
             <div className="w-full md:w-1/2 flex flex-col p-4 py-8 md:p-12 lg:p-16 overflow-y-auto h-full">
                 <div className="w-full max-w-md m-auto">
-                    <h1 className="text-2xl md:text-3xl text-center font-bold text-gray-900 dark:text-white mb-6">Verificación de Cuenta</h1>
+                    <h1 className="text-2xl md:text-3xl text-center font-bold text-slate-900 dark:text-slate-100 dark:text-white mb-6">Verificación de Cuenta</h1>
                     
                     {cargando ? (
                         <div className="flex flex-col items-center justify-center py-6">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mb-4"></div>
-                            <p className="text-gray-600 dark:text-gray-300 font-medium">Validando token con el servidor...</p>
+                            <p className="text-slate-600 dark:text-slate-400 dark:text-slate-300 font-medium">Validando token con el servidor...</p>
                         </div>
                     ) : (
                         <div className="space-y-6 text-center">
@@ -60,7 +60,7 @@ const ConfirmarCuenta = () => {
                                     <p className="text-red-600 dark:text-red-400 font-semibold mb-6">El enlace de confirmación ha expirado o es incorrecto.</p>
                                     <Link 
                                         to="/auth/registro" 
-                                        className="btn btn-lg w-full bg-gray-800 hover:bg-gray-900 text-white active:scale-[0.98] transition-all"
+                                        className="btn btn-lg w-full bg-slate-800 hover:bg-slate-900 text-white active:scale-[0.98] transition-all"
                                     >
                                         Crear Nueva Cuenta
                                     </Link>
@@ -71,7 +71,7 @@ const ConfirmarCuenta = () => {
                 </div>
             </div>
             
-            <div className="hidden md:block md:w-1/2 relative bg-gray-900">
+            <div className="hidden md:block md:w-1/2 relative bg-slate-900">
                 <img 
                     src="https://images.unsplash.com/photo-1778319301228-43a825a40667?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                     alt="Confirmar Cuenta Background" 

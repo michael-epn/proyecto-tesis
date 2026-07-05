@@ -63,7 +63,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-select,
 .form-checkbox,
 .form-radio {
-    @apply bg-white dark:bg-gray-900/30 border focus:ring-0 focus:ring-offset-0 dark:disabled:bg-gray-700/30 dark:disabled:border-gray-700 dark:disabled:hover:border-gray-700;
+    @apply bg-white dark:bg-slate-900 dark:bg-slate-900/30 border focus:ring-0 focus:ring-offset-0 dark:disabled:bg-slate-700/30 dark:disabled:border-slate-700 dark:disabled:hover:border-slate-700;
 }
 
 .form-checkbox {
@@ -74,12 +74,12 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-textarea,
 .form-multiselect,
 .form-select {
-    @apply text-sm text-gray-800 dark:text-gray-100 leading-5 py-2 px-3 border-gray-200 hover:border-gray-300 focus:border-gray-300 dark:border-gray-700/60 dark:hover:border-gray-600 dark:focus:border-gray-600 shadow-xs rounded-lg;
+    @apply text-sm text-slate-800 dark:text-slate-200 dark:text-slate-100 leading-5 py-2 px-3 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:border-slate-600 focus:border-slate-300 dark:border-slate-600 dark:border-slate-700/60 dark:hover:border-slate-600 dark:focus:border-slate-600 shadow-xs rounded-lg;
 }
 
 .form-input,
 .form-textarea {
-    @apply placeholder-gray-400 dark:placeholder-gray-500;
+    @apply placeholder-slate-400 dark:placeholder-slate-500;
 }
 
 .form-select {
@@ -88,7 +88,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .form-checkbox,
 .form-radio {
-    @apply text-violet-500 checked:bg-violet-500 checked:border-transparent border border-gray-300 dark:border-gray-700/60 dark:checked:border-transparent focus-visible:ring-2 focus-visible:ring-violet-500/50;
+    @apply text-violet-500 checked:bg-violet-500 checked:border-transparent border border-slate-300 dark:border-slate-600 dark:border-slate-700/60 dark:checked:border-transparent focus-visible:ring-2 focus-visible:ring-violet-500/50;
 }
 
 /* Switch element */
@@ -112,7 +112,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .form-switch input[type="checkbox"] + label {
-  @apply bg-gray-400 dark:bg-gray-700;
+  @apply bg-slate-400 dark:bg-slate-700;
 }
 
 .form-switch input[type="checkbox"]:checked + label {
@@ -124,11 +124,11 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .form-switch input[type="checkbox"]:disabled + label {
-    @apply cursor-not-allowed bg-gray-100 dark:bg-gray-700/20 border border-gray-200 dark:border-gray-700/60;
+    @apply cursor-not-allowed bg-slate-100 dark:bg-slate-800 dark:bg-slate-700/20 border border-slate-200 dark:border-slate-700 dark:border-slate-700/60;
 }
 
 .form-switch input[type="checkbox"]:disabled + label > span:first-child {
-    @apply bg-gray-400 dark:bg-gray-600;
+    @apply bg-slate-400 dark:bg-slate-600;
 }
 
 /* Chrome, Safari and Opera */

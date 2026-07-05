@@ -1,24 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
+import { useAuthStore } from '../../store/authStore';
+import CustomSelect from '../../components/CustomSelect';
 
 const Recomendaciones = () => {
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, control, reset } = useForm();
     const [cargandoIA, setCargandoIA] = useState(false);
-    
-    const [recomendaciones, setRecomendaciones] = useState(() => {
-        const borradoresGuardados = localStorage.getItem('borradores_temas');
-        return borradoresGuardados ? JSON.parse(borradoresGuardados) : [];
-    });
-
+    const user = useAuthStore((state) => state.user);
+    const estudianteId = user?._id || 'invitado';
+    const storageKey = `borradores_temas_${estudianteId}`;
     const [docentes, setDocentes] = useState([]);
     const [docentesSeleccionados, setDocentesSeleccionados] = useState({});
     const [dropdownAbierto, setDropdownAbierto] = useState(null);
+    const [recomendaciones, setRecomendaciones] = useState(() => {
+        const borradoresGuardados = localStorage.getItem(storageKey);
+        return borradoresGuardados ? JSON.parse(borradoresGuardados) : [];
+    });
+
+    const opcionesDocentes = useMemo(() => {
+        return docentes.map(doc => {
+            const disponibilidadManual = doc.disponibilidad !== false; 
+            const maxCupos = doc.cupos_maximos || 0;
+            const cuposOcupados = doc.cupos_ocupados || 0;
+            const estaLleno = cuposOcupados >= maxCupos;
+            
+            const deshabilitado = !disponibilidadManual || estaLleno;
+            
+            let textoEstado = `${maxCupos - cuposOcupados} cupos disp.`;
+            if (!disponibilidadManual) textoEstado = "No disponible";
+            else if (estaLleno) textoEstado = "Sin cupos";
+
+            return {
+                value: doc._id,
+                label: `${doc.nombre} ${doc.apellido}`,
+                disabled: deshabilitado,
+                helperText: textoEstado,
+                helperColor: !disponibilidadManual ? "text-rose-500" : estaLleno ? "text-amber-500" : "text-emerald-600"
+            };
+        });
+    }, [docentes]);
 
     useEffect(() => {
-        localStorage.setItem('borradores_temas', JSON.stringify(recomendaciones));
-    }, [recomendaciones]);
+        if (estudianteId) {
+            localStorage.setItem(storageKey, JSON.stringify(recomendaciones));
+        }
+    }, [recomendaciones, storageKey, estudianteId]);
 
     useEffect(() => {
         const obtenerDocentes = async () => {
@@ -88,15 +116,15 @@ const Recomendaciones = () => {
     };
 
     return (
-        <div className="w-full min-h-screen bg-slate-50 p-4 md:p-8">
+        <div className="w-full min-h-screen">
             <div className="max-w-[1600px] mx-auto">
                 <header className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Motor Generador de Temas</h2>
+                    <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-200 tracking-tight">Motor Generador de Temas</h2>
                     <p className="text-slate-500 mt-2 font-medium">Ingresa tu contexto académico para generar propuestas usando Inteligencia Artificial.</p>
                 </header>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                    <div className="lg:sticky lg:top-8 bg-white shadow-xl rounded-2xl border border-slate-200 overflow-hidden w-full">
+                    <div className="lg:sticky lg:top-8 bg-white dark:bg-slate-900 shadow-xl rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden w-full">
                         <div className="bg-slate-800 px-6 py-4 border-b border-slate-700">
                             <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -108,38 +136,38 @@ const Recomendaciones = () => {
                         
                         <form onSubmit={handleSubmit(ejecutarMotorIA)} className="p-6 space-y-5">
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Habilidades Técnicas (separados por coma)</label>
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Habilidades Técnicas (separados por coma)</label>
                                 <input 
                                     type="text" 
                                     {...register("habilidades", { required: true })}
-                                    className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow"
+                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow"
                                     placeholder="Ej: habilidad 1, habilidad 2"  
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Áreas de Interés (separadas por coma)</label>
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Áreas de Interés (separadas por coma)</label>
                                 <input 
                                     type="text" 
                                     {...register("intereses", { required: true })}
-                                    className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow"
+                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow"
                                     placeholder="Ej: interés 1, interés 2" 
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Contexto del problema</label>
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Contexto del problema</label>
                                 <textarea 
                                     rows="4" 
                                     {...register("contexto", { required: true })}
-                                    className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
+                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
                                     placeholder="Detalla el problema a resolver..." 
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Ideas preliminares</label>
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Ideas preliminares</label>
                                 <textarea 
                                     {...register("ideas", { required: true })}
                                     rows="4"
-                                    className="w-full px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
+                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 transition-shadow resize-none" 
                                     placeholder="Describe qué te gustaría construir..." 
                                 />
                             </div>
@@ -163,7 +191,7 @@ const Recomendaciones = () => {
                     </div>
                     <div className="grid grid-cols-1 gap-6 w-full">
                         {recomendaciones.length === 0 && !cargandoIA && (
-                            <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400 h-full min-h-[400px]">
+                            <div className="flex flex-col items-center justify-center p-12 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 text-slate-400 h-full min-h-[400px]">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                 </svg>
@@ -173,9 +201,9 @@ const Recomendaciones = () => {
                         )}
 
                         {recomendaciones.map((rec) => (
-                            <div key={rec.id_temporal} className="bg-white shadow-xl rounded-2xl border border-slate-200 flex flex-col w-full">
+                            <div key={rec.id_temporal} className="bg-white dark:bg-slate-900 shadow-xl rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col w-full">
                                 
-                                <div className="bg-slate-800 px-6 py-4 border-b border-slate-700 rounded-t-xl flex justify-between items-center">
+                                <div className="bg-slate-800 px-6 py-4 border-b border-slate-700 rounded-t-2xl flex justify-between items-center">
                                     <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -186,61 +214,36 @@ const Recomendaciones = () => {
                                         Borrador
                                     </span>
                                 </div>
-
                                 <div className="p-6 flex-grow">
-                                    <h2 className="text-xl font-extrabold text-slate-800 leading-tight mb-3">{rec.titulo}</h2>
-                                    <p className="text-slate-600 text-sm font-medium mb-6 line-clamp-4">{rec.descripcion}</p>
+                                    <h2 className="text-xl font-extrabold text-slate-800 dark:text-slate-200 leading-tight mb-3">{rec.titulo}</h2>
+                                    <p className="text-slate-600 dark:text-slate-400 text-sm font-medium mb-6 line-clamp-4">{rec.descripcion}</p>
                                     
                                     <div className="flex flex-wrap gap-2">
                                         {rec.tecnologias?.map((tech, i) => (
-                                            <span key={i} className="inline-flex items-center px-3 py-1 bg-violet-50 text-violet-700 rounded-lg text-xs font-bold border border-violet-100">
+                                            <span key={i} className="inline-flex items-center px-3 py-1 bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-400 rounded-full text-xs font-bold border border-violet-100 dark:border-violet-800">
                                                 {tech}
                                             </span>
                                         ))}
                                     </div>
                                 </div>
                                 
-                                <div className="bg-slate-50 p-6 rounded-b-xl border-t border-slate-200 space-y-5">
+                                <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-b-2xl border-t border-slate-200 dark:border-slate-700 space-y-5">
                                     <div className="relative">
-                                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                                            Selección de Tutor Académico
-                                        </label>
-                                        <button 
-                                            type="button"
-                                            onClick={() => setDropdownAbierto(dropdownAbierto === rec.id_temporal ? null : rec.id_temporal)}
-                                            className={`w-full px-4 min-h-[50px] bg-white text-sm flex justify-between items-center text-left outline-none transition-all duration-200 shadow-sm border
-                                                ${dropdownAbierto === rec.id_temporal 
-                                                    ? 'border-violet-500 ring-2 ring-violet-500 rounded-xl' 
-                                                    : 'border-slate-300 rounded-xl'
-                                                }`}
-                                        >
-                                            {(() => {
-                                                const idSeleccionado = docentesSeleccionados[rec.id_temporal];
-                                                if (!idSeleccionado) {
-                                                    return <span className="text-slate-400 truncate pr-2">Selecciona un docente de la lista...</span>;
-                                                }
-                                                
-                                                const docente = docentes.find(d => d._id === idSeleccionado);
-                                                return (
-                                                    <span className="text-slate-700 font-medium truncate pr-2">
-                                                        {docente ? `${docente.nombre} ${docente.apellido}` : 'Docente no encontrado'}
-                                                    </span>
-                                                );
-                                            })()}
-                                            
-                                            <svg 
-                                                className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${dropdownAbierto === rec.id_temporal ? 'rotate-180 text-violet-500' : 'text-slate-400'}`} 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </button>
+                                        <div className="relative">
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                                Selección de Tutor Académico
+                                            </label>
+                                            <CustomSelect
+                                                value={docentesSeleccionados[rec.id_temporal]}
+                                                onChange={(docenteId) => handleSelectChange(rec.id_temporal, docenteId)}
+                                                options={opcionesDocentes}
+                                                placeholder="Selecciona un docente de la lista..."
+                                            />
+                                        </div>
                                         
                                         {dropdownAbierto === rec.id_temporal && (
                                             <>
-                                                <ul className="absolute top-[calc(100%+8px)] left-0 z-50 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-60 overflow-y-auto py-0">
+                                                <ul className="absolute top-[calc(100%+8px)] left-0 z-50 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg max-h-60 overflow-y-auto py-0">
                                                     {docentes.map(doc => {
                                                         const disponibilidadManual = doc.disponibilidad !== false; 
                                                         const maxCupos = doc.cupos_maximos || 0;
@@ -261,10 +264,10 @@ const Recomendaciones = () => {
                                                                         setDropdownAbierto(null);
                                                                     }
                                                                 }}
-                                                                className={`px-4 py-2.5 text-sm flex items-center justify-between gap-2 transition-colors 
+                                                                className={`px-4 py-2.5 text-sm flex items-center justify-between gap-2
                                                                     ${estado.deshabilitado 
-                                                                        ? 'bg-slate-50 cursor-not-allowed opacity-60 text-slate-500' 
-                                                                        : 'hover:bg-violet-50 hover:text-violet-700 cursor-pointer text-slate-600'
+                                                                        ? 'bg-slate-50 dark:bg-slate-900 cursor-not-allowed opacity-60 text-slate-500' 
+                                                                        : 'hover:bg-violet-50 hover:text-violet-700 dark:hover:bg-slate-800 cursor-pointer text-slate-600 dark:text-slate-300'
                                                                     }
                                                                 `}
                                                             >
@@ -280,11 +283,11 @@ const Recomendaciones = () => {
                                             </>
                                         )}
                                     </div>
-
                                     <div className="flex gap-4 pt-2">
                                         <button 
                                             onClick={() => cancelarBorrador(rec.id_temporal)}
-                                            className="flex-1 bg-white border text-sm border-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm"                                        >
+                                            className="flex-1 text-sm font-bold py-3 px-6 rounded-xl transition-colors shadow-sm bg-slate-800 text-white hover:bg-slate-900 dark:hover:bg-slate-700"
+                                        >
                                             Cancelar
                                         </button>
                                         <button 
