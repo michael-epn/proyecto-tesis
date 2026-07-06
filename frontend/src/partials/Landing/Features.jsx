@@ -51,7 +51,7 @@ function Features() {
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-900 dark:text-white">Algoritmos de Similitud</h4>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Tecnología que optimiza el emparejamiento preciso y garantiza la viabilidad.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Tecnología que optimiza la generación de temas precisas y garantiza la viabilidad.</p>
                   </div>
                 </li>
               </ul>
