@@ -9,15 +9,16 @@ import { opcionesAgrupadas } from '../../data/mallaCurricular.js';
 import Select, { components } from 'react-select';
 import MultiSelectMaterias from '../../components/MultiSelectMaterias.jsx';
 
-const InputField = ({ label, register, name, type = "text", disabled = false }) => (
+const InputField = ({ label, register, name, type = "text", disabled = false, rules, error }) => (
     <div>
         <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{label}</label>
         <input 
             type={type} 
-            {...register(name)} 
+            {...register(name, rules)} 
             disabled={disabled}
-            className={`w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow ${disabled ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-200 dark:border-slate-700' : ''}`} 
+            className={`w-full px-4 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border ${error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-slate-300 dark:border-slate-700 focus:ring-violet-500 focus:border-violet-300'} rounded-xl outline-none focus:ring-2 transition-shadow ${disabled ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-200 dark:border-slate-700' : ''}`} 
         />
+        {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
     </div>
 );
 
@@ -189,7 +190,7 @@ const EditarPerfilEstudiante = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label="Nombre" register={register} name="nombre" />
                                     <InputField label="Apellido" register={register} name="apellido" />
-                                    <InputField label="Cédula" register={register} name="cedula" />
+                                    <InputField label="Cédula" register={register} name="cedula" rules={{required: "La cédula es obligatoria", pattern: {value: /^[0-9]{10}$/, message: "La cédula debe contener 10 números"}}} error={errors.cedula}/>
                                     <InputField label="Celular" register={register} name="celular" />
                                     <InputField label="Carrera" register={register} name="carrera" disabled={true} />
                                     <InputField label="Correo Electrónico" register={register} name="email" type="email" disabled={true} />

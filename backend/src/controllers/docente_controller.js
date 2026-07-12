@@ -67,8 +67,19 @@ const actualizarPerfil = async (req, res) => {
         if (!docenteBDD) {
             return res.status(404).json({ msg: "Docente no encontrado" });
         }
+        if (req.docente && req.docente._id.toString() !== id) {
+            return res.status(403).json({ msg: "No tienes permiso para actualizar este perfil" });
+        }
         if (Object.values(req.body).includes("")) {
             return res.status(400).json({ msg: "Debes llenar todos los campos" });
+        }
+        if (cedula && cedula !== docenteBDD.cedula) {
+            const response = await fetch(`https://api.ecuadorapi.com/api/v1/cedulas/${cedula}`, {
+                headers: { Authorization: `Bearer ${process.env.API_KEY_ECUADOR}` }
+            });
+            if (!response.ok) {
+                return res.status(404).json({ msg: "Cédula no válida o no encontrada en el registro civil" });
+            }
         }
         if (req.files && req.files.fotoPerfil) {
             const archivoTemp = req.files.fotoPerfil.tempFilePath;
