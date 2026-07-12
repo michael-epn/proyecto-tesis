@@ -7,7 +7,6 @@ function CTA() {
     const { isAuthenticated, rol } = useAuthStore();
 
     const handleAccess = () => {
-        // LÓGICA CORREGIDA: Redirección dinámica interpolada compatible con todos los roles (estudiante, docente, comision)
         if (isAuthenticated && rol) {
             navigate(`/${rol}`);
         } else {
@@ -17,7 +16,6 @@ function CTA() {
 
     return (
         <section className="py-24 bg-slate-900 text-center px-4 relative overflow-hidden border-t border-slate-800">
-            {/* Efecto de resplandor esférico suave adaptado a la paleta violeta */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-violet-500/10 rounded-full filter blur-3xl pointer-events-none"></div>
 
             <div className="max-w-4xl mx-auto relative z-10 space-y-6">

@@ -4,7 +4,6 @@ function Features() {
   return (
     <div id="solucion" className="bg-slate-50 dark:bg-slate-900/50">
       
-      {/* Banner de Métricas */}
       <div className="border-t border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap justify-around items-center text-center gap-6 opacity-90">
@@ -26,7 +25,6 @@ function Features() {
         </div>
       </div>
 
-      {/* Sección: Identificando Cuellos de Botella */}
       <section className="py-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:flex lg:items-center lg:gap-16">
@@ -79,7 +77,6 @@ function Features() {
         </div>
       </section>
 
-      {/* Grid: Transformación Digital */}
       <section className="py-24 border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -88,7 +85,6 @@ function Features() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Tarjeta 1 - Orientación (Acento Violeta) */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-shadow relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-violet-50 dark:bg-slate-800 rounded-bl-full -mr-8 -mt-8 opacity-100 group-hover:scale-110 transition-transform"></div>
               <div className="w-12 h-12 bg-violet-50 dark:bg-slate-800 text-violet-600 dark:text-violet-400 rounded-xl flex items-center justify-center mb-6 border border-violet-100 dark:border-slate-700 relative z-10">
@@ -98,7 +94,6 @@ function Features() {
               <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 relative z-10">Mitiga la desmotivación encontrando áreas de conocimiento afines a tu experiencia previa y rendimiento.</p>
             </div>
 
-            {/* Tarjeta 2 - Balance (Acento Índigo/Azul para variar ligeramente dentro de la misma paleta fría) */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-shadow relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 dark:bg-slate-800 rounded-bl-full -mr-8 -mt-8 opacity-100 group-hover:scale-110 transition-transform"></div>
               <div className="w-12 h-12 bg-indigo-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center mb-6 border border-indigo-100 dark:border-slate-700 relative z-10">
@@ -108,7 +103,6 @@ function Features() {
               <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 relative z-10">Equilibrio efectivo en la carga docente, asignando tutores cuyas especialidades coincidan con los temas.</p>
             </div>
 
-            {/* Tarjeta 3 - Eficiencia (Acento Pizarra/Gris) */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-shadow relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100 dark:bg-slate-800 rounded-bl-full -mr-8 -mt-8 opacity-100 group-hover:scale-110 transition-transform"></div>
               <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl flex items-center justify-center mb-6 border border-slate-200 dark:border-slate-700 relative z-10">

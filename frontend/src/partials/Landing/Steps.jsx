@@ -3,7 +3,6 @@ import React from "react";
 function Steps() {
     return (
         <section className="py-24 bg-white dark:bg-slate-900 relative overflow-hidden transition-colors duration-300">
-            {/* Círculos ambientales con blur de fondo adaptados a la nueva paleta violeta/índigo */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/10 dark:bg-violet-900/20 rounded-full mix-blend-multiply filter blur-[128px] animate-pulse"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-600/10 dark:bg-indigo-900/20 rounded-full mix-blend-multiply filter blur-[128px] animate-pulse [animation-delay:2000ms]"></div>
 
@@ -19,10 +18,8 @@ function Steps() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-                    {/* Línea conectora horizontal adaptada (visible solo en escritorio) */}
                     <div className="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-slate-200 dark:bg-slate-800 -z-10 transition-colors duration-300"></div>
 
-                    {/* Paso 1 */}
                     <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 transition-all duration-300 group shadow-sm hover:shadow-md">
                         <div className="w-12 h-12 bg-violet-50 dark:bg-slate-900 text-violet-600 dark:text-violet-400 border border-violet-100 dark:border-slate-700 rounded-xl flex items-center justify-center font-bold mb-6 group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 transition-colors duration-300">
                             1
@@ -36,7 +33,6 @@ function Steps() {
                         </p>
                     </div>
 
-                    {/* Paso 2 */}
                     <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 transition-all duration-300 group shadow-sm hover:shadow-md">
                         <div className="w-12 h-12 bg-violet-50 dark:bg-slate-900 text-violet-600 dark:text-violet-400 border border-violet-100 dark:border-slate-700 rounded-xl flex items-center justify-center font-bold mb-6 group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 transition-colors duration-300">
                             2
@@ -50,7 +46,6 @@ function Steps() {
                         </p>
                     </div>
 
-                    {/* Paso 3 */}
                     <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 transition-all duration-300 group shadow-sm hover:shadow-md">
                         <div className="w-12 h-12 bg-violet-50 dark:bg-slate-900 text-violet-600 dark:text-violet-400 border border-violet-100 dark:border-slate-700 rounded-xl flex items-center justify-center font-bold mb-6 group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 transition-colors duration-300">
                             3
@@ -64,7 +59,6 @@ function Steps() {
                         </p>
                     </div>
 
-                    {/* Paso 4 */}
                     <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 transition-all duration-300 group shadow-sm hover:shadow-md">
                         <div className="w-12 h-12 bg-violet-50 dark:bg-slate-900 text-violet-600 dark:text-violet-400 border border-violet-100 dark:border-slate-700 rounded-xl flex items-center justify-center font-bold mb-6 group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 transition-colors duration-300">
                             4
