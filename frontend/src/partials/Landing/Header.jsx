@@ -6,7 +6,7 @@ function Header() {
   const { isAuthenticated, user, rol } = useAuthStore();
   const dashboardRoute = rol ? `/${rol}` : '/';
   const profileRoute = rol ? `/${rol}/perfil` : '/';
-  const iniciales = user ? `${user.nombre?.charAt(0) || ''}${user.apellido?.charAt(0) || ''}`.toUpperCase() : 'UI';
+  const iniciales = user ? `${user.nombre?.charAt(0) || ''}${user.apellido?.charAt(0) || ''}` : 'UI';
 
   return (
     <header className="fixed w-full z-50 bg-white dark:bg-slate-900 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 transition-all duration-300">

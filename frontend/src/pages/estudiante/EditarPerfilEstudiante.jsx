@@ -98,7 +98,7 @@ const EditarPerfilEstudiante = () => {
                 dataToSend.append('bannerPerfil', archivoBanner);
             }
             const { data } = await clienteAxios.put(`/estudiante/perfil/${user?._id}`, dataToSend);
-            setAuth(token, data, rol);
+            setAuth(token, data.estudiante, rol);
             toast.success("Perfil actualizado con éxito");
             navigate('/estudiante/perfil');
         } catch (error) {

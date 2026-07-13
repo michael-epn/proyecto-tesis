@@ -4,6 +4,7 @@ import { crearTokenJWT } from "../middlewares/JWT.js"
 import mongoose from "mongoose"
 import Docente from "../models/Docente.js"
 import SolicitudTesis from "../models/SolicitudTesis.js"
+import { StreamChat } from "stream-chat"
 
 const registro = async (req, res) => {
     const { nombre, apellido, cargo, email, password } = req.body;
@@ -24,6 +25,20 @@ const registro = async (req, res) => {
             return res.status(500).json({ msg: "Error al enviar el correo de confirmación" });
         }
         await nuevaComision.save();
+        try {
+            const serverClient = StreamChat.getInstance(
+                process.env.STREAM_API_KEY, 
+                process.env.STREAM_API_SECRET
+            );
+            
+            await serverClient.upsertUser({
+                id: nuevaComision._id.toString(),
+                name: `${nuevaComision.nombre} ${nuevaComision.apellido}`.trim(),
+                rol: "comision"
+            });
+        } catch (streamError) {
+            console.error("Error al sincronizar con Stream Chat:", streamError);
+        }
         res.status(200).json({ msg: "Revisa tu correo para confirmar tu cuenta" });
     } catch (error) {
         console.error("Error detallado:", error);
@@ -48,6 +63,17 @@ const login = async (req, res) => {
         if (!verificarPassword) {
             return res.status(401).json({ msg: "Password incorrecto" })
         }
+        try {
+            const serverClient = StreamChat.getInstance(process.env.STREAM_API_KEY, process.env.STREAM_API_SECRET);
+            await serverClient.upsertUser({
+                id: comisionBDD._id.toString(),
+                name: `${comisionBDD.nombre} ${comisionBDD.apellido}`.trim(),
+                image: comisionBDD.fotoPerfil || undefined,
+                rol: "comision"
+            });
+        } catch (e) {
+            console.log("Stream sync warning en login:", e.message);
+        }
         const token = crearTokenJWT(comisionBDD._id, comisionBDD.rol)
         const { nombre, apellido, cargo, _id, rol, cedula, celular } = comisionBDD
         res.status(200).json({ token, rol, nombre, apellido, cargo, _id, email: comisionBDD.email, cedula, celular })
@@ -61,50 +87,54 @@ const perfil = (req, res) => {
     res.status(200).json(datosPerfil)
 }
 
+
 const actualizarPerfil = async (req, res) => {
     try {
         const { id } = req.params;
         const { nombre, apellido, cargo, celular, cedula } = req.body;
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ msg: `ID invalido: ${id}` });
-        }
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ msg: `ID inválido: ${id}` });
+        if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Debes llenar todos los campos" });
         const comisionBDD = await Comision.findById(id);
-        if (!comisionBDD) {
-            return res.status(404).json({ msg: "Comisionado no encontrado" });
-        }
-        if (req.comision && req.comision._id.toString() !== id) {
-            return res.status(403).json({ msg: "No tienes permiso para actualizar este perfil" });
-        }
-        if (Object.values(req.body).includes("")) {
-            return res.status(400).json({ msg: "Debes llenar todos los campos" });
-        }
+        if (!comisionBDD) return res.status(404).json({ msg: "Comisionado no encontrado" });
+        if (req.comision && req.comision._id.toString() !== id) return res.status(403).json({ msg: "No tienes permiso para actualizar este perfil" });
         if (cedula && cedula !== comisionBDD.cedula) {
             const response = await fetch(`https://api.ecuadorapi.com/api/v1/cedulas/${cedula}`, {
                 headers: { Authorization: `Bearer ${process.env.API_KEY_ECUADOR}` }
             });
-            if (!response.ok) {
-                return res.status(404).json({ msg: "Cédula no válida o no encontrada en el registro civil" });
-            }
+            if (!response.ok) return res.status(404).json({ msg: "Cédula no válida o no encontrada en el registro civil" });
+            comisionBDD.cedula = cedula;
         }
-        if (req.files && req.files.fotoPerfil) {
-            const archivoTemp = req.files.fotoPerfil.tempFilePath;
-            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT/Perfiles_Comisiones");
+        if (req.files?.fotoPerfil) {
+            const { secure_url } = await subirImagenCloudinary(req.files.fotoPerfil.tempFilePath, "ESFOT/Perfiles_Comisiones");
             comisionBDD.fotoPerfil = secure_url;
         }
-        if (req.files && req.files.bannerPerfil) {
-            const archivoTemp = req.files.bannerPerfil.tempFilePath;
-            const { secure_url } = await subirImagenCloudinary(archivoTemp, "ESFOT/Banners_Comisiones");
+        if (req.files?.bannerPerfil) {
+            const { secure_url } = await subirImagenCloudinary(req.files.bannerPerfil.tempFilePath, "ESFOT/Banners_Comisiones");
             comisionBDD.bannerPerfil = secure_url;
         }
-        comisionBDD.nombre = nombre ?? comisionBDD.nombre;
-        comisionBDD.apellido = apellido ?? comisionBDD.apellido;
-        comisionBDD.cargo = cargo ?? comisionBDD.cargo;
-        comisionBDD.celular = celular ?? comisionBDD.celular;
-        comisionBDD.cedula = cedula ?? comisionBDD.cedula;
+        const camposActualizar = {
+            ...(nombre && { nombre }),
+            ...(apellido && { apellido }),
+            ...(cargo && { cargo }),
+            ...(celular && { celular })
+        };
+        Object.assign(comisionBDD, camposActualizar);
         await comisionBDD.save();
+        try {
+            const serverClient = StreamChat.getInstance(process.env.STREAM_API_KEY, process.env.STREAM_API_SECRET);
+            await serverClient.upsertUser({
+                id: comisionBDD._id.toString(),
+                name: `${comisionBDD.nombre} ${comisionBDD.apellido}`.trim(),
+                image: comisionBDD.fotoPerfil || undefined,
+                rol: comisionBDD.rol
+            });
+        } catch (e) {
+            console.log("Stream sync warning en actualizar perfil:", e.message);
+        }
         const comisionActualizado = await Comision.findById(id).select("-password -token -confirmEmail -createdAt -updatedAt -__v");
-        res.status(200).json(comisionActualizado);
+        res.status(200).json({ msg: "Perfil actualizado correctamente", comision: comisionActualizado });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ msg: `Error en el servidor - ${error.message}` });
     }
 }

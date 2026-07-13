@@ -1,20 +1,55 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import Sidebar from '../partials/Sidebar'
 import Header from '../partials/Header'
+import { StreamChat } from 'stream-chat'
+import clienteAxios from '../config/axios'
+
+export const streamClient = StreamChat.getInstance(import.meta.env.VITE_STREAM_API_KEY)
 
 const DashboardLayout = ({ rolesPermitidos }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const { isAuthenticated, rol } = useAuthStore()
-
+    const [streamConnected, setStreamConnected] = useState(false)
+    const { isAuthenticated, rol, user } = useAuthStore()
     if (!isAuthenticated) {
         return <Navigate to="/" replace />
     }
-
     if (rolesPermitidos && !rolesPermitidos.includes(rol)) {
         return <Navigate to={`/${rol}`} replace />
     }
+
+    useEffect(() => {
+        const connectStream = async () => {
+            if (user && user._id && !streamConnected) {
+                try {
+                    const { data } = await clienteAxios.get('/chat/token');
+                    await streamClient.connectUser(
+                        {
+                            id: user._id,
+                            name: `${user.nombre} ${user.apellido || ''}`.trim(),
+                            image: user.fotoPerfil || undefined,
+                            rol: rol 
+                        },
+                        data.token
+                    );
+                    
+                    setStreamConnected(true);
+                } catch (error) {
+                    console.error("Error conectando a Stream Chat:", error);
+                }
+            }
+        };
+
+        connectStream();
+
+        return () => {
+            if (streamClient.userID) {
+                streamClient.disconnectUser();
+                setStreamConnected(false);
+            }
+        };
+    }, [user?._id, rol]);
 
     return (
         <div className="flex h-screen overflow-hidden">

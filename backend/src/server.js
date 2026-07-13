@@ -7,6 +7,7 @@ import comisionRoutes from './routers/comision_routes.js'
 import tesisRoutes from './routers/tesis_routes.js'
 import cloudinary from 'cloudinary'
 import fileUpload from "express-fileupload"
+import chatRoutes from './routers/chat_routes.js'
 
 dotenv.config()
 cloudinary.config({
@@ -39,11 +40,10 @@ app.use('/api/estudiante', estudianteRoutes)
 app.use('/api/docente', docenteRoutes)
 app.use('/api/comision', comisionRoutes)
 app.use('/api/tesis', tesisRoutes)
+app.use('/api/chat', chatRoutes)
 
 app.use((req, res) => {
-    res.status(404).json({
-        msg: 'Endpoint no encontrado'
-    })
+    res.status(404).json({msg: 'Endpoint no encontrado'})
 })
 
 export default app

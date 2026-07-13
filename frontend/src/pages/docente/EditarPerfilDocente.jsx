@@ -90,7 +90,7 @@ const EditarPerfilDocente = () => {
             }
 
             const { data } = await clienteAxios.put(`/docente/perfil/${user?._id}`, dataToSend);
-            setAuth(token, data, rol);
+            setAuth(token, data.docente, rol);
             toast.success("Perfil actualizado con éxito");
             navigate('/docente/perfil');
         } catch (error) {
@@ -214,7 +214,6 @@ const EditarPerfilDocente = () => {
                                             const disponibilidadActiva = watch("disponibilidad") !== false;
                                             const cuposMaximosForm = watch("cupos_maximos") || cuposMaximosActuales || 0;
                                             const estaLleno = cuposOcupados >= cuposMaximosForm;
-
                                             const obtenerEstado = () => {
                                                 if (!disponibilidadActiva) return {
                                                     estilo: "text-rose-700 bg-rose-50 border-rose-200 dark:bg-rose-950/40 dark:border-rose-800",

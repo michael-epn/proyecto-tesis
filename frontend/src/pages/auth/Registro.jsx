@@ -31,22 +31,23 @@ const Registro = () => {
     const navigate = useNavigate();
     const rolSeleccionado = watch('rol');
     const [mostrarPassword, setMostrarPassword] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSubmit = async (data) => {
+        setIsSubmitting(true);
         try {
             const payload = { ...data };
-
             if (payload.rol === 'docente' && payload.areas_investigacion) {
                 payload.areas_investigacion = payload.areas_investigacion.split(',').map(item => item.trim());
             }
-
             const url = `/${payload.rol}/registro`;
             const respuesta = await clienteAxios.post(url, payload);
-
             toast.success(respuesta.data.msg);
             navigate('/auth/login');
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al procesar el registro");
+        } finally {
+            setIsSubmitting(false); // Desbloquea el botón al finalizar (éxito o error)
         }
     };
 
@@ -193,9 +194,10 @@ const Registro = () => {
 
                         <button
                             type="submit"
-                            className="btn btn-lg rounded-xl w-full bg-violet-600 hover:bg-violet-700 text-white active:scale-[0.98] mt-4 shadow-sm"
+                            disabled={isSubmitting}
+                            className={`btn btn-lg rounded-xl w-full bg-violet-600 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-violet-700'} text-white active:scale-[0.98] mt-4 shadow-sm`}
                         >
-                            Registrarse
+                            {isSubmitting ? 'Procesando...' : 'Registrarse'}
                         </button>
                     </form>
 

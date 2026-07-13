@@ -67,24 +67,20 @@ const EditarPerfilComision = () => {
     const onSubmit = async (formData) => {
         try {
             const { email, ...dataRestante } = formData;
-            
             const dataToSend = new FormData();
             dataToSend.append('nombre', dataRestante.nombre);
             dataToSend.append('apellido', dataRestante.apellido);
             dataToSend.append('cedula', dataRestante.cedula);
             dataToSend.append('celular', dataRestante.celular);
             dataToSend.append('cargo', dataRestante.cargo);
-            
             if (archivoFoto) {
                 dataToSend.append('fotoPerfil', archivoFoto);
             }
             if (archivoBanner) {
                 dataToSend.append('bannerPerfil', archivoBanner);
             }
-            
             const { data } = await clienteAxios.put(`/comision/perfil/${user?._id}`, dataToSend);
-            
-            setAuth(token, data, rol);
+            setAuth(token, data.comision, rol);
             toast.success("Perfil actualizado con éxito");
             navigate('/comision/perfil');
         } catch (error) {

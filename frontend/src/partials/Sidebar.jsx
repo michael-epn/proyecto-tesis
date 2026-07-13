@@ -94,6 +94,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       </div>
                     </NavLink>
                   </li>
+                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/estudiante/chat' && 'bg-slate-900'}`}>
+                    <NavLink end to="/estudiante/chat" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/estudiante/chat' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Chat</span>
+                      </div>
+                    </NavLink>
+                  </li>
                   <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/estudiante/historial' && 'bg-slate-900'}`}>
                     <NavLink end to="/estudiante/historial" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/estudiante/historial' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
@@ -101,6 +108,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       </div>
                     </NavLink>
                   </li>
+
                 </>
               )}
 
@@ -124,6 +132,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     <NavLink end to="/docente/listado" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/docente/listado' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
                         <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Estudiantes Aceptados</span>
+                      </div>
+                    </NavLink>
+                  </li>
+                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/docente/chat' && 'bg-slate-900'}`}>
+                    <NavLink end to="/docente/chat" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/docente/chat' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Chat</span>
                       </div>
                     </NavLink>
                   </li>
@@ -164,6 +179,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     <NavLink end to="/comision/docentes" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/comision/docentes' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
                       <div className="flex items-center">
                         <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Gestión de Docentes</span>
+                      </div>
+                    </NavLink>
+                  </li>
+                  <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/comision/chat' && 'bg-slate-900'}`}>
+                    <NavLink end to="/comision/chat" className={`block text-slate-200 truncate transition duration-150 ${pathname === '/comision/chat' ? 'hover:text-slate-200' : 'hover:text-white'}`}>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">Chat</span>
                       </div>
                     </NavLink>
                   </li>

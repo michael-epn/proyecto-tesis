@@ -26,6 +26,7 @@ import VerPerfilComision from './pages/comision/VerPerfilComision'
 import EditarPerfilComision from './pages/comision/EditarPerfilComision'
 import HistorialComision from './pages/comision/HistorialComision'
 import GestionDocentes from './pages/comision/GestionDocentes'
+import Chat from './pages/Chat'
 
 const App = () => {
     return (
@@ -47,7 +48,8 @@ const App = () => {
                 <Route index element={<Recomendaciones />} />
                 <Route path="perfil" element={<VerPerfilEstudiante />} /> 
                 <Route path="configuracion" element={<EditarPerfilEstudiante />} />
-                <Route path="historial" element={<HistorialEstudiante />} /> 
+                <Route path="historial" element={<HistorialEstudiante />} />
+                <Route path="chat" element={<Chat />} /> 
             </Route>
 
             <Route path="/docente" element={<DashboardLayout rolesPermitidos={['docente']} />}>
@@ -56,6 +58,7 @@ const App = () => {
                 <Route path="configuracion" element={<EditarPerfilDocente />} />
                 <Route path="historial" element={<HistorialDocente />} />
                 <Route path="listado" element={<EstudiantesAceptados />} />
+                <Route path="chat" element={<Chat />} /> 
             </Route>
 
             <Route path="/comision" element={<DashboardLayout rolesPermitidos={['comision']} />}>
@@ -65,6 +68,7 @@ const App = () => {
                 <Route path="configuracion" element={<EditarPerfilComision />} />
                 <Route path="docentes" element={<GestionDocentes />} />
                 <Route path="historial" element={<HistorialComision />} />
+                <Route path="chat" element={<Chat />} />
             </Route>
 
             {/* Ruta por defecto */}

@@ -219,8 +219,7 @@ const HistorialDocente = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Modal de Detalles replicado */}
+            
             {feedbackModal.abierto && (
                 <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
                     <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200 dark:border-slate-700">
