@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 import CustomSelect from '../../components/CustomSelect';
+import { useState } from 'react';
 
 const opcionesRoles = [
     { value: "estudiante", label: "Estudiante" },
@@ -12,14 +13,18 @@ const opcionesRoles = [
 
 const RecuperarPassword = () => {
     const { register, handleSubmit, control, formState: { errors } } = useForm();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSubmit = async (data) => {
+        setIsSubmitting(true);
         try {
             const url = `/${data.rol}/recuperarpassword`;
             const respuesta = await clienteAxios.post(url, { email: data.email });
             toast.success(respuesta.data.msg);
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al procesar la solicitud");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -73,9 +78,10 @@ const RecuperarPassword = () => {
 
                         <button
                             type="submit"
-                            className="btn btn-lg rounded-xl w-full bg-violet-600 hover:bg-violet-700 text-white active:scale-[0.98] mt-4 shadow-sm"
+                            className={`btn btn-lg rounded-xl w-full bg-violet-600 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-violet-700'} text-white active:scale-[0.98] mt-4 shadow-sm`}
+                            disabled={isSubmitting}
                         >
-                            Enviar Instrucciones
+                            {isSubmitting ? 'Procesando...' : 'Enviar Instrucciones'}
                         </button>
                     </form>
 
