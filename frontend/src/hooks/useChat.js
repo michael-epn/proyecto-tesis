@@ -11,6 +11,8 @@ export const useChat = () => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isStreamReady, setIsStreamReady] = useState(false);
+    const [isTyping, setIsTyping] = useState(false);
+    const [readState, setReadState] = useState({});
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
@@ -25,13 +27,10 @@ export const useChat = () => {
 
     useEffect(() => {
         if (!isStreamReady || !user?._id) return;
-
         const fetchChannels = async () => {
             try {
-                // SOLUCIÓN: Eliminamos hidden: { $ne: true }. Stream ya los oculta por defecto.
                 const filter = { type: 'messaging', members: { $in: [String(user._id)] } };
                 const sort = [{ last_message_at: -1 }];
-                
                 const queriedChannels = await client.queryChannels(filter, sort, {
                     watch: true,
                     state: true,
@@ -43,15 +42,12 @@ export const useChat = () => {
                 console.error("Error al cargar canales de Stream:", error);
             }
         };
-
         fetchChannels();
-
         const handleEvent = () => fetchChannels();
         client.on('message.new', handleEvent);
         client.on('notification.added_to_channel', handleEvent);
         client.on('user.updated', handleEvent);
         client.on('user.presence.changed', handleEvent);
-        
         return () => {
             client.off('message.new', handleEvent);
             client.off('notification.added_to_channel', handleEvent);
@@ -71,6 +67,20 @@ export const useChat = () => {
         }));
         setMessages(formatted);
     };
+
+    useEffect(() => {
+        if (!activeChannel) return;
+        const startTyping = (evento) => {
+            if (evento.user.id !== user._id) setIsTyping(true);
+        };
+        const stopTyping = () => setIsTyping(false);
+        activeChannel.on('typing.start', startTyping);
+        activeChannel.on('typing.stop', stopTyping);
+        return () => {
+            activeChannel.off('typing.start', startTyping);
+            activeChannel.off('typing.stop', stopTyping);
+        };
+    }, [activeChannel]);
 
     const joinRoom = useCallback(async (receptorId) => {
         if (!client.userID || !receptorId) return;
@@ -108,15 +118,23 @@ export const useChat = () => {
 
     useEffect(() => {
         if (!activeChannel) return;
-
         const handleNewMessage = async () => {
             updateMessages(activeChannel);
             await activeChannel.markRead();
             scrollToBottom();
         };
+        const handleRead = () => {
+            if (activeChannel.state.read) {
+                setReadState({ ...activeChannel.state.read });
+            }
+        };
 
         activeChannel.on('message.new', handleNewMessage);
-        return () => activeChannel.off('message.new', handleNewMessage);
+        activeChannel.on('message.read', handleRead);
+        return () => {
+            activeChannel.off('message.new', handleNewMessage);
+            activeChannel.off('message.read', handleRead);
+        };
     }, [activeChannel]);
 
     const sendMessage = useCallback(async (text) => {
@@ -138,6 +156,24 @@ export const useChat = () => {
         setMessages([]);
     };
 
+    const borrarChatLocal = async (channelId) => {
+        const canal = channels.find(c => c.id === channelId);
+        if (canal) {
+            try {
+                await canal.hide(null, true);
+                canal.state.messages = [];
+                canal.state.read = {};
+                setChannels(prev => prev.filter(c => c.id !== channelId));
+                if (activeChannel?.id === channelId) {
+                    setActiveChannel(null);
+                    setMessages([]);
+                }
+            } catch (error) {
+                console.error("Error al limpiar el chat:", error);
+            }
+        }
+    };
+
     const scrollToBottom = () => {
         setTimeout(() => {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -153,6 +189,9 @@ export const useChat = () => {
         activeChannel, 
         hideAllChannels,
         loading, 
-        setActiveChannel 
+        setActiveChannel,
+        borrarChatLocal,
+        isTyping,
+        readState
     };
 };

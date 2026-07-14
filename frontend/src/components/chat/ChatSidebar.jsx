@@ -60,7 +60,7 @@ export const ChatSidebar = ({ contactos, chatActivo, onSelectChat, onOpenNewChat
                     >
                         <div className="relative">
                             <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex justify-center items-center">
-                                {contacto.fotoPerfil ? <img src={contacto.fotoPerfil} className="w-full h-full object-cover" /> : <span className="font-bold text-white">{contacto?.nombre.charAt(0)}{contacto.apellido?.charAt(0)}</span>}
+                                {contacto.fotoPerfil ? <img src={contacto.fotoPerfil} className="w-full h-full object-cover" /> : <span className="font-bold dark:text-white">{contacto?.nombre.charAt(0)}{contacto.apellido?.charAt(0)}</span>}
                             </div>
                             <span className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900 ${contacto.online ? 'bg-green-500' : 'bg-slate-400'}`}></span>
                         </div>

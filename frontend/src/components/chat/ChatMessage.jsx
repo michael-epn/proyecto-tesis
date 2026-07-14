@@ -1,5 +1,4 @@
-// Ya no necesitamos recibir 'contacto'
-export const ChatMessage = ({ msg, isOwn }) => (
+export const ChatMessage = ({ msg, isOwn, isRead }) => (
     <div className={`flex w-full mt-4 space-x-3 max-w-md ${isOwn ? 'ml-auto justify-end' : ''}`}>
         
         {!isOwn && (
@@ -22,9 +21,26 @@ export const ChatMessage = ({ msg, isOwn }) => (
             }`}>
                 <p className="text-sm">{msg.message}</p>
             </div>
-            <span className={`text-[10px] text-slate-400 mt-1 block ${isOwn ? 'text-right' : 'text-left'}`}>
-                {new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-            </span>
+            
+            <div className={`flex items-center gap-1 mt-1 ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                <span className="text-[10px] text-slate-400">
+                    {new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                </span>
+                
+                {isOwn && (
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className={`h-3 w-3 ${isRead ? 'text-blue-500' : 'text-slate-400'}`} 
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    >
+                        {isRead ? (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /> // (Puedes cambiar este SVG por un check doble real si tienes librerías de iconos como lucide-react o heroicons. Abajo uso un check doble dibujado)
+                        ) : (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        )}
+                    </svg>
+                )}
+            </div>
         </div>
     </div>
 );

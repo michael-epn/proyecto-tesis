@@ -1,7 +1,13 @@
 import { useState } from 'react';
 
-export const ChatInput = ({ onSendMessage }) => {
+export const ChatInput = ({ onSendMessage, activeChannel }) => {
     const [mensaje, setMensaje] = useState("");
+    const handleChange = (e) => {
+        setMensaje(e.target.value);
+        if (activeChannel) {
+            activeChannel.keystroke(); 
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -17,7 +23,7 @@ export const ChatInput = ({ onSendMessage }) => {
                 <input 
                     type="text" 
                     value={mensaje}
-                    onChange={(e) => setMensaje(e.target.value)}
+                    onChange={handleChange}
                     placeholder="Escribe un mensaje..."
                     className="flex-1 px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-300 transition-shadow text-sm"
                 />

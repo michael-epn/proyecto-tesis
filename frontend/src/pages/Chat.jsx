@@ -9,7 +9,11 @@ import { ModalNuevoChat } from '../components/chat/ModalNuevoChat';
 
 const Chat = () => {
     const { user } = useAuthStore();
-    const { messages, joinRoom, sendMessage, messagesEndRef, channels, activeChannel, hideAllChannels, setActiveChannel } = useChat();
+    const { 
+        messages, joinRoom, sendMessage, messagesEndRef, 
+        channels, activeChannel, hideAllChannels, setActiveChannel,
+        borrarChatLocal, isTyping, readState 
+    } = useChat();
     
     const [chatActivoVisual, setChatActivoVisual] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,6 +38,13 @@ const Chat = () => {
     const handleLimpiarHistorial = () => {
         if(window.confirm("¿Estás seguro de limpiar tu panel? (Tus chats volverán a aparecer cuando envíes o recibas un mensaje nuevo)")) {
             hideAllChannels();
+            setChatActivoVisual(null);
+        }
+    };
+
+    const handleDeleteCurrentChat = () => {
+        if(window.confirm("¿Deseas eliminar esta conversación de tu vista?")) {
+            borrarChatLocal(activeChannel.id);
             setChatActivoVisual(null);
         }
     };
@@ -101,9 +112,19 @@ const Chat = () => {
                     <div className={`flex-1 flex-col h-full bg-white dark:bg-slate-900 ${activeChannel ? 'flex' : 'hidden md:flex'}`}>
                         {activeChannel && contactoSeleccionado ? (
                             <>
-                                <ChatHeader contacto={contactoSeleccionado} onBack={() => setActiveChannel(null)} />
-                                <ChatConversation messages={messages} messagesEndRef={messagesEndRef} />
-                                <ChatInput onSendMessage={sendMessage} />
+                                <ChatHeader 
+                                    contacto={contactoSeleccionado} 
+                                    onBack={() => setActiveChannel(null)} 
+                                    isTyping={isTyping}
+                                    onDeleteChat={handleDeleteCurrentChat}
+                                />
+                                <ChatConversation 
+                                    messages={messages} 
+                                    messagesEndRef={messagesEndRef} 
+                                    activeChannel={activeChannel}
+                                    readState={readState}
+                                />
+                                <ChatInput onSendMessage={sendMessage} activeChannel={activeChannel} />
                             </>
                         ) : (
                             <div className="flex-1 flex flex-col items-center justify-center text-slate-400 bg-slate-50 dark:bg-slate-900/50">

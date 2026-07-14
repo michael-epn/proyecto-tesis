@@ -1,8 +1,18 @@
 import { ChatMessage } from './ChatMessage';
 import { useAuthStore } from '../../store/authStore';
 
-export const ChatConversation = ({ messages, messagesEndRef }) => {
+export const ChatConversation = ({ messages, messagesEndRef, activeChannel, readState }) => {
     const { user } = useAuthStore();
+    const getOtherUserLastRead = () => {
+        if (!readState) return new Date(0);
+        const otherUserId = Object.keys(readState).find(id => String(id) !== String(user?._id));
+        if (otherUserId && readState[otherUserId]) {
+            return new Date(readState[otherUserId].last_read);
+        }
+        return new Date(0);
+    };
+
+    const lastReadDate = getOtherUserLastRead();
 
     return (
         <div className="flex-1 p-4 md:p-6 overflow-y-auto bg-slate-50 dark:bg-slate-900/50">
@@ -18,13 +28,19 @@ export const ChatConversation = ({ messages, messagesEndRef }) => {
                     <p className="text-sm font-medium">Envía un mensaje para iniciar la conversación</p>
                 </div>
             ) : (
-                messages.map((msg, index) => (
-                    <ChatMessage 
-                        key={msg.id || index} 
-                        msg={msg} 
-                        isOwn={msg.senderId === user?._id}
-                    />
-                ))
+                messages.map((msg, index) => {
+                    const isOwnMessage = msg.senderId === String(user?._id);
+                    const isRead = isOwnMessage && new Date(msg.timestamp) <= lastReadDate;
+
+                    return (
+                        <ChatMessage 
+                            key={msg.id || index} 
+                            msg={msg} 
+                            isOwn={isOwnMessage}
+                            isRead={isRead}
+                        />
+                    );
+                })
             )}
             <div ref={messagesEndRef} />
         </div>
