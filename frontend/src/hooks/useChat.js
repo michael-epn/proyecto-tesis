@@ -152,6 +152,7 @@ export const useChat = () => {
         messagesEndRef, 
         activeChannel, 
         hideAllChannels,
-        loading 
+        loading, 
+        setActiveChannel 
     };
 };

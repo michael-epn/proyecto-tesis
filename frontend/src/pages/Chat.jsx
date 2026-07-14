@@ -9,7 +9,7 @@ import { ModalNuevoChat } from '../components/chat/ModalNuevoChat';
 
 const Chat = () => {
     const { user } = useAuthStore();
-    const { messages, joinRoom, sendMessage, messagesEndRef, channels, activeChannel, hideAllChannels } = useChat();
+    const { messages, joinRoom, sendMessage, messagesEndRef, channels, activeChannel, hideAllChannels, setActiveChannel } = useChat();
     
     const [chatActivoVisual, setChatActivoVisual] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
