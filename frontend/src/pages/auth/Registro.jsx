@@ -4,6 +4,9 @@ import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 import { useState } from 'react';
 import CustomSelect from '../../components/CustomSelect';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import GoogleAuthButton from '../../components/GoogleAuthButton';
 
 const opcionesRoles = [
     { value: "estudiante", label: "Estudiante" },
@@ -21,17 +24,60 @@ const opcionesCarreras = [
 ];
 
 const Registro = () => {
-    const { register, handleSubmit, watch, control, formState: { errors } } = useForm({
-        defaultValues: {
-            rol: '',
-            carrera: ''
-        },
+    const { register, handleSubmit, watch, control, getValues, trigger, clearErrors, formState: { errors } } = useForm({
+        defaultValues: {rol: '', carrera: ''},
+        mode: 'onChange',
         shouldUnregister: true
     });
     const navigate = useNavigate();
     const rolSeleccionado = watch('rol');
     const [mostrarPassword, setMostrarPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+    const registerConGoogle = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            setIsGoogleLoading(true);
+            try {
+                const formData = getValues();
+
+                const { data: googleProfile } = await axios.get(
+                    'https://www.googleapis.com/oauth2/v3/userinfo',
+                    { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } }
+                );
+
+                await clienteAxios.post('/auth/google', {
+                    email: googleProfile.email,
+                    nombre: googleProfile.given_name,
+                    apellido: googleProfile.family_name,
+                    picture: googleProfile.picture,
+                    carrera: formData.carrera,
+                    rolEsperado: formData.rol,
+                    action: 'register'
+                });
+
+                toast.success('Cuenta creada exitosamente con Google');
+                navigate('/auth/login');
+            } catch (error) {
+                toast.error(error.response?.data?.msg || 'Error al registrarse con Google');
+            } finally {
+                setIsGoogleLoading(false);
+            }
+        },
+        onError: () => toast.error('Registro cancelado')
+    });
+
+    const handleGoogleClick = async () => {
+        const isRolValid = await trigger('rol');
+        if (!isRolValid) return;
+
+        if (rolSeleccionado === 'estudiante') {
+            const isCarreraValid = await trigger('carrera');
+            if (!isCarreraValid) return;
+        }
+
+        registerConGoogle();
+    };
 
     const onSubmit = async (data) => {
         setIsSubmitting(true);
@@ -47,7 +93,7 @@ const Registro = () => {
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al procesar el registro");
         } finally {
-            setIsSubmitting(false); // Desbloquea el botón al finalizar (éxito o error)
+            setIsSubmitting(false);
         }
     };
 
@@ -75,7 +121,10 @@ const Registro = () => {
                                 render={({ field: { value, onChange } }) => (
                                     <CustomSelect
                                         value={value}
-                                        onChange={onChange}
+                                        onChange={(val) => {
+                                            onChange(val);
+                                            clearErrors("rol");
+                                        }}
                                         options={opcionesRoles}
                                         placeholder="Selecciona un perfil..."
                                         error={!!errors.rol}
@@ -127,7 +176,11 @@ const Registro = () => {
                                     render={({ field: { value, onChange } }) => (
                                         <CustomSelect
                                             value={value}
-                                            onChange={onChange}
+                                            onChange={(val) => {
+                                                onChange(val);
+                                                clearErrors("carrera");
+                                            }}
+                                            
                                             options={opcionesCarreras}
                                             placeholder="Selecciona tu carrera..."
                                             error={!!errors.carrera}
@@ -199,6 +252,17 @@ const Registro = () => {
                         >
                             {isSubmitting ? 'Procesando...' : 'Registrarse'}
                         </button>
+
+                        <div className="relative flex items-center py-2">
+                            <div className="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
+                            <span className="flex-shrink-0 mx-4 text-slate-400 text-sm font-medium">O</span>
+                            <div className="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
+                        </div>
+
+                        <GoogleAuthButton 
+                            isLoading={isGoogleLoading}
+                            onClick={handleGoogleClick}
+                        />
                     </form>
 
                     <div className="mt-8 text-center border-t border-slate-200 dark:border-slate-700 dark:border-slate-700 pt-6">

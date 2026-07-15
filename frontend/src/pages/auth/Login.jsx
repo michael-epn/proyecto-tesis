@@ -5,6 +5,9 @@ import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
 import { useState } from 'react';
 import CustomSelect from '../../components/CustomSelect';
+import GoogleAuthButton from '../../components/GoogleAuthButton';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
 const opcionesRoles = [
     { value: "estudiante", label: "Estudiante" },
@@ -16,6 +19,36 @@ const Login = () => {
     const navigate = useNavigate();
     const setAuth = useAuthStore((state) => state.setAuth);
     const [mostrarPassword, setMostrarPassword] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+    const loginConGoogle = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            setIsGoogleLoading(true);
+            try {
+                const { data: googleProfile } = await axios.get(
+                    'https://www.googleapis.com/oauth2/v3/userinfo',
+                    { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } }
+                );
+
+                const respuesta = await clienteAxios.post('/auth/google', {
+                    email: googleProfile.email,
+                    action: 'login'
+                });
+
+                const { token, role, usuario } = respuesta.data;
+                setAuth(token, usuario, role);
+                navigate(`/${role}`);
+            } catch (error) {
+                toast.error(error.response?.data?.msg || 'Error al iniciar sesión con Google');
+            } finally {
+                setIsGoogleLoading(false);
+            }
+        },
+        onError: () => {
+            toast.error('Inicio de sesión con Google cancelado o fallido');
+            setIsGoogleLoading(false);
+        }
+    });
 
     const onSubmit = async (data) => {
         try {
@@ -111,6 +144,17 @@ const Login = () => {
                         >
                             Iniciar Sesión
                         </button>
+
+                        <div className="relative flex items-center py-2">
+                            <div className="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
+                            <span className="flex-shrink-0 mx-4 text-slate-400 text-sm font-medium">O</span>
+                            <div className="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
+                        </div>
+
+                        <GoogleAuthButton 
+                            isLoading={isGoogleLoading}
+                            onClick={() => loginConGoogle()}
+                        />
                     </form>
 
                     <div className="mt-8 text-center border-t border-slate-200 dark:border-slate-700 dark:border-slate-700 pt-6">
