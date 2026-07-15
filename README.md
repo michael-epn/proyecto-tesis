@@ -224,4 +224,3 @@ Se añaden a continuación los cambios y mejoras recientes detectados en el repo
 - **Nuevos o actualizados routers y endpoints relevantes:** revisa [backend/src/routers/tesis_routes.js](backend/src/routers/tesis_routes.js), [backend/src/routers/chat_routes.js](backend/src/routers/chat_routes.js) y [backend/src/routers/auth_routes.js](backend/src/routers/auth_routes.js) para las rutas expuestas recientemente.
 - **Frontend: nuevos componentes y optimizaciones:** componentes de chat, estado con Zustand y mejoras en la UI dentro de [frontend/src/components/chat](frontend/src/components/chat) y [frontend/src/store/authStore.js](frontend/src/store/authStore.js).
 
-Si quieres que incluya un resumen más detallado (por ejemplo, por commit, autor o fecha), puedo generar una lista basada en el historial de Git o añadir enlaces a PRs específicos.
