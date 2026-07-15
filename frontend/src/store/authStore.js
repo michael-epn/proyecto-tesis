@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import { StreamChat } from 'stream-chat'
 import clienteAxios from '../config/axios'
 
-// Exportamos la instancia para que useChat.js la consuma sin redeclararla
 export const streamClient = StreamChat.getInstance(import.meta.env.VITE_STREAM_API_KEY)
 
 export const useAuthStore = create((set, get) => ({
@@ -10,7 +9,7 @@ export const useAuthStore = create((set, get) => ({
     user: JSON.parse(localStorage.getItem('user')) || null,
     rol: localStorage.getItem('rol') || null,
     isAuthenticated: !!localStorage.getItem('token'),
-    isStreamConnected: false, // Bandera para evitar dobles conexiones
+    isStreamConnected: false,
 
     setAuth: (token, user, rol) => {
         localStorage.setItem('token', token)
@@ -22,7 +21,6 @@ export const useAuthStore = create((set, get) => ({
     connectStreamChat: async () => {
         const { user, rol, isStreamConnected } = get();
         
-        // Evitamos reconexiones si ya está conectado
         if (!user?._id || streamClient.userID || isStreamConnected) return;
 
         try {
@@ -36,12 +34,11 @@ export const useAuthStore = create((set, get) => ({
 
             set({ isStreamConnected: true });
         } catch (error) {
-            console.error("Error al conectar Stream Chat:", error);
+            console.error("Error conectando Stream Chat:", error);
         }
     },
 
     logout: async () => {
-        // Desconexión limpia antes de borrar la sesión
         if (streamClient.userID) {
             await streamClient.disconnectUser();
         }
@@ -51,11 +48,8 @@ export const useAuthStore = create((set, get) => ({
         localStorage.removeItem('rol')
         
         set({ 
-            token: null, 
-            user: null, 
-            rol: null, 
-            isAuthenticated: false,
-            isStreamConnected: false 
+            token: null, user: null, rol: null, 
+            isAuthenticated: false, isStreamConnected: false 
         })
     }
 }))

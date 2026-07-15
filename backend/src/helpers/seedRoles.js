@@ -5,7 +5,8 @@ import AuthorizedRole from '../models/AuthorizedRole.js'
 dotenv.config()
 
 const rolesOficiales = [
-    { email: 'maykolaico@gmail.com', role: 'docente' }
+    { email: 'alex.suarez01@epn.edu.ec', role: 'docente' },
+    { email: 'amymishell.diaz@epn.edu.ec', role: 'comision' }
 ]
 
 const seedDB = async () => {

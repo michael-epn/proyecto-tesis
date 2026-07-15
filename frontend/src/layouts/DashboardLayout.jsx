@@ -8,20 +8,12 @@ const DashboardLayout = ({ rolesPermitidos }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const { isAuthenticated, rol, connectStreamChat } = useAuthStore()
 
-    // Solo pide la conexión, el Store decide si es necesaria.
     useEffect(() => {
-        if (isAuthenticated) {
-            connectStreamChat();
-        }
+        if (isAuthenticated) connectStreamChat();
     }, [isAuthenticated, connectStreamChat]);
 
-    if (!isAuthenticated) {
-        return <Navigate to="/" replace />
-    }
-    
-    if (rolesPermitidos && !rolesPermitidos.includes(rol)) {
-        return <Navigate to={`/${rol}`} replace />
-    }
+    if (!isAuthenticated) return <Navigate to="/" replace />
+    if (rolesPermitidos && !rolesPermitidos.includes(rol)) return <Navigate to={`/${rol}`} replace />
 
     return (
         <div className="flex h-screen overflow-hidden">

@@ -7,7 +7,7 @@ export const useChat = () => {
     const [channels, setChannels] = useState([]);
     const [activeChannel, setActiveChannel] = useState(null);
     const [messages, setMessages] = useState([]);
-    const [presence, setPresence] = useState({}); // ESTADO INDEPENDIENTE PARA ONLINE/OFFLINE
+    const [presence, setPresence] = useState({}); // Mapa inmutable O(1)
     const [loading, setLoading] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
     const [readState, setReadState] = useState({});
@@ -15,7 +15,6 @@ export const useChat = () => {
     const messagesEndRef = useRef(null);
     const isInitialized = useRef(false);
 
-    // 1. INICIALIZACIÓN GLOBAL (Una sola vez)
     useEffect(() => {
         if (!isStreamConnected || !user?._id || isInitialized.current) return;
 
@@ -29,7 +28,6 @@ export const useChat = () => {
                 
                 setChannels(queriedChannels);
 
-                // Llenar estado inicial de presencia
                 const initialPresence = {};
                 queriedChannels.forEach(channel => {
                     Object.values(channel.state.members).forEach(member => {
@@ -41,30 +39,26 @@ export const useChat = () => {
                 setPresence(initialPresence);
                 isInitialized.current = true;
             } catch (error) {
-                console.error("Error al cargar canales:", error);
+                console.error("Error en queryChannels:", error);
             }
         };
 
         initChat();
 
-        // Actualizar solo el estado presence
-        const updatePresence = (event) => {
-            if (event.user?.id) {
-                setPresence(prev => ({ ...prev, [event.user.id]: event.user.online }));
-            }
+        const updatePresence = (e) => {
+            if (e.user?.id) setPresence(prev => ({ ...prev, [e.user.id]: e.user.online }));
         };
 
-        // Reordenar sidebar en caso de un mensaje nuevo
-        const handleStructureChange = (event) => {
-            if (event.type === 'message.new' || event.type === 'notification.added_to_channel') {
+        const handleStructureChange = (e) => {
+            if (e.type === 'message.new' || e.type === 'notification.added_to_channel') {
                 setChannels(prevChannels => {
-                    const channelIndex = prevChannels.findIndex(c => c.cid === event.cid);
-                    if (channelIndex > -1) {
+                    const idx = prevChannels.findIndex(c => c.cid === e.cid);
+                    if (idx > -1) {
                         const updated = [...prevChannels];
-                        const [canalMovido] = updated.splice(channelIndex, 1);
-                        return [canalMovido, ...updated]; // Lo subimos al top
+                        const [moved] = updated.splice(idx, 1);
+                        return [moved, ...updated];
                     }
-                    if (event.channel) return [event.channel, ...prevChannels];
+                    if (e.channel) return [e.channel, ...prevChannels];
                     return prevChannels;
                 });
             }
@@ -93,7 +87,6 @@ export const useChat = () => {
         setMessages(formatted);
     }, []);
 
-    // 2. EVENTOS ESPECÍFICOS DEL CANAL ACTIVO
     useEffect(() => {
         if (!activeChannel) return;
 
@@ -133,14 +126,13 @@ export const useChat = () => {
         try {
             const channel = streamClient.channel('messaging', { members: [String(user._id), String(receptorId)] });
             await channel.watch(); 
-            await channel.show(); 
             
             setChannels(prev => prev.some(c => c.id === channel.id) ? prev : [channel, ...prev]);
             setActiveChannel(channel);
             await channel.markRead(); 
             scrollToBottom();
         } catch (error) {
-            toast.error("Hubo un problema al abrir la conversación.");
+            toast.error("Error al abrir conversación.");
             setActiveChannel(null); 
         } finally {
             setLoading(false);
@@ -162,8 +154,6 @@ export const useChat = () => {
         const canal = channels.find(c => c.id === channelId);
         if (canal) {
             await canal.hide(null, true);
-            canal.state.messages = [];
-            canal.state.read = {};
             setChannels(prev => prev.filter(c => c.id !== channelId));
             if (activeChannel?.id === channelId) {
                 setActiveChannel(null);
@@ -173,7 +163,7 @@ export const useChat = () => {
     };
 
     return { 
-        channels, messages, presence, activeChannel, // <- presencia exportada aquí
+        channels, messages, presence, activeChannel,
         loading, isTyping, readState, messagesEndRef,
         joinRoom, sendMessage, hideAllChannels, setActiveChannel, borrarChatLocal
     };

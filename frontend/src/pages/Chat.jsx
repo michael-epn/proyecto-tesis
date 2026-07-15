@@ -11,8 +11,8 @@ const Chat = () => {
     const { user } = useAuthStore();
     const { 
         messages, joinRoom, sendMessage, messagesEndRef, 
-        channels, presence, activeChannel, hideAllChannels, setActiveChannel, // <- presence agregado
-        borrarChatLocal, isTyping, readState 
+        channels, presence, activeChannel, hideAllChannels, setActiveChannel,
+        borrarChatLocal, isTyping, readState, presence 
     } = useChat();
     
     const [chatActivoVisual, setChatActivoVisual] = useState(null);
@@ -50,17 +50,12 @@ const Chat = () => {
     };
 
     const contactosMapeados = channels
-        .filter(channel => {
-            if (channel.state.messages.length > 0) return true;
-            if (activeChannel && activeChannel.id === channel.id) return true;
-            return false;
-        })
+        .filter(channel => channel.state.messages.length > 0 || (activeChannel && activeChannel.id === channel.id))
         .map(channel => {
             const members = Object.values(channel.state.members);
             const otherMember = members.find(m => m.user.id !== String(user?._id))?.user || members[0]?.user;
             const lastMessage = channel.state.messages[channel.state.messages.length - 1];
             
-            // LA MAGIA: Calculamos el online en base a 'presence' o por el último registro.
             const isOnline = presence[otherMember?.id] ?? otherMember?.online ?? false;
 
             return {
@@ -79,14 +74,10 @@ const Chat = () => {
         );
 
     const contactoBase = contactosMapeados.find(c => c.receptorId === chatActivoVisual?.id) || chatActivoVisual;
-
-    const otherMember = activeChannel 
-        ? Object.values(activeChannel.state.members).find(m => m.user.id !== String(user?._id))?.user 
-        : null;
+    const otherMember = activeChannel ? Object.values(activeChannel.state.members).find(m => m.user.id !== String(user?._id))?.user : null;
 
     const contactoSeleccionado = otherMember ? {
         ...contactoBase,
-        // Actualizamos de forma reactiva el header del chat
         online: presence[otherMember.id] ?? otherMember.online ?? false,
         fotoPerfil: otherMember?.image,
         rol: otherMember.rol || contactoBase?.rol
