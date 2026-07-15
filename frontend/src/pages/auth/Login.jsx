@@ -58,7 +58,13 @@ const Login = () => {
     }, []);
 
     const loginConGoogle = useGoogleLogin({
-        ux_mode: 'redirect',
+        flow: 'implicit',
+        onSuccess: (tokenResponse) => {
+            procesarLoginGoogle(tokenResponse.access_token);
+        },
+        onError: () => {
+            toast.error("Error con Google");
+        }
     });
 
     const onSubmit = async (data) => {

@@ -79,7 +79,16 @@ const Registro = () => {
     }, []);
 
     const registerConGoogle = useGoogleLogin({
-        ux_mode: 'redirect',
+        flow: 'implicit',
+        onSuccess: (tokenResponse) => {
+            procesarRegistroGoogle(
+                tokenResponse.access_token,
+                JSON.parse(localStorage.getItem("google_register_data"))
+            );
+        },
+        onError: () => {
+            toast.error("Error con Google");
+        }
     });
 
     const handleGoogleClick = async () => {
