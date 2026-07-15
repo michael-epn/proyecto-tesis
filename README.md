@@ -210,3 +210,18 @@ El proyecto ya cuenta con:
 - Implementar OAuth o autenticación social.
 - Mejorar la administración de archivos y documentación técnica.
 - Optimizar el rendimiento de consultas a MongoDB.
+
+## 13. Cambios recientes
+
+Se añaden a continuación los cambios y mejoras recientes detectados en el repositorio.
+
+- **Integración de envío de correos con Brevo:** configuración y utilidades en [backend/src/config/brevo.js](backend/src/config/brevo.js).
+- **Mejor manejo y seed de roles:** script y utilitario para inicializar roles en [backend/src/helpers/seedRoles.js](backend/src/helpers/seedRoles.js) y resolución de roles en [backend/src/helpers/authRoleResolver.js](backend/src/helpers/authRoleResolver.js).
+- **Mejoras en el sistema de mensajería/chat:** controladores y hooks actualizados en [backend/src/controllers/chat_controller.js](backend/src/controllers/chat_controller.js) y [frontend/src/hooks/useChat.js](frontend/src/hooks/useChat.js).
+- **Generación de temas con IA y servicios asociados:** integración y helpers en [backend/src/helpers/huggingFaceService.js](backend/src/helpers/huggingFaceService.js).
+- **Manejo de archivos y subida a Cloudinary:** utilitario actualizado en [backend/src/helpers/uploadCloudinary.js](backend/src/helpers/uploadCloudinary.js) y uso desde controladores.
+- **Mejoras en notificaciones y envío de correo transaccional:** [backend/src/helpers/sendMail.js](backend/src/helpers/sendMail.js) (posible soporte para múltiples proveedores).
+- **Nuevos o actualizados routers y endpoints relevantes:** revisa [backend/src/routers/tesis_routes.js](backend/src/routers/tesis_routes.js), [backend/src/routers/chat_routes.js](backend/src/routers/chat_routes.js) y [backend/src/routers/auth_routes.js](backend/src/routers/auth_routes.js) para las rutas expuestas recientemente.
+- **Frontend: nuevos componentes y optimizaciones:** componentes de chat, estado con Zustand y mejoras en la UI dentro de [frontend/src/components/chat](frontend/src/components/chat) y [frontend/src/store/authStore.js](frontend/src/store/authStore.js).
+
+Si quieres que incluya un resumen más detallado (por ejemplo, por commit, autor o fecha), puedo generar una lista basada en el historial de Git o añadir enlaces a PRs específicos.
