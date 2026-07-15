@@ -3,67 +3,23 @@ import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import CustomSelect from '../../components/CustomSelect';
-import GoogleAuthButton from '../../components/GoogleAuthButton';
-import { useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 
 const opcionesRoles = [
     { value: "estudiante", label: "Estudiante" },
     { value: "docente", label: "Docente" },
     { value: "comision", label: "Comisión Académica" },
 ];
-
 const Login = () => {
     const { register, handleSubmit, control, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const setAuth = useAuthStore((state) => state.setAuth);
     const [mostrarPassword, setMostrarPassword] = useState(false);
-    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-
-    const procesarLoginGoogle = async (access_token) => {
-        setIsGoogleLoading(true);
-        try {
-            const { data: googleProfile } = await axios.get(
-                'https://www.googleapis.com/oauth2/v3/userinfo',
-                { headers: { Authorization: `Bearer ${access_token}` } }
-            );
-
-            const respuesta = await clienteAxios.post('/auth/google', {
-                email: googleProfile.email,
-                action: 'login'
-            });
-
-            const { token, role, usuario } = respuesta.data;
-            setAuth(token, usuario, role);
-            navigate(`/${role}`);
-        } catch (error) {
-            toast.error(error.response?.data?.msg || 'Error al iniciar sesión con Google');
-        } finally {
-            setIsGoogleLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        const hash = window.location.hash;
-        if (hash.includes('access_token')) {
-            const params = new URLSearchParams(hash.substring(1));
-            const accessToken = params.get('access_token');
-            if (accessToken) {
-                window.history.replaceState({}, document.title, window.location.pathname);
-                procesarLoginGoogle(accessToken);
-            }
-        }
-    }, []);
-
-    const loginConGoogle = useGoogleLogin({
-        ux_mode: 'redirect',
-        redirect_uri: `${import.meta.env.VITE_FRONTEND_URL}/auth/login`
-    });
 
     const onSubmit = async (data) => {
         try {
+            
             const url = `/${data.rol}/login`;
             const respuesta = await clienteAxios.post(url, {
                 email: data.email,
@@ -155,11 +111,6 @@ const Login = () => {
                         >
                             Iniciar Sesión
                         </button>
-
-                        <GoogleAuthButton 
-                            isLoading={isGoogleLoading}
-                            onClick={() => loginConGoogle()}
-                        />
                     </form>
 
                     <div className="mt-8 text-center border-t border-slate-200 dark:border-slate-700 dark:border-slate-700 pt-6">
