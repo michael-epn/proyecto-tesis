@@ -21,7 +21,7 @@ function Header() {
                 </svg>
               </div>
               <span className="font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white tracking-tight">
-                SGT <span className="text-violet-600 dark:text-violet-400">ESFOT</span>
+                TEMAS <span className="text-violet-600 dark:text-violet-400">IA</span>
               </span>
             </Link>
           </div>
