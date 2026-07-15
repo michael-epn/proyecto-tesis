@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import AuthorizedRole from '../models/AuthorizedRole.js'
 
-dotenv.config() // Para leer tu .env
+dotenv.config()
 
 const rolesOficiales = [
     { email: 'maykolaico@gmail.com', role: 'docente' }
@@ -22,10 +22,10 @@ const seedDB = async () => {
         await AuthorizedRole.insertMany(rolesOficiales)
         console.log('Roles autorizados insertados correctamente!')
 
-        process.exit(0) // Cerramos el script con éxito
+        process.exit(0)
     } catch (error) {
         console.error('Error al insertar roles:', error)
-        process.exit(1) // Cerramos con error
+        process.exit(1)
     }
 }
 

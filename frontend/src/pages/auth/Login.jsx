@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CustomSelect from '../../components/CustomSelect';
 import GoogleAuthButton from '../../components/GoogleAuthButton';
 import { useGoogleLogin } from '@react-oauth/google';
@@ -14,6 +14,7 @@ const opcionesRoles = [
     { value: "docente", label: "Docente" },
     { value: "comision", label: "Comisión Académica" },
 ];
+
 const Login = () => {
     const { register, handleSubmit, control, formState: { errors } } = useForm();
     const navigate = useNavigate();
@@ -21,40 +22,48 @@ const Login = () => {
     const [mostrarPassword, setMostrarPassword] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-    const loginConGoogle = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            setIsGoogleLoading(true);
-            try {
-                // Obtenemos los datos del perfil desde Google
-                const { data: googleProfile } = await axios.get(
-                    'https://www.googleapis.com/oauth2/v3/userinfo',
-                    { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } }
-                );
+    const procesarLoginGoogle = async (access_token) => {
+        setIsGoogleLoading(true);
+        try {
+            const { data: googleProfile } = await axios.get(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                { headers: { Authorization: `Bearer ${access_token}` } }
+            );
 
-                // Enviamos los datos a tu backend (auth_controller)
-                const respuesta = await clienteAxios.post('/auth/google', {
-                    email: googleProfile.email,
-                    action: 'login'
-                });
+            const respuesta = await clienteAxios.post('/auth/google', {
+                email: googleProfile.email,
+                action: 'login'
+            });
 
-                const { token, role, usuario } = respuesta.data;
-                setAuth(token, usuario, role);
-                navigate(`/${role}`);
-            } catch (error) {
-                toast.error(error.response?.data?.msg || 'Error al iniciar sesión con Google');
-            } finally {
-                setIsGoogleLoading(false);
-            }
-        },
-        onError: () => {
-            toast.error('Inicio de sesión con Google cancelado o fallido');
+            const { token, role, usuario } = respuesta.data;
+            setAuth(token, usuario, role);
+            navigate(`/${role}`);
+        } catch (error) {
+            toast.error(error.response?.data?.msg || 'Error al iniciar sesión con Google');
+        } finally {
             setIsGoogleLoading(false);
         }
+    };
+
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash.includes('access_token')) {
+            const params = new URLSearchParams(hash.substring(1));
+            const accessToken = params.get('access_token');
+            if (accessToken) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+                procesarLoginGoogle(accessToken);
+            }
+        }
+    }, []);
+
+    const loginConGoogle = useGoogleLogin({
+        ux_mode: 'redirect',
+        redirect_uri: `${import.meta.env.VITE_FRONTEND_URL}/auth/login`
     });
 
     const onSubmit = async (data) => {
         try {
-            
             const url = `/${data.rol}/login`;
             const respuesta = await clienteAxios.post(url, {
                 email: data.email,

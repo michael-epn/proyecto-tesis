@@ -7,11 +7,9 @@ const ThemeContext = createContext({
 
 export default function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    // 1. Prioriza el localStorage
     const persistedTheme = localStorage.getItem('theme');
     if (persistedTheme) return persistedTheme;
     
-    // 2. Fallback a la preferencia del sistema operativo
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       return 'dark';
     }
@@ -38,7 +36,6 @@ export default function ThemeProvider({ children }) {
     }
   }, [theme]);
 
-  // Escuchar cambios en la preferencia del sistema si el usuario no ha forzado un tema
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e) => {

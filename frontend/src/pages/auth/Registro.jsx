@@ -2,7 +2,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import clienteAxios from '../../config/axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CustomSelect from '../../components/CustomSelect';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
@@ -35,43 +35,55 @@ const Registro = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-    const registerConGoogle = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            setIsGoogleLoading(true);
-            try {
-                // 1. Obtenemos los valores del formulario (Rol y Carrera)
-                const formData = getValues();
+    const procesarRegistroGoogle = async (access_token, formData) => {
+        setIsGoogleLoading(true);
+        try {
+            const { data: googleProfile } = await axios.get(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                { headers: { Authorization: `Bearer ${access_token}` } }
+            );
 
-                // 2. Obtenemos el perfil de Google
-                const { data: googleProfile } = await axios.get(
-                    'https://www.googleapis.com/oauth2/v3/userinfo',
-                    { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } }
-                );
+            await clienteAxios.post('/auth/google', {
+                email: googleProfile.email,
+                nombre: googleProfile.given_name,
+                apellido: googleProfile.family_name,
+                picture: googleProfile.picture,
+                carrera: formData.carrera,
+                rolEsperado: formData.rol,
+                action: 'register'
+            });
 
-                // 3. Enviamos AMBAS cosas al backend
-                await clienteAxios.post('/auth/google', {
-                    email: googleProfile.email,
-                    nombre: googleProfile.given_name,
-                    apellido: googleProfile.family_name,
-                    picture: googleProfile.picture,
-                    carrera: formData.carrera,
-                    rolEsperado: formData.rol,
-                    action: 'register'
-                });
+            toast.success('Cuenta creada exitosamente con Google');
+            navigate('/auth/login');
+        } catch (error) {
+            toast.error(error.response?.data?.msg || 'Error al registrarse con Google');
+        } finally {
+            setIsGoogleLoading(false);
+            localStorage.removeItem('google_register_data');
+        }
+    };
 
-                toast.success('Cuenta creada exitosamente con Google');
-                navigate('/auth/login');
-            } catch (error) {
-                toast.error(error.response?.data?.msg || 'Error al registrarse con Google');
-            } finally {
-                setIsGoogleLoading(false);
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash.includes('access_token')) {
+            const params = new URLSearchParams(hash.substring(1));
+            const accessToken = params.get('access_token');
+            
+            const savedData = localStorage.getItem('google_register_data');
+            
+            if (accessToken && savedData) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+                procesarRegistroGoogle(accessToken, JSON.parse(savedData));
             }
-        },
-        onError: () => toast.error('Registro cancelado')
+        }
+    }, []);
+
+    const registerConGoogle = useGoogleLogin({
+        ux_mode: 'redirect',
+        redirect_uri: `${import.meta.env.VITE_FRONTEND_URL}/auth/registro`
     });
 
     const handleGoogleClick = async () => {
-        // Validamos que elijan el rol y la carrera ANTES de abrir Google
         const isRolValid = await trigger('rol');
         if (!isRolValid) return;
 
@@ -80,7 +92,8 @@ const Registro = () => {
             if (!isCarreraValid) return;
         }
 
-        // Si pasaron la validación, abrimos Google
+        localStorage.setItem('google_register_data', JSON.stringify(getValues()));
+        
         registerConGoogle();
     };
 
@@ -98,7 +111,7 @@ const Registro = () => {
         } catch (error) {
             toast.error(error.response?.data?.msg || "Error al procesar el registro");
         } finally {
-            setIsSubmitting(false); // Desbloquea el botón al finalizar (éxito o error)
+            setIsSubmitting(false); 
         }
     };
 
@@ -264,7 +277,6 @@ const Registro = () => {
                             <div className="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
                         </div>
 
-                        {/* Nuevo botón de Google */}
                         <GoogleAuthButton 
                             isLoading={isGoogleLoading}
                             onClick={handleGoogleClick}

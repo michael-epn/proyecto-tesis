@@ -61,14 +61,13 @@ const upsertRoleAccount = async (role, email, nombre, apellido, fotoPerfil, carr
     const baseProfile = buildBaseProfile(role, email, nombre, apellido, fotoPerfil, carrera)
     const hashedPassword = await bcrypt.hash(baseProfile.password, 10)
 
-    // Extraemos los campos de actualización para separarlos de los de inserción pura
     const { 
         nombre: bNombre, 
         apellido: bApellido, 
         fotoPerfil: bFotoPerfil, 
         confirmEmail, 
         rol, 
-        ...insertOnlyFields // Aquí quedan password, cupos_maximos, carrera, etc.
+        ...insertOnlyFields
     } = baseProfile;
 
     return Model.findOneAndUpdate(
@@ -99,34 +98,23 @@ const upsertRoleAccount = async (role, email, nombre, apellido, fotoPerfil, carr
 const googleCallback = async (req, res) => {
     try {
         const { email, nombre, apellido, picture, carrera, action, rolEsperado } = req.body;
-
         if (!email) {
             return res.status(400).json({ msg: 'El email es requerido' });
         }
-
         const normalizedEmail = normalizeEmail(email);
         const usuarioExistente = await User.findOne({ email: normalizedEmail });
-
-        // ==========================================
-        // 1. LÓGICA EXCLUSIVA DE LOGIN
-        // ==========================================
         if (action === 'login') {
             if (!usuarioExistente) {
                 return res.status(404).json({ 
                     msg: 'No tienes una cuenta registrada. Por favor, regístrate primero.' 
                 });
             }
-
-            // Buscamos el perfil del usuario en su colección (Estudiante, Docente o Comision)
             const Model = ROLE_MODELS[usuarioExistente.role];
             const account = await Model.findOne({ email: normalizedEmail }).select('-password');
-
-            // Solo actualizamos la fecha de último acceso
             await User.findOneAndUpdate(
                 { email: normalizedEmail },
                 { $set: { lastLoginAt: new Date(), status: true } }
             );
-
             const token = crearTokenJWT(account._id, usuarioExistente.role);
             return res.status(200).json({
                 msg: 'Autenticación exitosa',
@@ -135,17 +123,12 @@ const googleCallback = async (req, res) => {
                 usuario: account
             });
         }
-
-        // ==========================================
-        // 2. LÓGICA EXCLUSIVA DE REGISTRO
-        // ==========================================
         if (action === 'register') {
             if (usuarioExistente) {
                 return res.status(400).json({ 
                     msg: 'Este correo ya está registrado. Por favor, inicia sesión.' 
                 });
             }
-
             const resolvedRole = req.authRole || (await resolveRoleFromAllowlist(normalizedEmail)).role;
             if (rolEsperado === 'docente' && resolvedRole !== 'docente') {
                 return res.status(403).json({ 
@@ -157,10 +140,7 @@ const googleCallback = async (req, res) => {
                     msg: 'Tu correo no está autorizado para cuenta de Comisión Académica.' 
                 });
             }
-            // Creamos el perfil específico (Estudiante, Docente, etc)
             const account = await upsertRoleAccount(resolvedRole, normalizedEmail, nombre, apellido, picture, carrera);
-
-            // NUEVO CÓDIGO: Simplemente creamos el usuario en la colección general
             await User.create({
                 email: normalizedEmail,
                 role: resolvedRole,
@@ -168,7 +148,6 @@ const googleCallback = async (req, res) => {
                 lastLoginAt: new Date(),
                 status: true
             });
-
             const token = crearTokenJWT(account._id, resolvedRole);
             return res.status(201).json({
                 msg: 'Cuenta creada exitosamente',
