@@ -25,7 +25,6 @@ function BarChart02({
 
   useEffect(() => {
     const ctx = canvas.current;
-    // eslint-disable-next-line no-unused-vars
     const newChart = new Chart(ctx, {
       type: 'bar',
       data: data,
@@ -126,7 +125,7 @@ function BarChart02({
       chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light;
     }
     chart.update('none');
-  }, [currentTheme]);
+  }, [currentTheme, chart, darkMode]);
 
   return (
     <canvas ref={canvas} width={width} height={height}></canvas>

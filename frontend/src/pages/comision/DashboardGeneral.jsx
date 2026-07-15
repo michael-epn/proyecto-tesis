@@ -72,7 +72,7 @@ function DashboardGeneral() {
         return () => {
             if (techChartInstanceRef.current) techChartInstanceRef.current.destroy();
         };
-    }, [cargando, metricas.tecnologias, currentTheme]);
+    }, [cargando, metricas.tecnologias, currentTheme, isDark]);
 
     const cargarMetricas = async () => {
         try {

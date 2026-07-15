@@ -5,26 +5,39 @@ import mongoose from "mongoose"
 import Docente from "../models/Docente.js"
 import SolicitudTesis from "../models/SolicitudTesis.js"
 import { StreamChat } from "stream-chat"
+import { normalizeEmail, resolveRoleFromAllowlist } from "../helpers/authRoleResolver.js"
+import User from "../models/User.js"
 
 const registro = async (req, res) => {
-    const { nombre, apellido, cargo, email, password } = req.body;
-    if (!nombre || !apellido || !cargo || !email || !password) {
-        return res.status(400).json({ msg: "Todos los campos son obligatorios" });
-    }
     try {
+        const { nombre, apellido, cargo, email, password } = req.body;
+        if (!nombre || !apellido || !cargo || !email || !password) {
+            return res.status(400).json({ msg: "Todos los campos son obligatorios" });
+        }
+        const normalizedEmail = normalizeEmail(email);
+        const { role: resolvedRole } = await resolveRoleFromAllowlist(normalizedEmail);
+        if (resolvedRole !== 'comision') {
+            return res.status(403).json({ 
+                msg: 'Tu correo no está autorizado para cuenta de Comisión Académica.' 
+            });
+        }
         const existeEmail = await Comision.findOne({ email });
         if (existeEmail) {
             return res.status(400).json({ msg: "El email ya está registrado" });
         }
-        const nuevaComision = new Comision(req.body);
+        const nuevaComision = new Comision({
+            ...req.body,
+            email: normalizedEmail
+        });
         const token = nuevaComision.createToken();
-        try {
-            await sendMailToRegister(email, token, "comision");
-        } catch (mailError) {
-            console.error("Error enviando correo:", mailError);
-            return res.status(500).json({ msg: "Error al enviar el correo de confirmación" });
-        }
+        await sendMailToRegister(normalizedEmail, token, "comision");
         await nuevaComision.save();
+        await User.create({
+            email: normalizedEmail,
+            role: 'comision',
+            provider: 'local',
+            status: false
+        });
         try {
             const serverClient = StreamChat.getInstance(
                 process.env.STREAM_API_KEY, 

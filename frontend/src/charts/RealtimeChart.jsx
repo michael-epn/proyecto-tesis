@@ -29,7 +29,6 @@ function RealtimeChart({
 
   useEffect(() => {
     const ctx = canvas.current;
-    // eslint-disable-next-line no-unused-vars
     const newChart = new Chart(ctx, {
       type: 'line',
       data: data,
@@ -143,7 +142,7 @@ function RealtimeChart({
       chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light; 
     }
     chart.update('none')
-  }, [currentTheme])    
+  }, [currentTheme, chart, darkMode])    
 
 
   return (

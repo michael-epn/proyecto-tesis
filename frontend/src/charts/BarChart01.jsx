@@ -157,7 +157,7 @@ function BarChart01({
     });
     setChart(newChart);
     return () => newChart.destroy();
-  }, []);
+  }, [darkMode, data]);
 
   useEffect(() => {
     if (!chart) return;
@@ -178,7 +178,7 @@ function BarChart01({
       chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light;
     }
     chart.update('none');
-  }, [currentTheme]);
+  }, [currentTheme, chart, darkMode]);
 
   return (
     <React.Fragment>

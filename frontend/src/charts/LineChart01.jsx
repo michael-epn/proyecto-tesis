@@ -27,7 +27,6 @@ function LineChart01({
 
   useEffect(() => {
     const ctx = canvas.current;
-    // eslint-disable-next-line no-unused-vars
     const newChart = new Chart(ctx, {
       type: 'line',
       data: data,
@@ -89,7 +88,7 @@ function LineChart01({
       chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light;
     }
     chart.update('none');
-  }, [currentTheme]);
+  }, [currentTheme, chart, darkMode]);
 
   return (
     <canvas ref={canvas} width={width} height={height}></canvas>

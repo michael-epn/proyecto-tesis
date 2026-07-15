@@ -4,6 +4,8 @@ import { crearTokenJWT } from "../middlewares/JWT.js"
 import mongoose from "mongoose"
 import { subirImagenCloudinary } from "../helpers/uploadCloudinary.js"
 import { StreamChat } from "stream-chat"
+import { normalizeEmail, resolveRoleFromAllowlist } from "../helpers/authRoleResolver.js"
+import User from "../models/User.js"
 
 const registro = async (req, res) => {
     try {
@@ -11,14 +13,30 @@ const registro = async (req, res) => {
         if (!email || !password || !nombre || !apellido) {
             return res.status(400).json({ msg: "Debes llenar todos los campos obligatorios" })
         }
+        const normalizedEmail = normalizeEmail(email);
+        const { role: resolvedRole } = await resolveRoleFromAllowlist(normalizedEmail);
+        if (resolvedRole !== 'docente') {
+            return res.status(403).json({ 
+                msg: 'Tu correo no está autorizado en la base de datos de Docentes. Si eres docente, contacta a administración.' 
+            });
+        }
         const existeEmail = await Docente.findOne({ email })
         if (existeEmail) {
             return res.status(400).json({ msg: "El email ya esta registrado" })
         }
-        const nuevoDocente = new Docente(req.body)
+        const nuevoDocente = new Docente({
+            ...req.body,
+            email: normalizedEmail
+        });
         const token = nuevoDocente.createToken()
-        await sendMailToRegister(email, token, "docente")
+        await sendMailToRegister(normalizedEmail, token, "docente");
         await nuevoDocente.save()
+        await User.create({
+            email: normalizedEmail,
+            role: 'docente',
+            provider: 'local',
+            status: false
+        });
         try {
             const serverClient = StreamChat.getInstance(
                 process.env.STREAM_API_KEY, 

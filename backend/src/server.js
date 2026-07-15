@@ -5,6 +5,7 @@ import estudianteRoutes from './routers/estudiante_routes.js'
 import docenteRoutes from './routers/docente_routes.js'
 import comisionRoutes from './routers/comision_routes.js'
 import tesisRoutes from './routers/tesis_routes.js'
+import authRoutes from './routers/auth_routes.js'
 import cloudinary from 'cloudinary'
 import fileUpload from "express-fileupload"
 import chatRoutes from './routers/chat_routes.js'
@@ -36,6 +37,7 @@ app.get('/', (req, res) => {
     res.send('Sistema Inteligente de Recomendación de Tesis')
 })
 
+app.use('/api/auth', authRoutes)
 app.use('/api/estudiante', estudianteRoutes)
 app.use('/api/docente', docenteRoutes)
 app.use('/api/comision', comisionRoutes)

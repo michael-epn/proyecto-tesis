@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { StreamChat } from 'stream-chat';
 import { useAuthStore } from '../store/authStore';
+import { toast } from 'react-toastify';
 
 const client = StreamChat.getInstance(import.meta.env.VITE_STREAM_API_KEY);
 
@@ -80,7 +81,7 @@ export const useChat = () => {
             activeChannel.off('typing.start', startTyping);
             activeChannel.off('typing.stop', stopTyping);
         };
-    }, [activeChannel]);
+    }, [activeChannel, user._id]);
 
     const joinRoom = useCallback(async (receptorId) => {
         if (!client.userID || !receptorId) return;

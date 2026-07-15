@@ -26,7 +26,6 @@ function BarChart03({
 
   useEffect(() => {
     const ctx = canvas.current;
-    // eslint-disable-next-line no-unused-vars
     const newChart = new Chart(ctx, {
       type: 'bar',
       data: data,
@@ -173,7 +172,7 @@ function BarChart03({
       chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light;
     }
     chart.update('none');
-  }, [currentTheme]);
+  }, [currentTheme, chart, darkMode]);
 
   return (
     <React.Fragment>
