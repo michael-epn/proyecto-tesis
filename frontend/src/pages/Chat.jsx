@@ -12,7 +12,7 @@ const Chat = () => {
     const { 
         messages, joinRoom, sendMessage, messagesEndRef, 
         channels, presence, activeChannel, hideAllChannels, setActiveChannel,
-        borrarChatLocal, isTyping, readState, presence 
+        borrarChatLocal, isTyping, readState 
     } = useChat();
     
     const [chatActivoVisual, setChatActivoVisual] = useState(null);
