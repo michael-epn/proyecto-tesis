@@ -224,3 +224,17 @@ Se añaden a continuación los cambios y mejoras recientes detectados en el repo
 - **Nuevos o actualizados routers y endpoints relevantes:** revisa [backend/src/routers/tesis_routes.js](backend/src/routers/tesis_routes.js), [backend/src/routers/chat_routes.js](backend/src/routers/chat_routes.js) y [backend/src/routers/auth_routes.js](backend/src/routers/auth_routes.js) para las rutas expuestas recientemente.
 - **Frontend: nuevos componentes y optimizaciones:** componentes de chat, estado con Zustand y mejoras en la UI dentro de [frontend/src/components/chat](frontend/src/components/chat) y [frontend/src/store/authStore.js](frontend/src/store/authStore.js).
 
+### OAuth (Google) — Implementación
+
+Se implementó autenticación social mediante Google OAuth con un flujo híbrido frontend-backend:
+
+- **Frontend:** usa `@react-oauth/google` y el hook `useGoogleLogin` para obtener el `access_token` y la información del perfil desde `https://www.googleapis.com/oauth2/v3/userinfo`. Componentes relevantes: [frontend/src/main.jsx](frontend/src/main.jsx), [frontend/src/pages/auth/Login.jsx](frontend/src/pages/auth/Login.jsx) y [frontend/src/pages/auth/Registro.jsx](frontend/src/pages/auth/Registro.jsx). Añadir en el `.env` de frontend: `VITE_GOOGLE_CLIENT_ID`.
+- **Backend:** se expone el endpoint `POST /api/auth/google` implementado en [backend/src/routers/auth_routes.js](backend/src/routers/auth_routes.js) y manejado por `googleCallback` en [backend/src/controllers/auth_controller.js](backend/src/controllers/auth_controller.js). El endpoint acepta un payload con `action: 'login'|'register'`, `email`, y campos opcionales (`nombre`, `apellido`, `picture`, `carrera`, `rolEsperado`).
+- **Resolución de rol y allowlist:** antes de procesar el registro se ejecuta el middleware `resolveAuthRole` ([backend/src/middlewares/resolveAuthRole.js](backend/src/middlewares/resolveAuthRole.js)) que utiliza la colección `AuthorizedRole` ([backend/src/models/AuthorizedRole.js](backend/src/models/AuthorizedRole.js)) para determinar si un email está autorizado como `docente` o `comision`. Si no está en la allowlist, se asigna `estudiante` por defecto.
+- **Modelo de usuario:** el modelo `User` incluye ahora el campo `provider` con valores `google` o `local` ([backend/src/models/User.js](backend/src/models/User.js)). Al registrarse vía Google se crea/actualiza la cuenta de rol correspondiente (`Estudiante`, `Docente` o `Comision`) y se crea un documento en `User` con `provider: 'google'`.
+- **Flujo de login/register:**
+  - `action: 'login'`: el backend busca el `User` por email; si existe, devuelve JWT creado con `crearTokenJWT` y datos de la cuenta.
+  - `action: 'register'`: si el correo no existe y la resolución de rol permite la creación (o el `rolEsperado` coincide con la allowlist), el backend crea o actualiza la cuenta del rol correspondiente y devuelve JWT.
+- **Dependencias y librerías:** frontend usa `@react-oauth/google`; backend incluye `google-auth-library` en dependencias aunque el flujo actual obtiene el perfil desde el frontend.
+
+
