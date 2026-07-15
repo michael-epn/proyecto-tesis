@@ -49,28 +49,32 @@ const Chat = () => {
         }
     };
 
-    const contactosMapeados = channels
-        .filter(channel => channel.state.messages.length > 0 || (activeChannel && activeChannel.id === channel.id))
+    const contactosMapeados = channels        
+        .filter(channel => {
+            if (channel?.state?.messages?.length > 0) return true;
+            if (activeChannel && activeChannel.id === channel?.id) return true;
+            return false;
+        })
         .map(channel => {
-            const members = Object.values(channel.state.members);
-            const otherMember = members.find(m => m.user.id !== String(user?._id))?.user || members[0]?.user;
-            const lastMessage = channel.state.messages[channel.state.messages.length - 1];
-            
+            const members = Object.values(channel?.state?.members || {});
+            const otherMember = members.find(m => m.user?.id !== String(user?._id))?.user || members[0]?.user;            const lastMessage = channel.state.messages[channel.state.messages.length - 1];
+            const messagesArray = channel?.state?.messages || [];
+            const lastMessage = messagesArray[messagesArray.length - 1];
             const isOnline = presence[otherMember?.id] ?? otherMember?.online ?? false;
 
             return {
-                id: channel.id,
+                id: channel?.id,
                 receptorId: otherMember?.id,
                 nombre: otherMember?.name || 'Usuario',
                 rol: otherMember?.rol || 'Rol',
                 fotoPerfil: otherMember?.image,
                 online: isOnline, 
-                unread: channel.countUnread(),
+                unread: typeof channel?.countUnread === 'function' ? channel.countUnread() : 0,
                 ultimoMensaje: lastMessage ? lastMessage.text : 'Conversación iniciada'
             };
         }).filter(contacto => 
-            contacto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            contacto.rol.toLowerCase().includes(searchTerm.toLowerCase())
+            (contacto.nombre || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (contacto.rol || '').toLowerCase().includes(searchTerm.toLowerCase())
         );
 
     const contactoBase = contactosMapeados.find(c => c.receptorId === chatActivoVisual?.id) || chatActivoVisual;
