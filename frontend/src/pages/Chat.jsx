@@ -57,7 +57,7 @@ const Chat = () => {
         })
         .map(channel => {
             const members = Object.values(channel?.state?.members || {});
-            const otherMember = members.find(m => m.user?.id !== String(user?._id))?.user || members[0]?.user;            const lastMessage = channel.state.messages[channel.state.messages.length - 1];
+            const otherMember = members.find(m => m.user?.id !== String(user?._id))?.user || members[0]?.user;
             const messagesArray = channel?.state?.messages || [];
             const lastMessage = messagesArray[messagesArray.length - 1];
             const isOnline = presence[otherMember?.id] ?? otherMember?.online ?? false;
