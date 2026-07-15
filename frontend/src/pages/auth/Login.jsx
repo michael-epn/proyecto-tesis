@@ -59,6 +59,7 @@ const Login = () => {
 
     const loginConGoogle = useGoogleLogin({
         ux_mode: 'redirect',
+        redirect_uri: `${import.meta.env.VITE_FRONTEND_URL}/auth/login`
     });
 
     const onSubmit = async (data) => {
