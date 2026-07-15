@@ -11,7 +11,7 @@ const Chat = () => {
     const { user } = useAuthStore();
     const { 
         messages, joinRoom, sendMessage, messagesEndRef, 
-        channels, activeChannel, hideAllChannels, setActiveChannel,
+        channels, presence, activeChannel, hideAllChannels, setActiveChannel, // <- presence agregado
         borrarChatLocal, isTyping, readState 
     } = useChat();
     
@@ -59,13 +59,17 @@ const Chat = () => {
             const members = Object.values(channel.state.members);
             const otherMember = members.find(m => m.user.id !== String(user?._id))?.user || members[0]?.user;
             const lastMessage = channel.state.messages[channel.state.messages.length - 1];
+            
+            // LA MAGIA: Calculamos el online en base a 'presence' o por el último registro.
+            const isOnline = presence[otherMember?.id] ?? otherMember?.online ?? false;
+
             return {
                 id: channel.id,
                 receptorId: otherMember?.id,
                 nombre: otherMember?.name || 'Usuario',
                 rol: otherMember?.rol || 'Rol',
                 fotoPerfil: otherMember?.image,
-                online: otherMember?.online,
+                online: isOnline, 
                 unread: channel.countUnread(),
                 ultimoMensaje: lastMessage ? lastMessage.text : 'Conversación iniciada'
             };
@@ -82,7 +86,8 @@ const Chat = () => {
 
     const contactoSeleccionado = otherMember ? {
         ...contactoBase,
-        online: otherMember.online,
+        // Actualizamos de forma reactiva el header del chat
+        online: presence[otherMember.id] ?? otherMember.online ?? false,
         fotoPerfil: otherMember?.image,
         rol: otherMember.rol || contactoBase?.rol
     } : contactoBase;
@@ -92,7 +97,7 @@ const Chat = () => {
             <div className="max-w-7xl mx-auto h-[800px] max-h-[85vh]">
                 <div className="mb-4">
                     <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-200 tracking-tight">Mensajes</h2>
-                    <p className="text-slate-500 mt-1 font-medium">Comunícate de forma instantánea con la comunidad ESFOT.</p>
+                    <p className="text-slate-500 mt-1 font-medium">Comunícate de forma instantánea con la comunidad.</p>
                 </div>
 
                 <div className="flex h-[calc(100%-4rem)] shadow-xl rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden bg-white dark:bg-slate-900">

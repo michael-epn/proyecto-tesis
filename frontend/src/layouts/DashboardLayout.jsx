@@ -3,51 +3,22 @@ import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import Sidebar from '../partials/Sidebar'
 import Header from '../partials/Header'
-import { StreamChat } from 'stream-chat'
-import clienteAxios from '../config/axios'
-import { useRef } from 'react'
-
-export const streamClient = StreamChat.getInstance(import.meta.env.VITE_STREAM_API_KEY)
 
 const DashboardLayout = ({ rolesPermitidos }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const [streamConnected, setStreamConnected] = useState(false)
-    const { isAuthenticated, rol, user } = useAuthStore()
-    const isConnecting = useRef(false);
+    const { isAuthenticated, rol, connectStreamChat } = useAuthStore()
 
+    // Solo pide la conexión, el Store decide si es necesaria.
     useEffect(() => {
-        const connectStream = async () => {
-            if (user?._id && !streamClient.userID && !isConnecting.current) {
-                isConnecting.current = true;
-                try {
-                    const { data } = await clienteAxios.get('/chat/token');
-                    await streamClient.connectUser({
-                        id: user._id,
-                        name: `${user.nombre} ${user.apellido || ''}`.trim(),
-                        image: user.fotoPerfil || undefined,
-                        rol: rol
-                    }, data.token);
-                    
-                    setStreamConnected(true);
-                } catch (error) {
-                    console.error("Error:", error);
-                    isConnecting.current = false;
-                }
-            }
-        };
-        connectStream();
-        return () => {
-            if (streamClient.userID) {
-                streamClient.disconnectUser();
-                setStreamConnected(false);
-                isConnecting.current = false;
-            }
-        };
-    }, [user, rol]);
+        if (isAuthenticated) {
+            connectStreamChat();
+        }
+    }, [isAuthenticated, connectStreamChat]);
 
     if (!isAuthenticated) {
         return <Navigate to="/" replace />
     }
+    
     if (rolesPermitidos && !rolesPermitidos.includes(rol)) {
         return <Navigate to={`/${rol}`} replace />
     }

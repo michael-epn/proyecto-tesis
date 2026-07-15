@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Transition from '../utils/Transition';
-import { streamClient } from '../layouts/DashboardLayout';
-import { useAuthStore } from '../store/authStore';
+import { streamClient, useAuthStore } from '../store/authStore';
 
 function DropdownNotifications({ align }) {
   const { user, rol } = useAuthStore();
