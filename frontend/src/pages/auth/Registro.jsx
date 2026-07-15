@@ -80,7 +80,6 @@ const Registro = () => {
 
     const registerConGoogle = useGoogleLogin({
         ux_mode: 'redirect',
-        redirect_uri: `${import.meta.env.VITE_FRONTEND_URL}/auth/registro`
     });
 
     const handleGoogleClick = async () => {
